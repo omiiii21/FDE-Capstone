@@ -1,0 +1,11 @@
+# Optional extras for the dense retrieval backend (RETRIEVAL_BACKEND=dense).
+#
+# These are only needed to reproduce the backend comparison reported in
+# docs/decisions/ADR-002-retrieval-backend.md. They are NOT required to run the
+# system: the default lexical backend measured better on this corpus, and
+# retrieve.py falls back to it when these packages are missing.
+#
+#   pip install -r requirements.txt -r requirements-dense.txt
+
+sentence-transformers==3.3.1
+chromadb==0.5.23

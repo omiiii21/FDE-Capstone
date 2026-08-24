@@ -1,0 +1,14 @@
+.env
+.venv/
+storage/
+__pycache__/
+*.pyc
+.pytest_cache/
+.coverage
+.DS_Store
+
+# Harness runs write a decision log per run; the JSON reports beside them are
+# committed on purpose, because the report quotes from them.
+evaluation/results/*.db
+evaluation/results/*.db-wal
+evaluation/results/*.db-shm
