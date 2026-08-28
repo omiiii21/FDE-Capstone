@@ -1,0 +1,523 @@
+{
+  "intent": {
+    "target": "intent",
+    "confidence_spread": {
+      "uncalibrated_p95_share_above_0_99": 0.0337,
+      "calibrated_share_above_0_99": 0.6292,
+      "calibrated_min": 0.3126,
+      "calibrated_max": 0.9999
+    },
+    "classes": [
+      "account_access",
+      "api_key_issue",
+      "api_usage_question",
+      "authentication_failure",
+      "billing_query",
+      "compliance_request",
+      "configuration_help",
+      "data_export",
+      "data_residency",
+      "database_issue",
+      "deployment_failure",
+      "feature_request",
+      "integration_help",
+      "onboarding",
+      "performance_degradation",
+      "quota_or_overage",
+      "rate_limit",
+      "rollback_request",
+      "security_incident",
+      "sso_configuration",
+      "unclear_request",
+      "webhook_issue"
+    ],
+    "n_tickets": 500,
+    "n_distinct_bodies": 215,
+    "n_fitted_on": 411,
+    "n_calibrated_on": 89,
+    "fold_accuracy": [
+      0.8764,
+      0.9375,
+      0.9714,
+      0.89,
+      0.9364
+    ],
+    "mean_accuracy_body_disjoint": 0.9223,
+    "std_accuracy": 0.0346,
+    "per_class": {
+      "account_access": {
+        "precision": 0.6111111111111112,
+        "recall": 0.5,
+        "f1": 0.55,
+        "support": 22
+      },
+      "api_key_issue": {
+        "precision": 1.0,
+        "recall": 0.7777777777777778,
+        "f1": 0.8750000000000001,
+        "support": 18
+      },
+      "api_usage_question": {
+        "precision": 1.0,
+        "recall": 0.7916666666666666,
+        "f1": 0.8837209302325582,
+        "support": 24
+      },
+      "authentication_failure": {
+        "precision": 0.9444444444444444,
+        "recall": 0.85,
+        "f1": 0.8947368421052632,
+        "support": 20
+      },
+      "billing_query": {
+        "precision": 0.6774193548387096,
+        "recall": 0.875,
+        "f1": 0.7636363636363636,
+        "support": 24
+      },
+      "compliance_request": {
+        "precision": 1.0,
+        "recall": 0.7307692307692307,
+        "f1": 0.8444444444444443,
+        "support": 26
+      },
+      "configuration_help": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "support": 17
+      },
+      "data_export": {
+        "precision": 0.90625,
+        "recall": 1.0,
+        "f1": 0.9508196721311475,
+        "support": 29
+      },
+      "data_residency": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "support": 29
+      },
+      "database_issue": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "support": 26
+      },
+      "deployment_failure": {
+        "precision": 0.9,
+        "recall": 1.0,
+        "f1": 0.9473684210526316,
+        "support": 27
+      },
+      "feature_request": {
+        "precision": 0.7619047619047619,
+        "recall": 0.8,
+        "f1": 0.7804878048780488,
+        "support": 20
+      },
+      "integration_help": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "support": 21
+      },
+      "onboarding": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "support": 22
+      },
+      "performance_degradation": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "support": 23
+      },
+      "quota_or_overage": {
+        "precision": 0.8518518518518519,
+        "recall": 1.0,
+        "f1": 0.92,
+        "support": 23
+      },
+      "rate_limit": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "support": 13
+      },
+      "rollback_request": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "support": 28
+      },
+      "security_incident": {
+        "precision": 0.9629629629629629,
+        "recall": 1.0,
+        "f1": 0.9811320754716981,
+        "support": 26
+      },
+      "sso_configuration": {
+        "precision": 0.9629629629629629,
+        "recall": 1.0,
+        "f1": 0.9811320754716981,
+        "support": 26
+      },
+      "unclear_request": {
+        "precision": 0.8235294117647058,
+        "recall": 0.9333333333333333,
+        "f1": 0.8749999999999999,
+        "support": 15
+      },
+      "webhook_issue": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "support": 21
+      },
+      "__macro__": {
+        "precision": 0.9273834937200687,
+        "recall": 0.9208430458430459,
+        "f1": 0.9203399377010842,
+        "support": 500
+      },
+      "__weighted_precision__": {
+        "precision": 0.9288607018613897
+      }
+    },
+    "temperature_if_used": 0.3,
+    "calibrator": {
+      "coef": [
+        0.556561,
+        6.629789
+      ],
+      "intercept": 0.15812,
+      "fitted": true
+    },
+    "calibration_shipped": [
+      {
+        "lower": 0.3,
+        "upper": 0.5,
+        "n": 9,
+        "stated": 0.3357,
+        "observed": 0.2222,
+        "gap_points": 11.35
+      },
+      {
+        "lower": 0.5,
+        "upper": 0.65,
+        "n": 11,
+        "stated": 0.5892,
+        "observed": 0.6364,
+        "gap_points": -4.72
+      },
+      {
+        "lower": 0.65,
+        "upper": 0.8,
+        "n": 2,
+        "stated": 0.7248,
+        "observed": 1.0,
+        "gap_points": -27.52
+      },
+      {
+        "lower": 0.9,
+        "upper": 0.95,
+        "n": 3,
+        "stated": 0.9189,
+        "observed": 1.0,
+        "gap_points": -8.11
+      },
+      {
+        "lower": 0.95,
+        "upper": 1.0,
+        "n": 64,
+        "stated": 0.9972,
+        "observed": 1.0,
+        "gap_points": -0.28
+      }
+    ],
+    "calibration_temperature_scaled": [
+      {
+        "lower": 0.3,
+        "upper": 0.5,
+        "n": 8,
+        "stated": 0.4613,
+        "observed": 0.125,
+        "gap_points": 33.63
+      },
+      {
+        "lower": 0.5,
+        "upper": 0.65,
+        "n": 1,
+        "stated": 0.6288,
+        "observed": 1.0,
+        "gap_points": -37.12
+      },
+      {
+        "lower": 0.65,
+        "upper": 0.8,
+        "n": 3,
+        "stated": 0.7312,
+        "observed": 0.0,
+        "gap_points": 73.12
+      },
+      {
+        "lower": 0.8,
+        "upper": 0.9,
+        "n": 6,
+        "stated": 0.8319,
+        "observed": 0.8333,
+        "gap_points": -0.14
+      },
+      {
+        "lower": 0.9,
+        "upper": 0.95,
+        "n": 3,
+        "stated": 0.924,
+        "observed": 1.0,
+        "gap_points": -7.6
+      },
+      {
+        "lower": 0.95,
+        "upper": 1.0,
+        "n": 68,
+        "stated": 0.9995,
+        "observed": 1.0,
+        "gap_points": -0.05
+      }
+    ],
+    "calibration_uncalibrated": [
+      {
+        "lower": 0.0,
+        "upper": 0.3,
+        "n": 17,
+        "stated": 0.1881,
+        "observed": 0.3529,
+        "gap_points": -16.48
+      },
+      {
+        "lower": 0.3,
+        "upper": 0.5,
+        "n": 8,
+        "stated": 0.3652,
+        "observed": 1.0,
+        "gap_points": -63.48
+      },
+      {
+        "lower": 0.5,
+        "upper": 0.65,
+        "n": 8,
+        "stated": 0.6013,
+        "observed": 1.0,
+        "gap_points": -39.87
+      },
+      {
+        "lower": 0.65,
+        "upper": 0.8,
+        "n": 1,
+        "stated": 0.6837,
+        "observed": 1.0,
+        "gap_points": -31.63
+      },
+      {
+        "lower": 0.8,
+        "upper": 0.9,
+        "n": 8,
+        "stated": 0.8463,
+        "observed": 1.0,
+        "gap_points": -15.37
+      },
+      {
+        "lower": 0.9,
+        "upper": 0.95,
+        "n": 9,
+        "stated": 0.9264,
+        "observed": 1.0,
+        "gap_points": -7.36
+      },
+      {
+        "lower": 0.95,
+        "upper": 1.0,
+        "n": 38,
+        "stated": 0.9718,
+        "observed": 1.0,
+        "gap_points": -2.82
+      }
+    ],
+    "ece_shipped": 0.0282,
+    "ece_temperature_scaled": 0.0621,
+    "ece_uncalibrated": 0.1612
+  },
+  "urgency": {
+    "target": "urgency",
+    "confidence_spread": {
+      "uncalibrated_p95_share_above_0_99": 0.0,
+      "calibrated_share_above_0_99": 0.0,
+      "calibrated_min": 0.4506,
+      "calibrated_max": 0.7415
+    },
+    "classes": [
+      "high",
+      "low",
+      "medium"
+    ],
+    "n_tickets": 500,
+    "n_distinct_bodies": 215,
+    "n_fitted_on": 411,
+    "n_calibrated_on": 89,
+    "fold_accuracy": [
+      0.5281,
+      0.4167,
+      0.4571,
+      0.46,
+      0.5273
+    ],
+    "mean_accuracy_body_disjoint": 0.4778,
+    "std_accuracy": 0.0435,
+    "per_class": {
+      "high": {
+        "precision": 0.5064935064935064,
+        "recall": 0.5342465753424658,
+        "f1": 0.52,
+        "support": 146
+      },
+      "low": {
+        "precision": 0.312,
+        "recall": 0.3046875,
+        "f1": 0.30830039525691694,
+        "support": 128
+      },
+      "medium": {
+        "precision": 0.5520361990950227,
+        "recall": 0.5398230088495575,
+        "f1": 0.5458612975391499,
+        "support": 226
+      },
+      "__macro__": {
+        "precision": 0.45684323519617637,
+        "recall": 0.45958569473067445,
+        "f1": 0.458053897598689,
+        "support": 500
+      },
+      "__weighted_precision__": {
+        "precision": 0.47728846588705415
+      }
+    },
+    "temperature_if_used": 2.65,
+    "calibrator": {
+      "coef": [
+        0.803104,
+        -2.269687
+      ],
+      "intercept": 0.377398,
+      "fitted": true
+    },
+    "calibration_shipped": [
+      {
+        "lower": 0.3,
+        "upper": 0.5,
+        "n": 41,
+        "stated": 0.4829,
+        "observed": 0.5366,
+        "gap_points": -5.37
+      },
+      {
+        "lower": 0.5,
+        "upper": 0.65,
+        "n": 40,
+        "stated": 0.5427,
+        "observed": 0.475,
+        "gap_points": 6.77
+      },
+      {
+        "lower": 0.65,
+        "upper": 0.8,
+        "n": 8,
+        "stated": 0.6865,
+        "observed": 0.75,
+        "gap_points": -6.35
+      }
+    ],
+    "calibration_temperature_scaled": [
+      {
+        "lower": 0.3,
+        "upper": 0.5,
+        "n": 50,
+        "stated": 0.4314,
+        "observed": 0.54,
+        "gap_points": -10.86
+      },
+      {
+        "lower": 0.5,
+        "upper": 0.65,
+        "n": 28,
+        "stated": 0.5545,
+        "observed": 0.3929,
+        "gap_points": 16.17
+      },
+      {
+        "lower": 0.65,
+        "upper": 0.8,
+        "n": 11,
+        "stated": 0.6754,
+        "observed": 0.8182,
+        "gap_points": -14.28
+      }
+    ],
+    "calibration_uncalibrated": [
+      {
+        "lower": 0.3,
+        "upper": 0.5,
+        "n": 13,
+        "stated": 0.4485,
+        "observed": 0.6154,
+        "gap_points": -16.69
+      },
+      {
+        "lower": 0.5,
+        "upper": 0.65,
+        "n": 26,
+        "stated": 0.5795,
+        "observed": 0.4231,
+        "gap_points": 15.64
+      },
+      {
+        "lower": 0.65,
+        "upper": 0.8,
+        "n": 16,
+        "stated": 0.7329,
+        "observed": 0.625,
+        "gap_points": 10.79
+      },
+      {
+        "lower": 0.8,
+        "upper": 0.9,
+        "n": 20,
+        "stated": 0.8376,
+        "observed": 0.4,
+        "gap_points": 43.76
+      },
+      {
+        "lower": 0.9,
+        "upper": 0.95,
+        "n": 6,
+        "stated": 0.9333,
+        "observed": 0.6667,
+        "gap_points": 26.66
+      },
+      {
+        "lower": 0.95,
+        "upper": 1.0,
+        "n": 8,
+        "stated": 0.9584,
+        "observed": 0.75,
+        "gap_points": 20.84
+      }
+    ],
+    "ece_shipped": 0.0609,
+    "ece_temperature_scaled": 0.1295,
+    "ece_uncalibrated": 0.2245
+  }
+}
