@@ -194,3 +194,88 @@ class LogisticRegression:
         obj.bias = np.array(payload["bias"], dtype=np.float64)
         obj.temperature = payload.get("temperature", 1.0)
         return obj
+
+
+class ConfidenceCalibrator:
+    """Maps a raw prediction onto the probability that it is correct.
+
+    Temperature scaling was the first thing I tried and it is the wrong tool
+    here. It calibrates the whole 22-way distribution, and on this corpus the
+    only way to do that is to sharpen it until 95% of predictions read 1.000,
+    at which point the routing threshold separates nothing.
+
+    The router never needs the full distribution. It asks one question - given
+    this prediction, how likely is it to be right - which is one-dimensional, so
+    this fits a two-feature logistic regression to exactly that question:
+
+        logit(P(correct)) = a * logit(max_prob) + b * margin + c
+
+    where margin is the gap between the top two classes. The margin earns its
+    place: a 0.51/0.49 call and a 0.51/0.12 call have the same top probability
+    and are not the same situation.
+
+    Fitted on held-out predictions from the shipped model, never on training data.
+    """
+
+    def __init__(self) -> None:
+        self.coef = np.zeros(2)
+        self.intercept = 0.0
+        self.fitted = False
+
+    @staticmethod
+    def _features(max_prob: np.ndarray, margin: np.ndarray) -> np.ndarray:
+        p = np.clip(max_prob, 1e-6, 1 - 1e-6)
+        return np.column_stack([np.log(p / (1 - p)), margin])
+
+    def fit(
+        self,
+        max_prob: Sequence[float],
+        margin: Sequence[float],
+        correct: Sequence[bool],
+        *,
+        epochs: int = 4000,
+        learning_rate: float = 0.08,
+        l2: float = 1e-3,
+    ) -> "ConfidenceCalibrator":
+        X = self._features(np.asarray(max_prob, dtype=float), np.asarray(margin, dtype=float))
+        y = np.asarray(correct, dtype=float)
+        # Standardise so the two features are on comparable scales; the shift
+        # and scale are folded back into the coefficients at the end.
+        mean, std = X.mean(axis=0), X.std(axis=0)
+        std[std == 0] = 1.0
+        Z = (X - mean) / std
+        w = np.zeros(2)
+        b = 0.0
+        n = len(y)
+        for _ in range(epochs):
+            p = 1.0 / (1.0 + np.exp(-(Z @ w + b)))
+            error = p - y
+            w -= learning_rate * (Z.T @ error / n + l2 * w)
+            b -= learning_rate * error.mean()
+        self.coef = w / std
+        self.intercept = float(b - (w * mean / std).sum())
+        self.fitted = True
+        return self
+
+    def predict(self, max_prob: float, margin: float) -> float:
+        if not self.fitted:
+            return float(max_prob)
+        x = self._features(np.array([max_prob]), np.array([margin]))[0]
+        z = float(x @ self.coef + self.intercept)
+        return float(1.0 / (1.0 + math.exp(-max(-30.0, min(30.0, z)))))
+
+    def to_dict(self) -> dict[str, Any]:
+        return {
+            "coef": [round(v, 6) for v in self.coef.tolist()],
+            "intercept": round(self.intercept, 6),
+            "fitted": self.fitted,
+        }
+
+    @classmethod
+    def from_dict(cls, payload: dict[str, Any] | None) -> "ConfidenceCalibrator":
+        obj = cls()
+        if payload:
+            obj.coef = np.array(payload["coef"], dtype=np.float64)
+            obj.intercept = float(payload["intercept"])
+            obj.fitted = bool(payload.get("fitted", True))
+        return obj
