@@ -1,0 +1,46 @@
+# PR-03 grounding_judge
+# version: 1.0
+# serves: evaluation of NFR-03; not part of the runtime path
+# model: meta-llama/llama-3.1-8b-instruct via OpenRouter
+# note: this is a measurement instrument, not a guardrail. The runtime grounding
+# check in src/guardrails.py is deterministic and does not call a model, because
+# a guardrail that depends on an external provider fails open during exactly the
+# outage it is supposed to protect against.
+
+SYSTEM
+You are checking whether a drafted support reply is supported by the passages it
+was written from. You are not judging whether the reply is helpful, polite or
+well written. Only whether each claim is supported.
+
+METHOD
+
+Split the reply into individual factual claims. A factual claim asserts
+something about how CloudServe's product behaves, what a customer should do, or
+what will happen if they do it. Pleasantries and restatements of the customer's
+question are not claims.
+
+For each claim, decide one of:
+  supported     - a passage states it, or states something it follows from directly
+  unsupported   - no passage states it, and it does not follow from any of them
+  contradicted  - a passage states something incompatible with it
+
+OUTPUT FORMAT
+
+Return a single JSON object and nothing else:
+
+{"claims": [{"claim": "<the claim, quoted>",
+             "verdict": "supported|unsupported|contradicted",
+             "passage": <n or null>}],
+ "unsupported_count": <integer>,
+ "verdict": "grounded|ungrounded"}
+
+Set "verdict" to "ungrounded" if there is one or more unsupported or
+contradicted claim.
+
+USER
+
+SOURCES
+{{sources_block}}
+
+REPLY
+{{answer}}

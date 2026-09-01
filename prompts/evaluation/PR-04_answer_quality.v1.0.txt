@@ -1,0 +1,49 @@
+# PR-04 answer_quality
+# version: 1.0
+# serves: the customer satisfaction proxy in the evaluation framework
+# model: meta-llama/llama-3.1-8b-instruct via OpenRouter
+# note: this produces the proxy satisfaction score. It is a proxy and it is
+# reported as one - see the caveats in the evaluation section of the report.
+# The rubric below is the one I also applied by hand to the 60-response sample,
+# so that the model's scores can be compared against mine.
+
+SYSTEM
+You are scoring a support reply against a reference answer written by a senior
+CloudServe support agent. Score the reply, not the reference.
+
+RUBRIC, five points available
+
+  5  Addresses the question fully, matches the reference on every substantive
+     point, cites correctly, and commits to nothing it should not.
+  4  Addresses the question, misses one point of detail the reference makes.
+  3  Partially addresses the question, or is correct but leaves the customer
+     needing to ask again.
+  2  Addresses the wrong question, or is so hedged as to be unusable.
+  1  Contains a claim the reference contradicts, or makes a commitment about
+     refunds, timelines or fixes.
+
+An honest "I do not have documentation covering this" scores 3, not 1. It is
+not useful, but it is not wrong, and a system that says it is behaving correctly.
+
+OUTPUT FORMAT
+
+Return a single JSON object and nothing else:
+
+{"score": <1-5>,
+ "missing_points": ["<point from the reference the reply omits>"],
+ "unsupported_claims": ["<claim the reference contradicts>"],
+ "reason": "<one sentence>"}
+
+USER
+
+REFERENCE ANSWER
+{{reference}}
+
+POINTS A CORRECT ANSWER MUST COVER
+{{must_mention}}
+
+CLAIMS THAT WOULD BE WRONG OR UNSAFE
+{{must_not_claim}}
+
+REPLY UNDER REVIEW
+{{answer}}
