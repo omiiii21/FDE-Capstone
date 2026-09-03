@@ -200,19 +200,29 @@ def check_grounding(response: str, passages: Sequence[Passage], citations: Seque
                 "grounding", False, f"cited {citation.get('doc_id')} which was not retrieved"
             )
 
+    # A citation covers the paragraph it sits in, not only the sentence it
+    # terminates. Support replies are written with the marker at the end of the
+    # passage it supports, so checking sentence by sentence flags the very claim
+    # the citation was attached to. The unit that has to carry a citation is
+    # therefore the paragraph.
     uncited: list[str] = []
-    for sentence in _SENTENCE_SPLIT.split(response.strip()):
-        sentence = sentence.strip()
-        if len(sentence) < 30 or _BOILERPLATE.match(sentence):
+    for paragraph in re.split(r"\n\s*\n", response.strip()):
+        paragraph = paragraph.strip()
+        if not paragraph or re.search(r"\[\d+\]", paragraph):
             continue
-        if _FACTUAL.search(sentence) and not re.search(r"\[\d+\]", sentence):
-            uncited.append(sentence)
+        for sentence in _SENTENCE_SPLIT.split(paragraph):
+            sentence = sentence.strip()
+            if len(sentence) < 30 or _BOILERPLATE.match(sentence):
+                continue
+            if _FACTUAL.search(sentence):
+                uncited.append(sentence)
 
     if uncited:
         return GuardrailResult(
             "grounding",
             False,
-            f'{len(uncited)} factual sentence(s) without a citation, first: "{uncited[0][:110]}"',
+            f"{len(uncited)} factual sentence(s) in a paragraph with no citation, "
+            f'first: "{uncited[0][:110]}"',
         )
     if not cited_markers:
         return GuardrailResult("grounding", False, "no citations at all")
