@@ -1,0 +1,486 @@
+{
+  "run": {
+    "run_id": "run-20260917T161528Z-c1045f",
+    "started_at": "2026-09-17T16:15:28Z",
+    "finished_at": "2026-09-17T16:15:29Z",
+    "duration_seconds": 0.33,
+    "tickets_per_second": 1494.87,
+    "input_path": "data/development_tickets.json",
+    "output_dir": "evaluation/results/dev_run",
+    "system_version": "2.1.0",
+    "python": "3.13.14",
+    "platform": "macOS-26.5.2-arm64-arm-64bit-Mach-O",
+    "model_provider": "none",
+    "provider_available": false,
+    "provider_model": "n/a",
+    "retrieval": {
+      "backend": "lexical",
+      "documents": 29,
+      "chunks": 69,
+      "top_k": 5,
+      "floor": 4.2
+    },
+    "confidence_threshold": 0.62,
+    "high_cost_threshold": 0.85,
+    "harness_level_failures": 0,
+    "unattended": true
+  },
+  "volume": {
+    "tickets_processed": 500,
+    "answered_automatically": 407,
+    "escalated": 93,
+    "blocked_by_guardrails": 0,
+    "processing_errors": 0,
+    "by_channel": {
+      "chat": 155,
+      "docs_comment": 78,
+      "email": 212,
+      "forum": 55
+    },
+    "by_action_and_channel": {
+      "chat/auto_respond": 128,
+      "docs_comment/escalate": 16,
+      "email/escalate": 41,
+      "email/auto_respond": 171,
+      "docs_comment/auto_respond": 62,
+      "forum/auto_respond": 46,
+      "chat/escalate": 27,
+      "forum/escalate": 9
+    }
+  },
+  "business": {
+    "first_contact_resolution": 0.814,
+    "first_contact_resolution_verified": 0.9034,
+    "first_contact_resolution_verified_basis": 321,
+    "escalation_rate": 0.186,
+    "automated_reply_seconds_mean": 0.0003,
+    "automated_reply_seconds_median": 0.0002,
+    "blended_reply_minutes_mean": 39.8,
+    "blended_reply_minutes_median": 0.0,
+    "blended_reply_assumption": "escalated tickets are assumed to wait 214 minutes, the median human resolution time in the development set; the system does not control that queue",
+    "baseline_first_contact_resolution": 0.438,
+    "baseline_escalation_rate": 0.562,
+    "baseline_median_reply_minutes": 214.0,
+    "routing_agreement_with_labels": 0.788
+  },
+  "technical": {
+    "classification": {
+      "accuracy": 0.978,
+      "macro_precision": 0.9819,
+      "macro_recall": 0.9779,
+      "weighted_precision": 0.9805,
+      "per_class": {
+        "account_access": {
+          "precision": 0.88,
+          "recall": 1.0,
+          "f1": 0.9362,
+          "support": 22
+        },
+        "api_key_issue": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0,
+          "support": 18
+        },
+        "api_usage_question": {
+          "precision": 1.0,
+          "recall": 0.9167,
+          "f1": 0.9565,
+          "support": 24
+        },
+        "authentication_failure": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0,
+          "support": 20
+        },
+        "billing_query": {
+          "precision": 1.0,
+          "recall": 0.875,
+          "f1": 0.9333,
+          "support": 24
+        },
+        "compliance_request": {
+          "precision": 1.0,
+          "recall": 0.9231,
+          "f1": 0.96,
+          "support": 26
+        },
+        "configuration_help": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0,
+          "support": 17
+        },
+        "data_export": {
+          "precision": 0.9062,
+          "recall": 1.0,
+          "f1": 0.9508,
+          "support": 29
+        },
+        "data_residency": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0,
+          "support": 29
+        },
+        "database_issue": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0,
+          "support": 26
+        },
+        "deployment_failure": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0,
+          "support": 27
+        },
+        "feature_request": {
+          "precision": 1.0,
+          "recall": 0.8,
+          "f1": 0.8889,
+          "support": 20
+        },
+        "integration_help": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0,
+          "support": 21
+        },
+        "onboarding": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0,
+          "support": 22
+        },
+        "performance_degradation": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0,
+          "support": 23
+        },
+        "quota_or_overage": {
+          "precision": 0.8519,
+          "recall": 1.0,
+          "f1": 0.92,
+          "support": 23
+        },
+        "rate_limit": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0,
+          "support": 13
+        },
+        "rollback_request": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0,
+          "support": 28
+        },
+        "security_incident": {
+          "precision": 0.963,
+          "recall": 1.0,
+          "f1": 0.9811,
+          "support": 26
+        },
+        "sso_configuration": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0,
+          "support": 26
+        },
+        "unclear_request": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0,
+          "support": 15
+        },
+        "webhook_issue": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0,
+          "support": 21
+        }
+      },
+      "top_confusions": [
+        {
+          "true": "feature_request",
+          "predicted": "quota_or_overage",
+          "count": 4
+        },
+        {
+          "true": "billing_query",
+          "predicted": "account_access",
+          "count": 3
+        },
+        {
+          "true": "api_usage_question",
+          "predicted": "data_export",
+          "count": 2
+        },
+        {
+          "true": "compliance_request",
+          "predicted": "security_incident",
+          "count": 1
+        },
+        {
+          "true": "compliance_request",
+          "predicted": "data_export",
+          "count": 1
+        }
+      ]
+    },
+    "retrieval": {
+      "recall_at_k": 0.9636,
+      "precision_at_1": 0.8768,
+      "citation_accuracy": 0.9034,
+      "citation_accuracy_basis": 321,
+      "responses_with_citations": 407,
+      "citations_all_resolve": true,
+      "returned_nothing_when_unanswerable": 0.049,
+      "mean_passages_returned": 4.812
+    },
+    "latency": {
+      "mean_seconds": 0.0003,
+      "median_seconds": 0.0003,
+      "p95_seconds": 0.0003,
+      "p99_seconds": 0.0004,
+      "max_seconds": 0.0006,
+      "p95_by_channel": {
+        "chat": 0.0004,
+        "docs_comment": 0.0003,
+        "email": 0.0003,
+        "forum": 0.0003
+      }
+    },
+    "calibration": {
+      "bands": [
+        {
+          "band": "0.2-0.4",
+          "n": 8,
+          "stated": 0.3267,
+          "observed": 0.125,
+          "gap_points": 20.17
+        },
+        {
+          "band": "0.4-0.6",
+          "n": 5,
+          "stated": 0.494,
+          "observed": 0.4,
+          "gap_points": 9.4
+        },
+        {
+          "band": "0.6-0.8",
+          "n": 9,
+          "stated": 0.652,
+          "observed": 0.8889,
+          "gap_points": -23.69
+        },
+        {
+          "band": "0.8-1.0",
+          "n": 478,
+          "stated": 0.999,
+          "observed": 1.0,
+          "gap_points": -0.1
+        }
+      ],
+      "expected_calibration_error": 0.0094,
+      "worst_band_gap_points": 23.69,
+      "within_five_points": false
+    }
+  },
+  "governance": {
+    "decisions_logged": 2500,
+    "tickets_with_decisions": 500,
+    "decision_log_reconciles": true,
+    "guardrail_activations": {
+      "grounding": 93,
+      "confidence_floor": 14,
+      "commitments": 5
+    },
+    "private_data_detections": 0,
+    "responses_released": 407,
+    "must_not_auto_respond_tickets": 87,
+    "must_not_auto_respond_breaches": 0,
+    "must_not_auto_respond_breach_ids": [],
+    "injection_attempts_detected": 0
+  },
+  "fairness": {
+    "customer_tier": {
+      "segments": {
+        "business": {
+          "n": 164,
+          "automation_rate": 0.811,
+          "verified_resolution_rate": 0.9009,
+          "verified_basis": 111,
+          "retrieval_recall": 0.9675,
+          "classification_accuracy": 0.9939
+        },
+        "enterprise": {
+          "n": 83,
+          "automation_rate": 0.8434,
+          "verified_resolution_rate": 0.9455,
+          "verified_basis": 55,
+          "retrieval_recall": 0.9661,
+          "classification_accuracy": 0.9759
+        },
+        "standard": {
+          "n": 253,
+          "automation_rate": 0.8063,
+          "verified_resolution_rate": 0.8903,
+          "verified_basis": 155,
+          "retrieval_recall": 0.96,
+          "classification_accuracy": 0.9684
+        }
+      },
+      "verified_resolution_spread_points": 5.52,
+      "segments_compared": [
+        "business",
+        "enterprise",
+        "standard"
+      ],
+      "within_five_points": false
+    },
+    "language_fluency": {
+      "segments": {
+        "fluent": {
+          "n": 380,
+          "automation_rate": 0.8132,
+          "verified_resolution_rate": 0.9083,
+          "verified_basis": 240,
+          "retrieval_recall": 0.9778,
+          "classification_accuracy": 0.9711
+        },
+        "non_fluent": {
+          "n": 120,
+          "automation_rate": 0.8167,
+          "verified_resolution_rate": 0.8889,
+          "verified_basis": 81,
+          "retrieval_recall": 0.9195,
+          "classification_accuracy": 1.0
+        }
+      },
+      "verified_resolution_spread_points": 1.94,
+      "segments_compared": [
+        "fluent",
+        "non_fluent"
+      ],
+      "within_five_points": true
+    },
+    "customer_region": {
+      "segments": {
+        "asia_pacific": {
+          "n": 119,
+          "automation_rate": 0.7731,
+          "verified_resolution_rate": 0.9275,
+          "verified_basis": 69,
+          "retrieval_recall": 0.9474,
+          "classification_accuracy": 0.9664
+        },
+        "europe": {
+          "n": 151,
+          "automation_rate": 0.8146,
+          "verified_resolution_rate": 0.8529,
+          "verified_basis": 102,
+          "retrieval_recall": 0.9652,
+          "classification_accuracy": 0.9669
+        },
+        "latin_america": {
+          "n": 60,
+          "automation_rate": 0.8833,
+          "verified_resolution_rate": 0.95,
+          "verified_basis": 40,
+          "retrieval_recall": 0.9767,
+          "classification_accuracy": 1.0
+        },
+        "north_america": {
+          "n": 170,
+          "automation_rate": 0.8176,
+          "verified_resolution_rate": 0.9182,
+          "verified_basis": 110,
+          "retrieval_recall": 0.9675,
+          "classification_accuracy": 0.9882
+        }
+      },
+      "verified_resolution_spread_points": 9.71,
+      "segments_compared": [
+        "asia_pacific",
+        "europe",
+        "latin_america",
+        "north_america"
+      ],
+      "within_five_points": false
+    },
+    "channel": {
+      "segments": {
+        "chat": {
+          "n": 155,
+          "automation_rate": 0.8258,
+          "verified_resolution_rate": 0.8692,
+          "verified_basis": 107,
+          "retrieval_recall": 0.9412,
+          "classification_accuracy": 0.9548
+        },
+        "docs_comment": {
+          "n": 78,
+          "automation_rate": 0.7949,
+          "verified_resolution_rate": 0.9048,
+          "verified_basis": 42,
+          "retrieval_recall": 0.9583,
+          "classification_accuracy": 0.9744
+        },
+        "email": {
+          "n": 212,
+          "automation_rate": 0.8066,
+          "verified_resolution_rate": 0.9197,
+          "verified_basis": 137,
+          "retrieval_recall": 0.9804,
+          "classification_accuracy": 0.9906
+        },
+        "forum": {
+          "n": 55,
+          "automation_rate": 0.8364,
+          "verified_resolution_rate": 0.9429,
+          "verified_basis": 35,
+          "retrieval_recall": 0.973,
+          "classification_accuracy": 1.0
+        }
+      },
+      "verified_resolution_spread_points": 7.37,
+      "segments_compared": [
+        "chat",
+        "docs_comment",
+        "email",
+        "forum"
+      ],
+      "within_five_points": false
+    },
+    "ticket_length": {
+      "segments": {
+        "long": {
+          "n": 390,
+          "automation_rate": 0.8513,
+          "verified_resolution_rate": 0.9102,
+          "verified_basis": 256,
+          "retrieval_recall": 0.9681,
+          "classification_accuracy": 0.9769
+        },
+        "short": {
+          "n": 110,
+          "automation_rate": 0.6818,
+          "verified_resolution_rate": 0.8769,
+          "verified_basis": 65,
+          "retrieval_recall": 0.9467,
+          "classification_accuracy": 0.9818
+        }
+      },
+      "verified_resolution_spread_points": 3.33,
+      "segments_compared": [
+        "long",
+        "short"
+      ],
+      "within_five_points": true
+    }
+  }
+}
