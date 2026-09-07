@@ -1,0 +1,35 @@
+{
+  "input": "data/development_tickets.json",
+  "base_rate_answerable": 0.714,
+  "results": [
+    {
+      "configuration": "text only, class-weighted",
+      "accuracy": 0.653,
+      "beats_base_rate": false,
+      "recall_on_uncovered": 0.5223,
+      "precision_on_uncovered": 0.4271
+    },
+    {
+      "configuration": "text only, unweighted",
+      "accuracy": 0.6691,
+      "beats_base_rate": false,
+      "recall_on_uncovered": 0.4332,
+      "precision_on_uncovered": 0.4517
+    },
+    {
+      "configuration": "text + retrieval features",
+      "accuracy": 0.6673,
+      "beats_base_rate": false,
+      "recall_on_uncovered": 0.4189,
+      "precision_on_uncovered": 0.4367
+    },
+    {
+      "configuration": "text + retrieval, class-weighted",
+      "accuracy": 0.6261,
+      "beats_base_rate": false,
+      "recall_on_uncovered": 0.5338,
+      "precision_on_uncovered": 0.4013
+    }
+  ],
+  "conclusion": "Answerability is not predictable from the ticket text or from retrieval scores on a body-disjoint split. No gate was built; see scripts/documentation_gap.py for what to do instead."
+}
