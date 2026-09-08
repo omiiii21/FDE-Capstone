@@ -1,0 +1,31 @@
+{
+  "input": "data/development_tickets.json",
+  "top_k": 5,
+  "results": {
+    "lexical": {
+      "recall_at_k": 0.9636,
+      "precision_at_1": 0.8768,
+      "false_positive_rate_on_unanswerable": 0.993,
+      "recall_fluent": 0.9778,
+      "recall_non_fluent": 0.9195,
+      "median_query_ms": 0.042,
+      "p95_query_ms": 0.061,
+      "floor": 3.0
+    },
+    "dense": {
+      "recall_at_k": 0.9608,
+      "precision_at_1": 0.888,
+      "false_positive_rate_on_unanswerable": 0.9371,
+      "recall_fluent": 0.9704,
+      "recall_non_fluent": 0.931,
+      "median_query_ms": 3.033,
+      "p95_query_ms": 3.568,
+      "floor": 3.0
+    }
+  },
+  "dense_minus_lexical_recall_points": -0.28,
+  "non_fluent_gap_points": {
+    "lexical": 5.83,
+    "dense": 3.94
+  }
+}
