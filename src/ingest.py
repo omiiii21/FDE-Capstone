@@ -151,13 +151,21 @@ def load_tickets(path: str | Path) -> list[Ticket]:
     if stripped.startswith("["):
         records = json.loads(text)
     elif stripped.startswith("{"):
-        payload = json.loads(text)
-        for key in ("tickets", "data", "items", "records"):
-            if isinstance(payload.get(key), list):
-                records = payload[key]
-                break
+        # A JSON Lines file also starts with "{", so deciding on the first
+        # character alone is not enough - it sends a .jsonl file into
+        # json.loads() on the whole text, which fails on line two. Try the
+        # single-document reading first and fall back to line by line.
+        try:
+            payload = json.loads(text)
+        except json.JSONDecodeError:
+            records = [json.loads(line) for line in text.splitlines() if line.strip()]
         else:
-            records = [payload]
+            for key in ("tickets", "data", "items", "records"):
+                if isinstance(payload.get(key), list):
+                    records = payload[key]
+                    break
+            else:
+                records = [payload]
     else:
         records = [json.loads(line) for line in text.splitlines() if line.strip()]
 
