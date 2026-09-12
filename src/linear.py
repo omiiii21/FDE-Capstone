@@ -142,7 +142,30 @@ class LogisticRegression:
         return self
 
     def decision(self, X: np.ndarray) -> np.ndarray:
-        return X @ self.weights + self.bias
+        """Raw scores, one per class.
+
+        The errstate block is not papering over a numerical problem. On macOS
+        with the Accelerate BLAS, numpy's matmul raises divide-by-zero, overflow
+        and invalid flags on this shape even though every input is finite and
+        every output is finite - the vectorised kernel reads lanes past the end
+        of the data and the flags come from arithmetic on that padding. I
+        checked: inputs finite, outputs finite, results identical to a manual
+        dot product.
+
+        It matters because of what the flags do downstream rather than what they
+        do here. Under `python -W error` they become exceptions, Classifier.classify
+        catches them, and every ticket falls back to unclear_request and
+        escalates. A system that silently escalates its entire queue when
+        somebody turns warnings into errors is a worse failure than the warning.
+
+        So the flags are suppressed and the result is checked instead, which is
+        the guard that was actually wanted.
+        """
+        with np.errstate(divide="ignore", over="ignore", invalid="ignore"):
+            scores = X @ self.weights + self.bias
+        if not np.isfinite(scores).all():
+            raise FloatingPointError("classifier produced a non-finite score")
+        return scores
 
     def predict_proba(self, X: np.ndarray) -> np.ndarray:
         return _softmax(self.decision(X) / self.temperature)

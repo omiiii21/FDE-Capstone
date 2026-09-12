@@ -43,6 +43,9 @@ _SENTENCE = re.compile(r"(?<=[.!?])\s+(?=[A-Z`'\"(])")
 _STEP = re.compile(r"^\s*\d+\.\s+")
 _HEADING_LINE = re.compile(r"^\s*#{1,6}\s+")
 _BULLET = re.compile(r"^\s*[-*]\s+")
+# Article furniture. These lines are structure, not prose, and a reply that
+# quotes them reads like a paste of the page rather than an answer.
+_METADATA = re.compile(r"^\s*(\*\*[A-Za-z ]+:\*\*|Applies to:)", re.IGNORECASE)
 
 # A supporting article has to score at least this share of the top result to be
 # cited alongside it. Set from the development set: below about 0.6 the second
@@ -95,12 +98,18 @@ def _useful_sentences(passage: Passage, query_terms: set[str]) -> list[str]:
     """
     section = ""
     sentences: list[tuple[str, str]] = []
+    title_line = passage.title.strip().lower()
     for line in passage.text.splitlines():
         if _HEADING_LINE.match(line):
             section = _HEADING_LINE.sub("", line).strip().lower()
             continue
         line = line.strip()
-        if not line:
+        if not line or _METADATA.match(line):
+            continue
+        # The chunk repeats the article title at the top so a quoted passage
+        # says what it is about. That is useful for retrieval and is not a
+        # sentence, so it does not belong in the reply.
+        if line.lower() == title_line:
             continue
         line = _BULLET.sub("", line)
         for sentence in _SENTENCE.split(line):
@@ -131,6 +140,34 @@ class ExtractiveGenerator:
 
     name = "extractive"
 
+    def __init__(self, retriever=None):
+        # Optional. Without it the generator quotes whichever chunk ranked
+        # best, which is frequently the symptoms section - the part describing
+        # the problem the customer already told us about. With it, the reply
+        # comes from the same article's resolution steps instead.
+        self.retriever = retriever
+
+    def _best_chunk_for(self, passage: Passage) -> Passage:
+        if self.retriever is None:
+            return passage
+        siblings = self.retriever.chunks_for(passage.doc_id)
+        for chunk in siblings:
+            if "resolution" in chunk.section.lower():
+                if chunk.chunk_id == passage.chunk_id:
+                    return passage
+                return Passage(
+                    doc_id=chunk.doc_id,
+                    title=chunk.title,
+                    category=chunk.category,
+                    chunk_id=chunk.chunk_id,
+                    text=chunk.text,
+                    # The score belongs to the passage that was retrieved. The
+                    # quoted text comes from a sibling, and the citation still
+                    # resolves to the same article, which is what A6 checks.
+                    score=passage.score,
+                )
+        return passage
+
     def draft(self, ticket: Ticket, passages: list[Passage]) -> Draft:
         if not passages:
             return Draft(NO_ANSWER, [], False, "nothing in the knowledge base matched this ticket", self.name)
@@ -157,6 +194,7 @@ class ExtractiveGenerator:
             distinct.append(passage)
 
         for index, passage in enumerate(distinct[:3], start=1):
+            passage = self._best_chunk_for(passage)
             sentences = _useful_sentences(passage, query_terms)
             if not sentences:
                 continue
@@ -193,9 +231,9 @@ class ModelGenerator:
 
     name = "model"
 
-    def __init__(self, provider: Provider, fallback: ExtractiveGenerator | None = None):
+    def __init__(self, provider: Provider, fallback: ExtractiveGenerator | None = None, retriever=None):
         self.provider = provider
-        self.fallback = fallback or ExtractiveGenerator()
+        self.fallback = fallback or ExtractiveGenerator(retriever)
         self._template = load_prompt(ANSWER_PROMPT)
         self._escalation_template = load_prompt(ESCALATION_PROMPT)
 
@@ -370,5 +408,5 @@ def _parse_json_object(raw: str) -> dict | None:
     return None
 
 
-def get_generator(provider: Provider) -> ModelGenerator:
-    return ModelGenerator(provider)
+def get_generator(provider: Provider, retriever=None) -> ModelGenerator:
+    return ModelGenerator(provider, retriever=retriever)

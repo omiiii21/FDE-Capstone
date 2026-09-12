@@ -1,0 +1,64 @@
+# Prometheus scrape configuration for the CloudServe triage system.
+#
+# The application serves its metrics on METRICS_PORT (8001 by default) from
+# src/metrics.py, on its own listener rather than as a route on the API. That
+# is deliberate: scraping does not then depend on the application being healthy,
+# and the endpoint does not sit next to the customer-facing routes. The API
+# itself is on port 8000 and is not scraped.
+#
+# Five series are exported. Both labelled series are bounded on purpose, four
+# channels and three outcomes, so the whole instrumentation is a few dozen time
+# series. Ticket id or intent as a label would be unbounded and is the usual way
+# a Prometheus instance falls over.
+#
+#   tickets_processed_total{channel,outcome}   counter
+#   response_seconds                           histogram, 10 buckets, 0.05s to 30s
+#   guardrail_blocks_total{guardrail}          counter
+#   classification_confidence                  histogram, 10 even buckets
+#   kill_switch_engaged                        gauge, 0 or 1
+#
+# Start Prometheus with:
+#   prometheus --config.file=docs/monitoring/prometheus.yml
+
+global:
+  # 15s against a system whose p95 is well under a millisecond is generous.
+  # It is chosen so that the confidence histogram has enough samples per bucket
+  # to show a shape within an hour at CloudServe's volume of roughly 500
+  # tickets a week.
+  scrape_interval: 15s
+  scrape_timeout: 10s
+  evaluation_interval: 15s
+  external_labels:
+    service: cloudserve-triage
+
+# No alerting rules are shipped. Thresholds worth alerting on are documented in
+# README.md in this directory, but they were chosen against 500 development
+# tickets rather than against live traffic, and committing them as alerts would
+# give them an authority they have not earned. Set them after a shadow-mode
+# period, from what the traffic actually does.
+rule_files: []
+
+scrape_configs:
+  - job_name: cloudserve-triage
+    metrics_path: /metrics
+    scheme: http
+    static_configs:
+      - targets:
+          - localhost:8001
+        labels:
+          # Set these per deployment. They are how you tell a staging spike
+          # from a production one on a shared dashboard.
+          environment: development
+          instance_role: triage-api
+
+    # The application is expected to restart during a deployment and the
+    # counters reset when it does. Prometheus handles counter resets itself;
+    # nothing here needs to compensate for it.
+    honor_labels: false
+
+  # Prometheus scraping itself, so that a gap in the graphs can be attributed
+  # to the scraper rather than to the application.
+  - job_name: prometheus
+    static_configs:
+      - targets:
+          - localhost:9090

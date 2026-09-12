@@ -253,6 +253,16 @@ class Retriever:
         grounding guardrail and by the tests behind A6."""
         return self.documents.get(doc_id)
 
+    def chunks_for(self, doc_id: str) -> list[Chunk]:
+        """Every chunk of one article, in document order.
+
+        The generator needs this because the chunk that ranks best is often not
+        the chunk worth quoting. A customer's words match the symptoms section,
+        which describes the problem they already know they have; the resolution
+        section is the part that helps them.
+        """
+        return [c for c in self.chunks if c.doc_id == doc_id]
+
     def passage_for(self, chunk_id: str) -> Chunk | None:
         for chunk in self.chunks:
             if chunk.chunk_id == chunk_id:

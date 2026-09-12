@@ -23,6 +23,7 @@ Serves FR-02, FR-03. Acceptance criterion A3.
 from __future__ import annotations
 
 import json
+import logging
 import re
 from functools import lru_cache
 from pathlib import Path
@@ -32,6 +33,8 @@ import numpy as np
 from .config import settings
 from .linear import ConfidenceCalibrator, LogisticRegression, TfidfVectoriser
 from .schema import Classification, Ticket
+
+log = logging.getLogger(__name__)
 
 PROMPT_VERSION = "classifier v2.1 (tf-idf + multinomial logistic, margin-calibrated)"
 
@@ -198,6 +201,18 @@ class Classifier:
         except Exception as exc:  # pragma: no cover - defensive, A11
             # A classifier that raises must not stop the ticket. The defined
             # fallback is the class that always escalates.
+            #
+            # This is logged at error rather than swallowed. A fallback that
+            # fires once is a bad ticket; a fallback that fires on everything is
+            # an outage wearing the costume of a cautious system, and the only
+            # way to tell them apart is to count them. The decision log records
+            # it too, in the method field.
+            log.error(
+                "classifier failed on %s, falling back to unclear_request: %s: %s",
+                ticket.ticket_id,
+                type(exc).__name__,
+                exc,
+            )
             return Classification(
                 intent="unclear_request",
                 intent_confidence=0.0,

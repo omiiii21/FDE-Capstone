@@ -67,8 +67,8 @@ class Pipeline:
             # escalating is the correct degraded behaviour rather than a crash.
             log.error("classifier artefact missing; every ticket will escalate")
             self.classifier = None
-        self.generator = ModelGenerator(self.provider)
-        self.extractive = ExtractiveGenerator()
+        self.generator = ModelGenerator(self.provider, retriever=self.retriever)
+        self.extractive = ExtractiveGenerator(self.retriever)
 
     # -- main entry point ------------------------------------------------
 
