@@ -12,3 +12,12 @@ __pycache__/
 evaluation/results/*.db
 evaluation/results/*.db-wal
 evaluation/results/*.db-shm
+
+# The decision log is a runtime artefact. It accumulates across runs into the
+# output directory, so re-running the harness into the same folder grows it
+# without bound - the 500-ticket database reached 16MB during development.
+# The readable export beside it, decision_log.jsonl, is the auditable artefact
+# and that one is committed.
+evaluation/results/**/*.db
+evaluation/results/**/*.db-wal
+evaluation/results/**/*.db-shm
