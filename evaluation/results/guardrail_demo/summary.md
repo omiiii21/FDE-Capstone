@@ -1,8 +1,8 @@
-# Evaluation run run-20260917T181402Z-224c8a
+# Evaluation run run-20260917T181626Z-43e79d
 
 Input: `data/guardrail_probe_tickets.json`  
-Started: 2026-09-17T18:14:02Z  
-Duration: 0.03s (321.58 tickets/sec)  
+Started: 2026-09-17T18:16:26Z  
+Duration: 0.03s (319.34 tickets/sec)  
 Provider: unsafe_demo (available: True)  
 Retrieval: lexical, top_k=5, floor=4.2  
 Confidence threshold: 0.62

@@ -1,8 +1,8 @@
-# Evaluation run run-20260917T181158Z-c54fee
+# Evaluation run run-20260917T181626Z-63e9ff
 
 Input: `data/guardrail_probe_tickets.json`  
-Started: 2026-09-17T18:11:58Z  
-Duration: 0.02s (391.79 tickets/sec)  
+Started: 2026-09-17T18:16:26Z  
+Duration: 0.03s (342.11 tickets/sec)  
 Provider: none (available: False)  
 Retrieval: lexical, top_k=5, floor=4.2  
 Confidence threshold: 0.62
@@ -24,7 +24,7 @@ Confidence threshold: 0.62
 | First contact resolution | 43.8% | 60% | 11.1% |
 | First contact resolution, verified | - | - | 0.0% (n=0) |
 | Escalation rate | 56.2% | 30% | 88.9% |
-| Median reply, automated | 214 min | 5 min | 0.000 s |
+| Median reply, automated | 214 min | 5 min | 0.001 s |
 | Median reply, blended | 214 min | 5 min | 214.0 min |
 | Routing agreement with labels | - | - | 0.0% |
 
