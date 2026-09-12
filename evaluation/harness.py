@@ -270,7 +270,10 @@ def render_summary(report: dict[str, Any]) -> str:
         f"| Citation accuracy | 95% | {retrieval['citation_accuracy']:.1%} "
         f"(n={retrieval['citation_accuracy_basis']}) |",
         f"| Latency p95 | 3 s | {latency['p95_seconds']:.3f} s |",
-        f"| Calibration, worst band gap | 5 pts | {calibration['worst_band_gap_points']:.1f} pts |",
+        f"| Calibration error (ECE) | - | {calibration['expected_calibration_error']:.4f} |",
+        f"| Calibration, worst band gap | 5 pts | {calibration['worst_band_gap_points']:.1f} pts "
+        f"(over {calibration['bands_counted']} bands holding "
+        f"{calibration['predictions_in_counted_bands']} predictions) |",
         "",
         "## Governance",
         "",
@@ -297,6 +300,18 @@ def render_summary(report: dict[str, Any]) -> str:
         spread = block["verified_resolution_spread_points"]
         spread_text = f"{spread:.1f} pts" if spread is not None else "not comparable"
         lines.append(f"| {name} | {spread_text} | {'yes' if block['within_five_points'] else 'no'} |")
+
+    thin = calibration["predictions_in_thin_bands"]
+    if thin:
+        lines += [
+            "",
+            f"Calibration bands holding fewer than {calibration['minimum_band_size_counted']} "
+            f"predictions are excluded from the worst-gap figure; {thin} prediction(s) fall in "
+            f"those bands. Across every band including them the worst gap is "
+            f"{calibration['worst_band_gap_all_bands']:.1f} points, which is one or two tickets "
+            "rather than a calibration problem. The expected calibration error above is over all "
+            "bands and is the figure to read.",
+        ]
 
     lines += [
         "",

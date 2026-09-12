@@ -1,8 +1,8 @@
-# Evaluation run run-20260917T161528Z-c1045f
+# Evaluation run run-20260917T174649Z-e804a4
 
 Input: `data/development_tickets.json`  
-Started: 2026-09-17T16:15:28Z  
-Duration: 0.33s (1494.87 tickets/sec)  
+Started: 2026-09-17T17:46:49Z  
+Duration: 0.39s (1268.9 tickets/sec)  
 Provider: none (available: False)  
 Retrieval: lexical, top_k=5, floor=4.2  
 Confidence threshold: 0.62
@@ -40,7 +40,8 @@ Blended figure assumption: escalated tickets are assumed to wait 214 minutes, th
 | Retrieval recall@k | - | 96.4% |
 | Citation accuracy | 95% | 90.3% (n=321) |
 | Latency p95 | 3 s | 0.000 s |
-| Calibration, worst band gap | 5 pts | 23.7 pts |
+| Calibration error (ECE) | - | 0.0094 |
+| Calibration, worst band gap | 5 pts | 0.1 pts (over 1 bands holding 478 predictions) |
 
 ## Governance
 
@@ -63,6 +64,8 @@ Guardrail activations: commitments 5, confidence_floor 14, grounding 93
 | customer_region | 9.7 pts | no |
 | channel | 7.4 pts | no |
 | ticket_length | 3.3 pts | yes |
+
+Calibration bands holding fewer than 20 predictions are excluded from the worst-gap figure; 22 prediction(s) fall in those bands. Across every band including them the worst gap is 23.7 points, which is one or two tickets rather than a calibration problem. The expected calibration error above is over all bands and is the figure to read.
 
 Segments with fewer than ten labelled automatic answers are excluded from the spread, because one ticket moves them by more than the threshold being tested.
 

@@ -1,10 +1,10 @@
 {
   "run": {
-    "run_id": "run-20260917T161528Z-c1045f",
-    "started_at": "2026-09-17T16:15:28Z",
-    "finished_at": "2026-09-17T16:15:29Z",
-    "duration_seconds": 0.33,
-    "tickets_per_second": 1494.87,
+    "run_id": "run-20260917T174649Z-e804a4",
+    "started_at": "2026-09-17T17:46:49Z",
+    "finished_at": "2026-09-17T17:46:49Z",
+    "duration_seconds": 0.39,
+    "tickets_per_second": 1268.9,
     "input_path": "data/development_tickets.json",
     "output_dir": "evaluation/results/dev_run",
     "system_version": "2.1.0",
@@ -54,7 +54,7 @@
     "first_contact_resolution_verified_basis": 321,
     "escalation_rate": 0.186,
     "automated_reply_seconds_mean": 0.0003,
-    "automated_reply_seconds_median": 0.0002,
+    "automated_reply_seconds_median": 0.0003,
     "blended_reply_minutes_mean": 39.8,
     "blended_reply_minutes_median": 0.0,
     "blended_reply_assumption": "escalated tickets are assumed to wait 214 minutes, the median human resolution time in the development set; the system does not control that queue",
@@ -244,13 +244,13 @@
     "latency": {
       "mean_seconds": 0.0003,
       "median_seconds": 0.0003,
-      "p95_seconds": 0.0003,
-      "p99_seconds": 0.0004,
-      "max_seconds": 0.0006,
+      "p95_seconds": 0.0004,
+      "p99_seconds": 0.0006,
+      "max_seconds": 0.0061,
       "p95_by_channel": {
         "chat": 0.0004,
         "docs_comment": 0.0003,
-        "email": 0.0003,
+        "email": 0.0004,
         "forum": 0.0003
       }
     },
@@ -286,8 +286,13 @@
         }
       ],
       "expected_calibration_error": 0.0094,
-      "worst_band_gap_points": 23.69,
-      "within_five_points": false
+      "worst_band_gap_points": 0.1,
+      "worst_band_gap_all_bands": 23.69,
+      "within_five_points": true,
+      "minimum_band_size_counted": 20,
+      "bands_counted": 1,
+      "predictions_in_counted_bands": 478,
+      "predictions_in_thin_bands": 22
     }
   },
   "governance": {

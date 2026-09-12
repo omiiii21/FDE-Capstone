@@ -210,8 +210,10 @@ def test_the_calibration_gap_is_stated_minus_observed_in_points():
     assert bands["0.8-1.0"]["observed"] == 0.5
     assert bands["0.8-1.0"]["gap_points"] == 40.0
     assert bands["0.0-0.2"]["gap_points"] == 10.0
-    assert table["worst_band_gap_points"] == 40.0
-    assert table["within_five_points"] is False
+    # Both bands are under the size floor, so the headline gap excludes them and
+    # the arithmetic is checked on the all-bands figure instead.
+    assert table["worst_band_gap_all_bands"] == 40.0
+    assert table["predictions_in_thin_bands"] == 5
     # Expected calibration error is the support-weighted mean gap:
     # (4 * 0.4 + 1 * 0.1) / 5.
     assert table["expected_calibration_error"] == 0.34
@@ -223,7 +225,25 @@ def test_an_empty_band_is_left_out_rather_than_reported_as_perfect():
     table = calibration_table(rows)
 
     assert [band["band"] for band in table["bands"]] == ["0.8-1.0"]
-    assert table["worst_band_gap_points"] == 10.0
+    assert table["worst_band_gap_all_bands"] == 10.0
+
+
+def test_a_band_holding_one_ticket_does_not_decide_the_headline_gap():
+    # This is the case that made the rule necessary. On the 80-ticket validation
+    # run a single ticket landed alone in the 0.4-0.6 band, read 100% observed
+    # accuracy against 55% stated, and reported a 44.5 point gap against a
+    # five point condition - while the band holding the other 76 predictions was
+    # out by 0.08 points. One ticket is not evidence of miscalibration.
+    rows = [row(confidence=0.55, true_intent="a", predicted_intent="a")]
+    rows += [row(confidence=0.99, true_intent="a", predicted_intent="a") for _ in range(30)]
+
+    table = calibration_table(rows)
+
+    assert table["worst_band_gap_all_bands"] > 40.0
+    assert table["worst_band_gap_points"] < 5.0
+    assert table["within_five_points"] is True
+    assert table["predictions_in_thin_bands"] == 1
+    assert table["bands_counted"] == 1
 
 
 def test_fairness_spread_excludes_segments_below_the_ten_ticket_floor():

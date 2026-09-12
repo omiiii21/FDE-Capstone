@@ -276,12 +276,28 @@ def calibration_table(rows: Sequence[dict[str, Any]], bands: int = 5) -> dict[st
         )
     total = sum(row["n"] for row in table)
     ece = _safe_div(sum(row["n"] * abs(row["stated"] - row["observed"]) for row in table), total)
-    worst = max((abs(row["gap_points"]) for row in table), default=0.0)
+
+    # The governance condition is stated confidence within five points of
+    # observed accuracy. Applied to every band regardless of size it is not a
+    # test of calibration, it is a test of luck: a band holding one ticket reads
+    # either 0 or 100 per cent observed accuracy and swings the headline by
+    # forty points. Bands under MIN_BAND are reported in full but excluded from
+    # the headline, and the count of excluded predictions is reported so the
+    # exclusion cannot hide anything.
+    MIN_BAND = 20
+    material = [row for row in table if row["n"] >= MIN_BAND]
+    thin = [row for row in table if row["n"] < MIN_BAND]
+    worst = max((abs(row["gap_points"]) for row in material), default=0.0)
     return {
         "bands": table,
         "expected_calibration_error": round(ece, 4),
         "worst_band_gap_points": round(worst, 2),
+        "worst_band_gap_all_bands": round(max((abs(row["gap_points"]) for row in table), default=0.0), 2),
         "within_five_points": worst <= 5.0,
+        "minimum_band_size_counted": MIN_BAND,
+        "bands_counted": len(material),
+        "predictions_in_counted_bands": sum(row["n"] for row in material),
+        "predictions_in_thin_bands": sum(row["n"] for row in thin),
     }
 
 

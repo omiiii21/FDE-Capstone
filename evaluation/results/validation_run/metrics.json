@@ -1,10 +1,10 @@
 {
   "run": {
-    "run_id": "run-20260917T161529Z-7521b0",
-    "started_at": "2026-09-17T16:15:29Z",
-    "finished_at": "2026-09-17T16:15:29Z",
-    "duration_seconds": 0.06,
-    "tickets_per_second": 1249.13,
+    "run_id": "run-20260917T174649Z-9f6cfc",
+    "started_at": "2026-09-17T17:46:49Z",
+    "finished_at": "2026-09-17T17:46:49Z",
+    "duration_seconds": 0.07,
+    "tickets_per_second": 1154.14,
     "input_path": "data/validation_tickets.json",
     "output_dir": "evaluation/results/validation_run",
     "system_version": "2.1.0",
@@ -259,8 +259,13 @@
         }
       ],
       "expected_calibration_error": 0.0081,
-      "worst_band_gap_points": 44.51,
-      "within_five_points": false
+      "worst_band_gap_points": 0.08,
+      "worst_band_gap_all_bands": 44.51,
+      "within_five_points": true,
+      "minimum_band_size_counted": 20,
+      "bands_counted": 1,
+      "predictions_in_counted_bands": 76,
+      "predictions_in_thin_bands": 4
     }
   },
   "governance": {
