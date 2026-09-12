@@ -1,10 +1,10 @@
 {
   "run": {
-    "run_id": "run-20260917T181626Z-43e79d",
-    "started_at": "2026-09-17T18:16:26Z",
-    "finished_at": "2026-09-17T18:16:26Z",
-    "duration_seconds": 0.03,
-    "tickets_per_second": 319.34,
+    "run_id": "run-20260917T181948Z-dea305",
+    "started_at": "2026-09-17T18:19:48Z",
+    "finished_at": "2026-09-17T18:19:48Z",
+    "duration_seconds": 0.02,
+    "tickets_per_second": 441.04,
     "input_path": "data/guardrail_probe_tickets.json",
     "output_dir": "evaluation/results/guardrail_demo",
     "system_version": "2.1.0",
@@ -75,16 +75,16 @@
       "mean_passages_returned": 3.778
     },
     "latency": {
-      "mean_seconds": 0.0009,
+      "mean_seconds": 0.0008,
       "median_seconds": 0.0005,
-      "p95_seconds": 0.0045,
-      "p99_seconds": 0.0045,
-      "max_seconds": 0.0045,
+      "p95_seconds": 0.0042,
+      "p99_seconds": 0.0042,
+      "max_seconds": 0.0042,
       "p95_by_channel": {
-        "email": 0.0045,
+        "email": 0.0042,
         "chat": 0.0005,
-        "docs_comment": 0.0006,
-        "forum": 0.0004
+        "docs_comment": 0.0005,
+        "forum": 0.0005
       }
     },
     "calibration": {

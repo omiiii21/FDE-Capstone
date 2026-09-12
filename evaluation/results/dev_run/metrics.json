@@ -1,10 +1,10 @@
 {
   "run": {
-    "run_id": "run-20260917T181157Z-d2563d",
-    "started_at": "2026-09-17T18:11:57Z",
-    "finished_at": "2026-09-17T18:11:58Z",
-    "duration_seconds": 0.43,
-    "tickets_per_second": 1169.04,
+    "run_id": "run-20260917T181947Z-71389c",
+    "started_at": "2026-09-17T18:19:47Z",
+    "finished_at": "2026-09-17T18:19:48Z",
+    "duration_seconds": 0.52,
+    "tickets_per_second": 965.19,
     "input_path": "data/development_tickets.json",
     "output_dir": "evaluation/results/dev_run",
     "system_version": "2.1.0",
@@ -246,7 +246,7 @@
       "median_seconds": 0.0003,
       "p95_seconds": 0.0004,
       "p99_seconds": 0.0004,
-      "max_seconds": 0.0006,
+      "max_seconds": 0.0009,
       "p95_by_channel": {
         "chat": 0.0004,
         "docs_comment": 0.0004,

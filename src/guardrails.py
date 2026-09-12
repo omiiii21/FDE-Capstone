@@ -137,8 +137,10 @@ _SENTENCE_SPLIT = re.compile(r"(?<=[.!?])\s+")
 # Sentences that are conversation rather than claims. Without this the opening
 # and closing lines of every reply are flagged as ungrounded.
 _BOILERPLATE = re.compile(
-    r"^(?:thanks|thank you|hello|hi\b|i do not have documentation|if that does not resolve|"
-    r"reply to this message|a support engineer|apologies|sorry)",
+    r"^(?:thanks|thank you|hello|hi\b|i do not have documentation|"
+    r"if (?:that|it) does not (?:resolve|answer)|"
+    r"reply to this message|a support engineer|apologies|sorry|"
+    r"this reply was drafted automatically)",
     re.I,
 )
 

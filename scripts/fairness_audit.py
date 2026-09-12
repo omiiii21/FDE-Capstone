@@ -8,12 +8,14 @@ the segments differ in more than the thing being tested. Non-fluent tickets are
 also shorter and skew towards different intents, so a gap between the two
 averages could be about length or topic rather than about phrasing.
 
-The development set happens to make a better test possible. Most questions
+The development set happens to make a better test possible. Many questions
 appear twice, once in fluent English and once in non-fluent English, with the
-same intent and the same expected documents: 44 of the 54 (intent, expected
-docs) groups contain both. That gives near-matched pairs. Running both halves of
-a pair and comparing retrieval on each isolates phrasing from everything else,
-which is the comparison the governance framework is actually asking for.
+same intent and the same expected documents. 29 such groups survive the filter
+this script applies, which is stricter than a first count suggests: the group
+also has to carry an expected document, or there is no retrieval outcome to
+compare. That gives near-matched pairs, and running both halves of a pair
+isolates phrasing from length and topic, which is the comparison the governance
+framework is actually asking for.
 
 Both analyses are reported. The segment averages are what the framework's table
 wants; the matched pairs are what I would defend.

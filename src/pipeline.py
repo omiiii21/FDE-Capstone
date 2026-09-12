@@ -40,8 +40,8 @@ log = logging.getLogger(__name__)
 STAGE_REQUIREMENTS = {
     "classification": ["FR-02", "FR-03"],
     "retrieval": ["FR-04", "FR-05"],
-    "routing": ["FR-05", "FR-09"],
-    "generation": ["FR-06", "FR-07", "FR-08"],
+    "routing": ["FR-05", "FR-09", "FR-13", "FR-16"],
+    "generation": ["FR-06", "FR-07", "FR-08", "FR-14", "FR-15"],
     "validation": ["FR-10", "NFR-04"],
 }
 

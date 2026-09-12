@@ -18,7 +18,7 @@ it is not, the system does not stop and it does not send something unchecked -
 it sends the extractive draft, which is duller and safe. That is what A11 means
 by degrading rather than crashing.
 
-Serves FR-06, FR-07, FR-08. Acceptance criteria A6, A11.
+Serves FR-06, FR-07, FR-08, FR-14, FR-15. Acceptance criteria A6, A11.
 """
 
 from __future__ import annotations
@@ -56,6 +56,34 @@ NO_ANSWER = (
     "I do not have documentation covering this, so I am passing it to a support "
     "engineer rather than guessing."
 )
+
+# FR-15. Ravi Menon, the customer, asked for this directly and gave the reason:
+# "Not because I object, but because I calibrate how much I trust it. If I know a
+# person wrote it I will act without checking. If I know a machine drafted it I
+# will verify first. Hiding that would be the thing that annoys me."
+#
+# It sits in the reply rather than in an email footer because a footer is the
+# part nobody reads, and the whole point is that it changes what the customer
+# does next.
+DISCLOSURE = (
+    "This reply was drafted automatically from CloudServe's support documentation, and the "
+    "articles it came from are listed above. If it does not answer your question, reply to this "
+    "message and a support engineer will pick it up."
+)
+
+
+def finalise(body: str) -> str:
+    """Add the greeting and the disclosure to a drafted answer.
+
+    Both generators route through here so the disclosure cannot be attached to
+    one path and forgotten on the other. PR-01 tells the model not to write a
+    greeting or a sign-off for the same reason: the delivery layer owns them, so
+    there is one place to change them and one place to check them.
+    """
+    body = body.strip()
+    if not body:
+        return body
+    return f"Thanks for getting in touch.\n\n{body}\n\n{DISCLOSURE}"
 
 
 @dataclass
@@ -218,12 +246,7 @@ class ExtractiveGenerator:
         if not paragraphs:
             return Draft(NO_ANSWER, [], False, "retrieved passages contained no actionable steps", self.name)
 
-        opening = "Thanks for getting in touch."
-        closing = (
-            "If that does not resolve it, reply to this message and a support engineer " "will pick it up."
-        )
-        body = "\n\n".join([opening] + paragraphs + [closing])
-        return Draft(body, citations, True, "", self.name)
+        return Draft(finalise("\n\n".join(paragraphs)), citations, True, "", self.name)
 
 
 class ModelGenerator:
@@ -303,7 +326,7 @@ class ModelGenerator:
             for m in markers
             if 1 <= m <= len(passages)
         ]
-        return Draft(answer, citations, True, str(parsed.get("uncertain_about", "")), "model")
+        return Draft(finalise(answer), citations, True, str(parsed.get("uncertain_about", "")), "model")
 
     def escalation_note(
         self, ticket: Ticket, passages: list[Passage], *, intent: str, confidence: float, routing_reason: str

@@ -31,6 +31,8 @@ from .config import settings
 
 log = logging.getLogger(__name__)
 
+# Serves FR-14: the handover note is produced whether or not a provider answers.
+
 OPENROUTER_URL = "https://openrouter.ai/api/v1/chat/completions"
 
 

@@ -13,7 +13,7 @@ Marcus has a compliance review in the autumn and said he needs to be able to say
 why it did what it did; "confidence 0.58 below threshold 0.62" is a reason,
 "routing_rule_4" is not.
 
-Serves FR-05, FR-09. Acceptance criterion A5.
+Serves FR-05, FR-09, FR-13, FR-16. Acceptance criterion A5.
 """
 
 from __future__ import annotations

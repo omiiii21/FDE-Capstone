@@ -1,8 +1,8 @@
-# Evaluation run run-20260917T181158Z-e18289
+# Evaluation run run-20260917T181948Z-7ba777
 
 Input: `data/validation_tickets.json`  
-Started: 2026-09-17T18:11:58Z  
-Duration: 0.08s (1024.11 tickets/sec)  
+Started: 2026-09-17T18:19:48Z  
+Duration: 0.08s (981.37 tickets/sec)  
 Provider: none (available: False)  
 Retrieval: lexical, top_k=5, floor=4.2  
 Confidence threshold: 0.62
