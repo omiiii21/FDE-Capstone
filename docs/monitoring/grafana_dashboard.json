@@ -218,7 +218,7 @@
     {
       "id": 6,
       "title": "Predictions below the routing threshold",
-      "description": "Share of predictions landing under 0.6, the nearest histogram bucket edge to the 0.62 confidence threshold. These tickets escalate on rule R-04. On the development run this was 22 of 500, about 4 percent.",
+      "description": "Share of predictions landing under 0.6, the nearest histogram bucket edge to the 0.62 confidence threshold. On the development run this was 13 of 500, 2.6 percent; 14 fell below the threshold itself.",
       "type": "stat",
       "datasource": { "type": "prometheus", "uid": "${datasource}" },
       "gridPos": { "h": 5, "w": 8, "x": 16, "y": 16 },
