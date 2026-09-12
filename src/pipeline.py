@@ -260,11 +260,36 @@ class Pipeline:
             threshold=self.threshold,
         )
         if routing.action != AUTO:
-            # The handover note is internal and deliberately has no citations,
-            # so grounding and the confidence floor do not apply to it. They are
-            # still evaluated and recorded; they simply do not block.
+            # Nothing blocks on this path, and the reasoning is worth writing
+            # down because I had it wrong first time.
+            #
+            # A guardrail exists to stop a response reaching a customer. An
+            # escalation does not reach a customer; it reaches a CloudServe
+            # engineer who is handling the ticket and is entitled to see the
+            # customer's own name, account and key. Blocking the handover note
+            # for containing those was the guardrail firing at the wrong
+            # audience, and it is why the first dev run reported ninety-three
+            # activations while stopping nothing.
+            #
+            # Two of the checks cannot pass here by construction: the note
+            # carries no citations, and it is not a confidence-gated answer.
+            # A third, commitments, is reading the customer's own words back,
+            # because the note quotes their opening line. All three are recorded
+            # as not-applicable rather than as failures, and pii is recorded
+            # honestly but does not block.
+            reasons = {
+                "grounding": "not applicable: internal handover note, carries no citations",
+                "confidence_floor": "not applicable: the note is not a confidence-gated answer",
+                "commitments": "not applicable: the note quotes the customer's own wording",
+            }
             guardrails = [
-                GuardrailResult(g.name, g.passed, g.detail, blocking=g.name == "pii") for g in guardrails
+                GuardrailResult(
+                    g.name,
+                    True if g.name in reasons else g.passed,
+                    reasons.get(g.name, g.detail),
+                    blocking=False,
+                )
+                for g in guardrails
             ]
 
         blocked = [g for g in guardrails if g.blocked]

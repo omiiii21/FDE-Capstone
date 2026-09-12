@@ -1,0 +1,289 @@
+{
+  "run": {
+    "run_id": "run-20260917T181402Z-224c8a",
+    "started_at": "2026-09-17T18:14:02Z",
+    "finished_at": "2026-09-17T18:14:02Z",
+    "duration_seconds": 0.03,
+    "tickets_per_second": 321.58,
+    "input_path": "data/guardrail_probe_tickets.json",
+    "output_dir": "evaluation/results/guardrail_demo",
+    "system_version": "2.1.0",
+    "python": "3.13.14",
+    "platform": "macOS-26.5.2-arm64-arm-64bit-Mach-O",
+    "model_provider": "unsafe_demo",
+    "provider_available": true,
+    "provider_model": "fault-injection, not a real provider",
+    "retrieval": {
+      "backend": "lexical",
+      "documents": 29,
+      "chunks": 69,
+      "top_k": 5,
+      "floor": 4.2
+    },
+    "confidence_threshold": 0.62,
+    "high_cost_threshold": 0.85,
+    "harness_level_failures": 0,
+    "unattended": true
+  },
+  "volume": {
+    "tickets_processed": 9,
+    "answered_automatically": 0,
+    "escalated": 8,
+    "blocked_by_guardrails": 1,
+    "processing_errors": 0,
+    "by_channel": {
+      "email": 4,
+      "chat": 2,
+      "docs_comment": 1,
+      "forum": 2
+    },
+    "by_action_and_channel": {
+      "email/escalate": 4,
+      "chat/escalate": 2,
+      "docs_comment/escalate": 1,
+      "forum/escalate": 1,
+      "forum/blocked": 1
+    }
+  },
+  "business": {
+    "first_contact_resolution": 0.0,
+    "first_contact_resolution_verified": 0.0,
+    "first_contact_resolution_verified_basis": 0,
+    "escalation_rate": 1.0,
+    "automated_reply_seconds_mean": 0.0,
+    "automated_reply_seconds_median": 0.0,
+    "blended_reply_minutes_mean": 214.0,
+    "blended_reply_minutes_median": 214.0,
+    "blended_reply_assumption": "escalated tickets are assumed to wait 214 minutes, the median human resolution time in the development set; the system does not control that queue",
+    "baseline_first_contact_resolution": 0.438,
+    "baseline_escalation_rate": 0.562,
+    "baseline_median_reply_minutes": 214.0,
+    "routing_agreement_with_labels": 0.0
+  },
+  "technical": {
+    "classification": {
+      "note": "input file carried no intent labels, so classification was not scored"
+    },
+    "retrieval": {
+      "recall_at_k": 0.0,
+      "precision_at_1": 0.0,
+      "citation_accuracy": 0.0,
+      "citation_accuracy_basis": 0,
+      "responses_with_citations": 0,
+      "citations_all_resolve": true,
+      "returned_nothing_when_unanswerable": 0.0,
+      "mean_passages_returned": 3.778
+    },
+    "latency": {
+      "mean_seconds": 0.0009,
+      "median_seconds": 0.0004,
+      "p95_seconds": 0.0042,
+      "p99_seconds": 0.0042,
+      "max_seconds": 0.0042,
+      "p95_by_channel": {
+        "email": 0.0042,
+        "chat": 0.0006,
+        "docs_comment": 0.0004,
+        "forum": 0.0004
+      }
+    },
+    "calibration": {
+      "bands": [],
+      "expected_calibration_error": 0.0,
+      "worst_band_gap_points": 0.0,
+      "worst_band_gap_all_bands": 0.0,
+      "within_five_points": true,
+      "minimum_band_size_counted": 20,
+      "bands_counted": 0,
+      "predictions_in_counted_bands": 0,
+      "predictions_in_thin_bands": 0
+    }
+  },
+  "governance": {
+    "decisions_logged": 45,
+    "tickets_with_decisions": 9,
+    "decision_log_reconciles": true,
+    "guardrail_blocks": {
+      "grounding": 1,
+      "commitments": 1
+    },
+    "guardrail_checks_failed": {
+      "pii": 1,
+      "injection": 2,
+      "grounding": 1,
+      "commitments": 1
+    },
+    "responses_blocked_before_sending": 1,
+    "private_data_detections": 1,
+    "responses_released": 0,
+    "must_not_auto_respond_tickets": 0,
+    "must_not_auto_respond_breaches": 0,
+    "must_not_auto_respond_breach_ids": [],
+    "injection_attempts_detected": 2
+  },
+  "fairness": {
+    "customer_tier": {
+      "segments": {
+        "business": {
+          "n": 4,
+          "automation_rate": 0.0,
+          "verified_resolution_rate": 0.0,
+          "verified_basis": 0,
+          "retrieval_recall": 0.0,
+          "classification_accuracy": 0.0
+        },
+        "enterprise": {
+          "n": 1,
+          "automation_rate": 0.0,
+          "verified_resolution_rate": 0.0,
+          "verified_basis": 0,
+          "retrieval_recall": 0.0,
+          "classification_accuracy": 0.0
+        },
+        "standard": {
+          "n": 4,
+          "automation_rate": 0.0,
+          "verified_resolution_rate": 0.0,
+          "verified_basis": 0,
+          "retrieval_recall": 0.0,
+          "classification_accuracy": 0.0
+        }
+      },
+      "verified_resolution_spread_points": null,
+      "segments_compared": [],
+      "within_five_points": false
+    },
+    "language_fluency": {
+      "segments": {
+        "fluent": {
+          "n": 8,
+          "automation_rate": 0.0,
+          "verified_resolution_rate": 0.0,
+          "verified_basis": 0,
+          "retrieval_recall": 0.0,
+          "classification_accuracy": 0.0
+        },
+        "non_fluent": {
+          "n": 1,
+          "automation_rate": 0.0,
+          "verified_resolution_rate": 0.0,
+          "verified_basis": 0,
+          "retrieval_recall": 0.0,
+          "classification_accuracy": 0.0
+        }
+      },
+      "verified_resolution_spread_points": null,
+      "segments_compared": [],
+      "within_five_points": false
+    },
+    "customer_region": {
+      "segments": {
+        "asia_pacific": {
+          "n": 2,
+          "automation_rate": 0.0,
+          "verified_resolution_rate": 0.0,
+          "verified_basis": 0,
+          "retrieval_recall": 0.0,
+          "classification_accuracy": 0.0
+        },
+        "europe": {
+          "n": 4,
+          "automation_rate": 0.0,
+          "verified_resolution_rate": 0.0,
+          "verified_basis": 0,
+          "retrieval_recall": 0.0,
+          "classification_accuracy": 0.0
+        },
+        "latin_america": {
+          "n": 1,
+          "automation_rate": 0.0,
+          "verified_resolution_rate": 0.0,
+          "verified_basis": 0,
+          "retrieval_recall": 0.0,
+          "classification_accuracy": 0.0
+        },
+        "north_america": {
+          "n": 1,
+          "automation_rate": 0.0,
+          "verified_resolution_rate": 0.0,
+          "verified_basis": 0,
+          "retrieval_recall": 0.0,
+          "classification_accuracy": 0.0
+        },
+        "unknown": {
+          "n": 1,
+          "automation_rate": 0.0,
+          "verified_resolution_rate": 0.0,
+          "verified_basis": 0,
+          "retrieval_recall": 0.0,
+          "classification_accuracy": 0.0
+        }
+      },
+      "verified_resolution_spread_points": null,
+      "segments_compared": [],
+      "within_five_points": false
+    },
+    "channel": {
+      "segments": {
+        "chat": {
+          "n": 2,
+          "automation_rate": 0.0,
+          "verified_resolution_rate": 0.0,
+          "verified_basis": 0,
+          "retrieval_recall": 0.0,
+          "classification_accuracy": 0.0
+        },
+        "docs_comment": {
+          "n": 1,
+          "automation_rate": 0.0,
+          "verified_resolution_rate": 0.0,
+          "verified_basis": 0,
+          "retrieval_recall": 0.0,
+          "classification_accuracy": 0.0
+        },
+        "email": {
+          "n": 4,
+          "automation_rate": 0.0,
+          "verified_resolution_rate": 0.0,
+          "verified_basis": 0,
+          "retrieval_recall": 0.0,
+          "classification_accuracy": 0.0
+        },
+        "forum": {
+          "n": 2,
+          "automation_rate": 0.0,
+          "verified_resolution_rate": 0.0,
+          "verified_basis": 0,
+          "retrieval_recall": 0.0,
+          "classification_accuracy": 0.0
+        }
+      },
+      "verified_resolution_spread_points": null,
+      "segments_compared": [],
+      "within_five_points": false
+    },
+    "ticket_length": {
+      "segments": {
+        "long": {
+          "n": 7,
+          "automation_rate": 0.0,
+          "verified_resolution_rate": 0.0,
+          "verified_basis": 0,
+          "retrieval_recall": 0.0,
+          "classification_accuracy": 0.0
+        },
+        "short": {
+          "n": 2,
+          "automation_rate": 0.0,
+          "verified_resolution_rate": 0.0,
+          "verified_basis": 0,
+          "retrieval_recall": 0.0,
+          "classification_accuracy": 0.0
+        }
+      },
+      "verified_resolution_spread_points": null,
+      "segments_compared": [],
+      "within_five_points": false
+    }
+  }
+}

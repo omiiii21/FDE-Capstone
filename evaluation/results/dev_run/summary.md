@@ -1,8 +1,8 @@
-# Evaluation run run-20260917T180427Z-a7b95b
+# Evaluation run run-20260917T181157Z-d2563d
 
 Input: `data/development_tickets.json`  
-Started: 2026-09-17T18:04:27Z  
-Duration: 0.4s (1249.84 tickets/sec)  
+Started: 2026-09-17T18:11:57Z  
+Duration: 0.43s (1169.04 tickets/sec)  
 Provider: none (available: False)  
 Retrieval: lexical, top_k=5, floor=4.2  
 Confidence threshold: 0.62
@@ -53,7 +53,7 @@ Blended figure assumption: escalated tickets are assumed to wait 214 minutes, th
 | Never-auto-respond breaches | zero | 0 of 87 |
 | Injection attempts detected | - | 0 |
 
-Guardrail activations: commitments 5, confidence_floor 14, grounding 93
+Responses blocked before sending: none. All 407 released responses passed every check, because routing had already diverted the rest. On this data the guardrails are the second line rather than the one doing the work, and the evidence that they block is the test suite, not this run.
 
 ## Fairness
 

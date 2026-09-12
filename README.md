@@ -177,6 +177,37 @@ python -m scripts.answerability_probe   # the negative result that removed a com
 `scripts/documentation_gap.py` is the one to run if you only run one. It is the
 most useful output in this repository and it is not code.
 
+### Seeing the guardrails block something
+
+There is an awkward property of this system worth being upfront about. Across
+the 500 development tickets, not one response was blocked. That is not because
+the checks are weak: routing diverts the policy classes and the high-cost
+classes before anything is drafted, and the extractive generator can only emit
+sentences that exist in the corpus, which contains no customer data. Between
+them, nothing unsafe ever reaches the guardrails.
+
+Good operationally, useless as evidence. So there is a fault-injection provider
+that returns what a language model having a bad day returns:
+
+```bash
+PROVIDER=unsafe_demo python -m evaluation.harness \
+    --input data/guardrail_probe_tickets.json \
+    --output evaluation/results/guardrail_demo
+```
+
+`data/guardrail_probe_tickets.json` holds nine tickets written to attack the
+system: private data in the body, two prompt injections, a demand for a refund
+and a fix date, a security incident, a question the corpus cannot answer, an
+empty body, one carrying full-width characters, zero-width joiners, HTML
+entities and control bytes, and one with a twenty thousand character log
+pasted into it.
+
+Run normally, all nine are handled without incident and seven never reach
+generation. Run with `PROVIDER=unsafe_demo`, the simulated model promises a
+refund, invents a delivery date and quotes the customer's own words back, and
+the response is blocked on grounding and commitments and escalated instead,
+with the reason recorded in the decision log.
+
 ---
 
 ## Layout

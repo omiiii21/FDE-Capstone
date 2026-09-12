@@ -1,10 +1,10 @@
 {
   "run": {
-    "run_id": "run-20260917T180428Z-a463fe",
-    "started_at": "2026-09-17T18:04:28Z",
-    "finished_at": "2026-09-17T18:04:28Z",
+    "run_id": "run-20260917T181158Z-e18289",
+    "started_at": "2026-09-17T18:11:58Z",
+    "finished_at": "2026-09-17T18:11:58Z",
     "duration_seconds": 0.08,
-    "tickets_per_second": 1063.7,
+    "tickets_per_second": 1024.11,
     "input_path": "data/validation_tickets.json",
     "output_dir": "evaluation/results/validation_run",
     "system_version": "2.1.0",
@@ -272,11 +272,9 @@
     "decisions_logged": 400,
     "tickets_with_decisions": 80,
     "decision_log_reconciles": true,
-    "guardrail_activations": {
-      "grounding": 15,
-      "commitments": 2,
-      "confidence_floor": 2
-    },
+    "guardrail_blocks": {},
+    "guardrail_checks_failed": {},
+    "responses_blocked_before_sending": 0,
     "private_data_detections": 0,
     "responses_released": 65,
     "must_not_auto_respond_tickets": 14,

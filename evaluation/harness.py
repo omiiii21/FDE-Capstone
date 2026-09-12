@@ -288,8 +288,16 @@ def render_summary(report: dict[str, Any]) -> str:
         f"{governance['must_not_auto_respond_tickets']} |",
         f"| Injection attempts detected | - | {governance['injection_attempts_detected']} |",
         "",
-        "Guardrail activations: "
-        + (", ".join(f"{k} {v}" for k, v in sorted(governance["guardrail_activations"].items())) or "none"),
+        "Responses blocked before sending: "
+        + (
+            ", ".join(f"{k} {v}" for k, v in sorted(governance["guardrail_blocks"].items()))
+            or (
+                f"none. All {governance['responses_released']} released responses passed every "
+                "check, because routing had already diverted the rest. On this data the guardrails "
+                "are the second line rather than the one doing the work, and the evidence that they "
+                "block is the test suite, not this run."
+            )
+        ),
         "",
         "## Fairness",
         "",

@@ -222,10 +222,16 @@ def latency_metrics(rows: Sequence[dict[str, Any]]) -> dict[str, Any]:
 
 
 def governance_metrics(rows: Sequence[dict[str, Any]], log_summary: dict[str, Any]) -> dict[str, Any]:
-    activations: Counter[str] = Counter()
+    # Two different numbers, and conflating them flatters the system. A block is
+    # a response stopped on its way to a customer. A failed check on an
+    # escalation is a note to a colleague that was never going to pass.
+    blocks: Counter[str] = Counter()
+    failed_checks: Counter[str] = Counter()
     for r in rows:
+        for name in r.get("guardrails_blocked", []):
+            blocks[name] += 1
         for name in r.get("guardrails_failed", []):
-            activations[name] += 1
+            failed_checks[name] += 1
 
     # must_not_auto_respond is a governance condition, not a score. Any ticket
     # in that set that got an automatic answer is a failure regardless of how
@@ -237,13 +243,15 @@ def governance_metrics(rows: Sequence[dict[str, Any]], log_summary: dict[str, An
         "decisions_logged": log_summary.get("total_decisions", 0),
         "tickets_with_decisions": log_summary.get("tickets_with_decisions", 0),
         "decision_log_reconciles": log_summary.get("reconciles", False),
-        "guardrail_activations": dict(activations),
-        "private_data_detections": activations.get("pii", 0),
+        "guardrail_blocks": dict(blocks),
+        "guardrail_checks_failed": dict(failed_checks),
+        "responses_blocked_before_sending": sum(1 for r in rows if r["action"] == "blocked"),
+        "private_data_detections": failed_checks.get("pii", 0),
         "responses_released": sum(1 for r in rows if r["action"] == "auto_respond"),
         "must_not_auto_respond_tickets": len(policy_tickets),
         "must_not_auto_respond_breaches": len(breaches),
         "must_not_auto_respond_breach_ids": [r["ticket_id"] for r in breaches][:20],
-        "injection_attempts_detected": activations.get("injection", 0),
+        "injection_attempts_detected": failed_checks.get("injection", 0),
     }
 
 

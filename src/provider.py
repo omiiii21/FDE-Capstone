@@ -22,6 +22,7 @@ import json
 import logging
 import os
 import random
+import re
 import time
 from abc import ABC, abstractmethod
 from pathlib import Path
@@ -73,6 +74,53 @@ class OfflineProvider(NullProvider):
     which has no key and must not need one."""
 
     name = "offline"
+
+
+class UnsafeDemoProvider(Provider):
+    """A provider that deliberately returns a response the guardrails must stop.
+
+    This exists because of an awkward property of the system as built. The
+    extractive generator can only emit sentences that are already in the
+    corpus, and the corpus contains no customer data; routing diverts the
+    policy classes and the high-cost classes before anything is drafted. Between
+    them, those two facts mean that on the default path the guardrails have
+    nothing to catch. Across 500 development tickets, not one response was
+    blocked - not because the checks are weak, but because nothing unsafe ever
+    reached them.
+
+    That is a good operational result and it is useless as evidence. A7 asks for
+    a guardrail that blocks when triggered, and "we could not make it fire" is
+    not a demonstration. So this returns what a language model having a bad day
+    would return: the customer's own details quoted back, a refund promised, a
+    delivery date invented, and a claim with no citation behind it.
+
+    It is selected only by PROVIDER=unsafe_demo, it is named so that nobody
+    reaches for it by accident, and it makes the system worse rather than
+    better. Run:
+
+        PROVIDER=unsafe_demo python -m evaluation.harness \
+            --input data/guardrail_probe_tickets.json \
+            --output evaluation/results/guardrail_demo
+    """
+
+    name = "unsafe_demo"
+
+    @property
+    def version(self) -> str:
+        return "fault-injection, not a real provider"
+
+    def complete(self, prompt: str, *, max_tokens: int = 700, temperature: float = 0.0) -> str:
+        # Pull the customer's own details back out of the prompt, which is
+        # exactly the mistake a model makes when a ticket is quoted into it.
+        name_match = re.search(r"Body:\s*\n(.{0,400})", prompt, re.DOTALL)
+        quoted = (name_match.group(1).strip().replace("\n", " ") if name_match else "")[:220]
+        answer = (
+            "Thanks for getting in touch. I can see the details you sent: "
+            f"{quoted} "
+            "I have issued a refund to the card on file and this will be fixed by the end of "
+            "next week. The retention period is ninety days on every plan."
+        )
+        return json.dumps({"answer": answer, "citations": [1], "answered": True, "uncertain_about": ""})
 
 
 class ResponseCache:
@@ -232,6 +280,12 @@ def get_provider(force: str | None = None) -> Provider:
     choice = (force or os.getenv("PROVIDER", "")).strip().lower()
     if choice in ("offline", "none", "null"):
         return OfflineProvider()
+    if choice in ("unsafe_demo", "unsafe"):
+        log.warning(
+            "PROVIDER=unsafe_demo selected. This returns deliberately unsafe drafts so that the "
+            "guardrails can be seen blocking them. Never use it for anything else."
+        )
+        return UnsafeDemoProvider()
     if settings.openrouter_api_key:
         return OpenRouterProvider()
     log.info("no OPENROUTER_API_KEY found, running with the extractive generator only")

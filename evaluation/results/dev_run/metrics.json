@@ -1,10 +1,10 @@
 {
   "run": {
-    "run_id": "run-20260917T180427Z-a7b95b",
-    "started_at": "2026-09-17T18:04:27Z",
-    "finished_at": "2026-09-17T18:04:28Z",
-    "duration_seconds": 0.4,
-    "tickets_per_second": 1249.84,
+    "run_id": "run-20260917T181157Z-d2563d",
+    "started_at": "2026-09-17T18:11:57Z",
+    "finished_at": "2026-09-17T18:11:58Z",
+    "duration_seconds": 0.43,
+    "tickets_per_second": 1169.04,
     "input_path": "data/development_tickets.json",
     "output_dir": "evaluation/results/dev_run",
     "system_version": "2.1.0",
@@ -245,8 +245,8 @@
       "mean_seconds": 0.0003,
       "median_seconds": 0.0003,
       "p95_seconds": 0.0004,
-      "p99_seconds": 0.0005,
-      "max_seconds": 0.0007,
+      "p99_seconds": 0.0004,
+      "max_seconds": 0.0006,
       "p95_by_channel": {
         "chat": 0.0004,
         "docs_comment": 0.0004,
@@ -299,11 +299,9 @@
     "decisions_logged": 2500,
     "tickets_with_decisions": 500,
     "decision_log_reconciles": true,
-    "guardrail_activations": {
-      "grounding": 93,
-      "confidence_floor": 14,
-      "commitments": 5
-    },
+    "guardrail_blocks": {},
+    "guardrail_checks_failed": {},
+    "responses_blocked_before_sending": 0,
     "private_data_detections": 0,
     "responses_released": 407,
     "must_not_auto_respond_tickets": 87,

@@ -1,8 +1,8 @@
-# Evaluation run run-20260917T180428Z-a463fe
+# Evaluation run run-20260917T181158Z-e18289
 
 Input: `data/validation_tickets.json`  
-Started: 2026-09-17T18:04:28Z  
-Duration: 0.08s (1063.7 tickets/sec)  
+Started: 2026-09-17T18:11:58Z  
+Duration: 0.08s (1024.11 tickets/sec)  
 Provider: none (available: False)  
 Retrieval: lexical, top_k=5, floor=4.2  
 Confidence threshold: 0.62
@@ -53,7 +53,7 @@ Blended figure assumption: escalated tickets are assumed to wait 214 minutes, th
 | Never-auto-respond breaches | zero | 0 of 14 |
 | Injection attempts detected | - | 0 |
 
-Guardrail activations: commitments 2, confidence_floor 2, grounding 15
+Responses blocked before sending: none. All 65 released responses passed every check, because routing had already diverted the rest. On this data the guardrails are the second line rather than the one doing the work, and the evidence that they block is the test suite, not this run.
 
 ## Fairness
 
