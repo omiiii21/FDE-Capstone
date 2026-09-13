@@ -32,6 +32,8 @@ What these checks cannot do is tell you that a cited passage fails to support th
 
 ## What would change my mind
 
-Sample the 93 grounding activations and have Ines mark each one as a reply she would have sent unchanged. If more than a third are sendable, the paragraph rule is over-blocking, and I would keep the paragraph unit but carry a citation forward across paragraph breaks within the same passage rather than resetting at every blank line.
+There is no sample to draw from on the default path, which is itself the finding. Once the escalation path stopped being checked as though it were an outgoing reply, the dev run blocked nothing at all: routing diverts the policy classes and the high-cost classes before anything is drafted, and the extractive generator can only emit sentences that are already in the corpus. The checks are not weak; nothing unsafe reaches them.
+
+So the experiment has to be run against drafts that could be unsafe. `PROVIDER=unsafe_demo` produces them deliberately, and the way to change my mind is to point the model path at the full development set once a key is available, then have Ines mark every blocked reply as one she would have sent unchanged. If more than a third are sendable, the paragraph rule is over-blocking, and I would keep the paragraph as the unit but carry a citation forward across paragraph breaks within the same retrieved passage rather than resetting at every blank line.
 
 On redaction, the private-data check fired zero times on 500 tickets, so the argument is currently theoretical. What would make me revisit it is a run where it blocks a material share of replies and every single block is the customer's own identifier quoted back to them. That is one narrow pattern with a safe fix, and at that point a redact-and-send exception for that pattern alone would be worth arguing for. Any other match still goes to a human.
