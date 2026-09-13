@@ -29,6 +29,34 @@ from src.config import NEVER_AUTO_RESPOND
 from src.ingest import load_tickets
 
 
+AGENTS = 6  # CloudServe's support team, from the brief
+HOURS_PER_WEEK = 40
+WORKING_WEEKS = 46
+
+
+def _capacity_check(elapsed_hours: float) -> dict:
+    """Guard the headline figure against being read as labour.
+
+    The whole team can work about eleven thousand hours a year. Any figure larger
+    than that is elapsed ticket time, not effort, and saying so here means the
+    number carries its own correction wherever it is quoted.
+    """
+    capacity = AGENTS * HOURS_PER_WEEK * WORKING_WEEKS
+    return {
+        "support_agents": AGENTS,
+        "team_hours_available_per_year": capacity,
+        "elapsed_hours_as_multiple_of_team_capacity": round(elapsed_hours / capacity, 1),
+        "reading": (
+            "This is elapsed ticket time, not agent labour. It exceeds the entire "
+            "team's annual capacity, which is the proof that it cannot be labour. "
+            "The dataset records resolution time from arrival to close and carries "
+            "no handling time, so agent effort cannot be derived from it at all. "
+            "Quote the weekly ticket count instead, and quote this only as the "
+            "elapsed burden the queue carries."
+        ),
+    }
+
+
 def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--input", default="data/development_tickets.json")
@@ -68,9 +96,15 @@ def main() -> int:
                 ),
                 "mean_csat": round(statistics.mean(csats), 2) if csats else None,
                 "repeat_contact_rate": round(repeats / len(group), 4),
-                # Hours of agent time these tickets consume across a year, if the
-                # 500 ticket sample is representative of a 500 per week queue.
-                "annual_agent_hours": round(
+                # ELAPSED ticket-hours across a year, if the 500 ticket sample is
+                # representative of a 500 per week queue. This is NOT agent labour
+                # and an earlier version of this script called it that. The data
+                # records `resolution_time_minutes`, which is wall-clock time from
+                # arrival to resolution and includes every minute a ticket sat in a
+                # queue. Six agents cannot work the number this produces: see
+                # `capacity_check` in the summary, which exists so the figure can
+                # never be quoted as headcount again.
+                "annual_elapsed_ticket_hours": round(
                     (statistics.median(resolution_times) if resolution_times else 0) * len(group) * 52 / 60,
                     0,
                 ),
@@ -82,7 +116,7 @@ def main() -> int:
     # Rank by agent hours recovered, but only count the classes automation could
     # actually take. An article on security incidents is worth writing and will
     # not reduce the escalation rate by one ticket.
-    rows.sort(key=lambda r: (r["would_be_automatable"], r["annual_agent_hours"]), reverse=True)
+    rows.sort(key=lambda r: (r["would_be_automatable"], r["annual_elapsed_ticket_hours"]), reverse=True)
 
     automatable = [r for r in rows if r["would_be_automatable"]]
     recoverable = sum(r["uncovered_tickets"] for r in automatable)
@@ -97,7 +131,11 @@ def main() -> int:
         "automation_ceiling_if_gaps_closed": round(
             1 - (sum(r["uncovered_tickets"] for r in rows) - recoverable) / total, 4
         ),
-        "annual_agent_hours_in_scope": round(sum(r["annual_agent_hours"] for r in automatable), 0),
+        "annual_elapsed_ticket_hours_in_scope": round(
+            sum(r["annual_elapsed_ticket_hours"] for r in automatable), 0
+        ),
+        "weekly_tickets_in_scope": recoverable,
+        "capacity_check": _capacity_check(sum(r["annual_elapsed_ticket_hours"] for r in automatable)),
         "by_intent": rows,
     }
 
@@ -110,7 +148,7 @@ def main() -> int:
     )
     print(
         f"{'intent':26s} {'n':>4s} {'% of class':>11s} {'med mins':>9s} {'csat':>5s} "
-        f"{'repeat':>7s} {'agent hrs/yr':>13s}"
+        f"{'repeat':>7s} {'elapsed h/yr':>13s}"
     )
     for row in rows[:14]:
         marker = " " if row["would_be_automatable"] else "*"
@@ -119,7 +157,7 @@ def main() -> int:
             f"{row['share_of_this_intent']:>10.0%} "
             f"{(row['median_resolution_minutes'] or 0):>9.0f} "
             f"{(row['mean_csat'] or 0):>5.2f} {row['repeat_contact_rate']:>7.0%} "
-            f"{row['annual_agent_hours']:>13,.0f}"
+            f"{row['annual_elapsed_ticket_hours']:>13,.0f}"
         )
     print("\n* policy class: an article helps the agent but will not raise the automation rate.")
     print(
@@ -127,8 +165,18 @@ def main() -> int:
         f"Closing the gaps in automatable classes would raise it to "
         f"{summary['automation_ceiling_if_gaps_closed']:.1%}."
     )
-    hours = summary["annual_agent_hours_in_scope"]
-    print(f"Agent time tied up in those gaps: roughly {hours:,.0f} hours a year.")
+    hours = summary["annual_elapsed_ticket_hours_in_scope"]
+    check = summary["capacity_check"]
+    print(
+        f"Those gaps hold {summary['weekly_tickets_in_scope']} tickets a week, carrying roughly "
+        f"{hours:,.0f} elapsed ticket-hours a year."
+    )
+    print(
+        f"  That is {check['elapsed_hours_as_multiple_of_team_capacity']}x the "
+        f"{check['team_hours_available_per_year']:,} hours {check['support_agents']} agents have in a "
+        "year, which is how you know it is elapsed time and not labour. The data carries no "
+        "handling time, so agent effort cannot be derived from it."
+    )
     print(f"\nwritten to {args.output}")
     return 0
 

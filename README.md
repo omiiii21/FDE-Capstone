@@ -192,7 +192,7 @@ The most useful output in this repository is not code. It is
 flowchart LR
     A["500 tickets<br/>a week"] --> B["357 the docs<br/>can answer<br/><sub>71.4%</sub>"]
     A --> C["143 the docs<br/>cannot answer<br/><sub>28.6%</sub>"]
-    C --> D["Median 530 to 1070 min<br/>CSAT around 2.5<br/>~57,400 agent hours a year"]
+    C --> D["Median 530 to 1070 min<br/>CSAT around 2.5<br/>~57,400 elapsed ticket-hours a year<br/>(not labour: 5.2x team capacity)"]
     D --> E["About 14 articles<br/>would close it"]
     E --> F["Automation ceiling<br/>71.4% → 88.8%"]
 

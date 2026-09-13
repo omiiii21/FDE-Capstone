@@ -6,7 +6,14 @@
   "uncovered_in_automatable_classes": 87,
   "automation_ceiling_today": 0.714,
   "automation_ceiling_if_gaps_closed": 0.888,
-  "annual_agent_hours_in_scope": 57445.0,
+  "annual_elapsed_ticket_hours_in_scope": 57445.0,
+  "weekly_tickets_in_scope": 87,
+  "capacity_check": {
+    "support_agents": 6,
+    "team_hours_available_per_year": 11040,
+    "elapsed_hours_as_multiple_of_team_capacity": 5.2,
+    "reading": "This is elapsed ticket time, not agent labour. It exceeds the entire team's annual capacity, which is the proof that it cannot be labour. The dataset records resolution time from arrival to close and carries no handling time, so agent effort cannot be derived from it at all. Quote the weekly ticket count instead, and quote this only as the elapsed burden the queue carries."
+  },
   "by_intent": [
     {
       "intent": "authentication_failure",
@@ -16,7 +23,7 @@
       "median_resolution_minutes": 1068.5,
       "mean_csat": 2.5,
       "repeat_contact_rate": 0.1667,
-      "annual_agent_hours": 5556.0,
+      "annual_elapsed_ticket_hours": 5556.0,
       "would_be_automatable": true,
       "note": ""
     },
@@ -28,7 +35,7 @@
       "median_resolution_minutes": 892,
       "mean_csat": 3,
       "repeat_contact_rate": 0.2857,
-      "annual_agent_hours": 5411.0,
+      "annual_elapsed_ticket_hours": 5411.0,
       "would_be_automatable": true,
       "note": ""
     },
@@ -40,7 +47,7 @@
       "median_resolution_minutes": 1040.0,
       "mean_csat": 2.83,
       "repeat_contact_rate": 0.3333,
-      "annual_agent_hours": 5408.0,
+      "annual_elapsed_ticket_hours": 5408.0,
       "would_be_automatable": true,
       "note": ""
     },
@@ -52,7 +59,7 @@
       "median_resolution_minutes": 683.0,
       "mean_csat": 2.5,
       "repeat_contact_rate": 0.375,
-      "annual_agent_hours": 4735.0,
+      "annual_elapsed_ticket_hours": 4735.0,
       "would_be_automatable": true,
       "note": ""
     },
@@ -64,7 +71,7 @@
       "median_resolution_minutes": 648.5,
       "mean_csat": 2.12,
       "repeat_contact_rate": 0.625,
-      "annual_agent_hours": 4496.0,
+      "annual_elapsed_ticket_hours": 4496.0,
       "would_be_automatable": true,
       "note": ""
     },
@@ -76,7 +83,7 @@
       "median_resolution_minutes": 958,
       "mean_csat": 3,
       "repeat_contact_rate": 0.4,
-      "annual_agent_hours": 4151.0,
+      "annual_elapsed_ticket_hours": 4151.0,
       "would_be_automatable": true,
       "note": ""
     },
@@ -88,7 +95,7 @@
       "median_resolution_minutes": 669,
       "mean_csat": 2.57,
       "repeat_contact_rate": 0.8571,
-      "annual_agent_hours": 4059.0,
+      "annual_elapsed_ticket_hours": 4059.0,
       "would_be_automatable": true,
       "note": ""
     },
@@ -100,7 +107,7 @@
       "median_resolution_minutes": 581.5,
       "mean_csat": 2.88,
       "repeat_contact_rate": 0.375,
-      "annual_agent_hours": 4032.0,
+      "annual_elapsed_ticket_hours": 4032.0,
       "would_be_automatable": true,
       "note": ""
     },
@@ -112,7 +119,7 @@
       "median_resolution_minutes": 686,
       "mean_csat": 2,
       "repeat_contact_rate": 0.2,
-      "annual_agent_hours": 2973.0,
+      "annual_elapsed_ticket_hours": 2973.0,
       "would_be_automatable": true,
       "note": ""
     },
@@ -124,7 +131,7 @@
       "median_resolution_minutes": 653,
       "mean_csat": 2.6,
       "repeat_contact_rate": 0.2,
-      "annual_agent_hours": 2830.0,
+      "annual_elapsed_ticket_hours": 2830.0,
       "would_be_automatable": true,
       "note": ""
     },
@@ -136,7 +143,7 @@
       "median_resolution_minutes": 813.0,
       "mean_csat": 3.75,
       "repeat_contact_rate": 0.0,
-      "annual_agent_hours": 2818.0,
+      "annual_elapsed_ticket_hours": 2818.0,
       "would_be_automatable": true,
       "note": ""
     },
@@ -148,7 +155,7 @@
       "median_resolution_minutes": 529.5,
       "mean_csat": 2.17,
       "repeat_contact_rate": 0.1667,
-      "annual_agent_hours": 2753.0,
+      "annual_elapsed_ticket_hours": 2753.0,
       "would_be_automatable": true,
       "note": ""
     },
@@ -160,7 +167,7 @@
       "median_resolution_minutes": 896,
       "mean_csat": 4,
       "repeat_contact_rate": 0.3333,
-      "annual_agent_hours": 2330.0,
+      "annual_elapsed_ticket_hours": 2330.0,
       "would_be_automatable": true,
       "note": ""
     },
@@ -172,7 +179,7 @@
       "median_resolution_minutes": 871,
       "mean_csat": 3,
       "repeat_contact_rate": 0.3333,
-      "annual_agent_hours": 2265.0,
+      "annual_elapsed_ticket_hours": 2265.0,
       "would_be_automatable": true,
       "note": ""
     },
@@ -184,7 +191,7 @@
       "median_resolution_minutes": 1089.5,
       "mean_csat": 3.5,
       "repeat_contact_rate": 0.5,
-      "annual_agent_hours": 1888.0,
+      "annual_elapsed_ticket_hours": 1888.0,
       "would_be_automatable": true,
       "note": ""
     },
@@ -196,7 +203,7 @@
       "median_resolution_minutes": 371.0,
       "mean_csat": 3,
       "repeat_contact_rate": 0.5,
-      "annual_agent_hours": 643.0,
+      "annual_elapsed_ticket_hours": 643.0,
       "would_be_automatable": true,
       "note": ""
     },
@@ -208,7 +215,7 @@
       "median_resolution_minutes": 699,
       "mean_csat": 1,
       "repeat_contact_rate": 0.0,
-      "annual_agent_hours": 606.0,
+      "annual_elapsed_ticket_hours": 606.0,
       "would_be_automatable": true,
       "note": ""
     },
@@ -220,7 +227,7 @@
       "median_resolution_minutes": 566,
       "mean_csat": 5,
       "repeat_contact_rate": 0.0,
-      "annual_agent_hours": 491.0,
+      "annual_elapsed_ticket_hours": 491.0,
       "would_be_automatable": true,
       "note": ""
     },
@@ -232,7 +239,7 @@
       "median_resolution_minutes": 737.5,
       "mean_csat": 3.15,
       "repeat_contact_rate": 0.5,
-      "annual_agent_hours": 12783.0,
+      "annual_elapsed_ticket_hours": 12783.0,
       "would_be_automatable": false,
       "note": "policy class; an article helps the agent, not the automation"
     },
@@ -244,7 +251,7 @@
       "median_resolution_minutes": 840.5,
       "mean_csat": 2.5,
       "repeat_contact_rate": 0.0833,
-      "annual_agent_hours": 8741.0,
+      "annual_elapsed_ticket_hours": 8741.0,
       "would_be_automatable": false,
       "note": "policy class; an article helps the agent, not the automation"
     },
@@ -256,7 +263,7 @@
       "median_resolution_minutes": 800,
       "mean_csat": 2.22,
       "repeat_contact_rate": 0.3333,
-      "annual_agent_hours": 6240.0,
+      "annual_elapsed_ticket_hours": 6240.0,
       "would_be_automatable": false,
       "note": "policy class; an article helps the agent, not the automation"
     },
@@ -268,7 +275,7 @@
       "median_resolution_minutes": 437,
       "mean_csat": 2.4,
       "repeat_contact_rate": 0.3333,
-      "annual_agent_hours": 5681.0,
+      "annual_elapsed_ticket_hours": 5681.0,
       "would_be_automatable": false,
       "note": "policy class; an article helps the agent, not the automation"
     }
