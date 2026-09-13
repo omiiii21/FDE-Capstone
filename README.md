@@ -280,7 +280,7 @@ Every figure in the report comes from one of these, and they all write into
 | `python -m scripts.tune_threshold` | The routing threshold, from a cost model |
 | `python -m scripts.fairness_audit` | Segment comparison and the matched-pair test |
 | `python -m scripts.answerability_probe` | The negative result that removed a component |
-| `python -m scripts.compare_retrieval` | BM25 against dense embeddings |
+| `python -m scripts.compare_retrieval` | BM25 against dense embeddings; needs `requirements-dense.txt` and says so and exits cleanly without it |
 | `python -m scripts.tune_retrieval --full` | The `top_k` and relevance-floor sweep |
 | `python -m scripts.train_classifier` | Retrains; the artefact is committed, so this is optional |
 

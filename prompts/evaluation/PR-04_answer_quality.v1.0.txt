@@ -4,8 +4,10 @@
 # model: meta-llama/llama-3.1-8b-instruct via OpenRouter
 # note: this produces the proxy satisfaction score. It is a proxy and it is
 # reported as one - see the caveats in the evaluation section of the report.
-# The rubric below is the one I also applied by hand to the 60-response sample,
-# so that the model's scores can be compared against mine.
+# The rubric below is fixed so that a hand marker and the model can be compared
+# against each other. That comparison has not been run: it needs a live provider
+# and a second marker, and the report carries customer satisfaction as not
+# measured for that reason.
 
 SYSTEM
 You are scoring a support reply against a reference answer written by a senior

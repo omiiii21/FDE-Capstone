@@ -1962,7 +1962,14 @@ function tourEnd() {
   if (verdict) {
     verdict.scrollIntoView({behavior: REDUCED ? "auto" : "smooth", block: "center"});
   }
-  const back = tour.returnTo && tour.returnTo.focus ? tour.returnTo : $("#tourBtn");
+  // On a first visit the walkthrough opens by itself, so the element focused when
+  // it opened is <body>. Body has a focus method, so the old test passed and sent
+  // focus there, which is the same as losing it. Hand focus back only to something
+  // that can actually hold it, and otherwise to the control that replays the tour.
+  const previous = tour.returnTo;
+  const usable = previous && typeof previous.focus === "function"
+    && previous !== document.body && document.contains(previous);
+  const back = usable ? previous : $("#tourBtn");
   if (back && back.focus) { back.focus(); }
 }
 
