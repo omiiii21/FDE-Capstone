@@ -1,9 +1,9 @@
-# Evaluation run run-20260918T015904Z-869070
+# Evaluation run run-20260918T053709Z-beb745
 
 Input: `data/guardrail_probe_tickets.json`  
-Started: 2026-09-18T01:59:04Z  
-Duration: 0.04s (239.41 tickets/sec)  
-Provider: none (available: False)  
+Started: 2026-09-18T05:37:09Z  
+Duration: 0.04s (231.35 tickets/sec)  
+Provider: offline (available: False)  
 Retrieval: lexical, top_k=5, floor=4.2  
 Confidence threshold: 0.62
 
@@ -43,7 +43,7 @@ Blended figure assumption: escalated tickets are assumed to wait 214 minutes, th
 | Retrieval recall@k | 90% | 0.0% |
 | Citation accuracy, every labelled reply | 95% | not scored: the input file carried no labels |
 | Citation accuracy, answerable tickets only | 95% | not scored: the input file carried no labels |
-| Latency p95 | 10 s chat, 60 s other | 0.008 s |
+| Latency p95 | 10 s chat, 60 s other | 0.007 s |
 | Calibration error (ECE) | - | not scored: the input file carried no labels |
 | Calibration, worst band gap | 5 pts | not scored: the input file carried no labels |
 

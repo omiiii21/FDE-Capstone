@@ -1,10 +1,10 @@
 {
   "run": {
-    "run_id": "validation_run",
-    "started_at": "2026-09-18T02:51:06Z",
-    "finished_at": "2026-09-18T02:51:06Z",
+    "run_id": "run-20260918T053435Z-74cb8e",
+    "started_at": "2026-09-18T05:34:35Z",
+    "finished_at": "2026-09-18T05:34:35Z",
     "duration_seconds": 0.12,
-    "tickets_per_second": 690.81,
+    "tickets_per_second": 672.42,
     "input_path": "data/validation_tickets.json",
     "output_dir": "evaluation/results/validation_run",
     "system_version": "2.1.0",
@@ -231,14 +231,14 @@
     "latency": {
       "mean_seconds": 0.0006,
       "median_seconds": 0.0006,
-      "p95_seconds": 0.0008,
-      "p99_seconds": 0.001,
-      "max_seconds": 0.0011,
+      "p95_seconds": 0.0007,
+      "p99_seconds": 0.0009,
+      "max_seconds": 0.0012,
       "p95_by_channel": {
-        "forum": 0.0011,
+        "forum": 0.0012,
         "chat": 0.0008,
         "docs_comment": 0.0007,
-        "email": 0.0009
+        "email": 0.0007
       }
     },
     "calibration": {

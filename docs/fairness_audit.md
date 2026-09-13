@@ -44,16 +44,27 @@ one of them is considerably stronger than the other.
   smaller than the segment.
 - *Verified resolution*, the share of automatic answers whose cited document
   matches an expected document. This is the closest thing available to "the
-  customer got the right answer", and it is a proxy, not an outcome. Every
-  figure in this document uses the restricted population, meaning only the
-  automatic answers on tickets where the labels name an expected document at
-  all. The run report also carries the unrestricted version, which counts the
-  86 replies sent on tickets the corpus does not cover and comes out at 71.3%
-  against the restricted 90.3%. The restricted measure is the right one for a
-  fairness comparison, because the coverage gap is not spread evenly across
-  segments and mixing it in would report a documentation problem as a
-  discrimination problem. It is the wrong one for a headline, and the report
-  leads with the unrestricted figure for that reason.
+  customer got the right answer", and it is a proxy, not an outcome. It has two
+  populations and this document reports both.
+
+  The **restricted** figure is over the automatic answers on tickets where the
+  labels name an expected document. The **corrected** figure is over every
+  automatic answer the segment carries a coverage label for, including the ones
+  the corpus covers with nothing. The per-segment tables below give the
+  restricted figure, because it isolates retrieval and citation from coverage.
+  **The spread and the pass or fail verdict are computed on the corrected
+  figure.**
+
+  An earlier version of this document computed both on the restricted figure,
+  arguing that the coverage gap is not spread evenly across segments and that
+  mixing it in would report a documentation problem as a discrimination problem.
+  I no longer think that holds. An automatic answer on a ticket no document
+  covers is not the corpus falling short, it is `R-02-no-grounding` failing: that
+  rule exists to escalate exactly those tickets, and when one gets past it a
+  customer has been answered from documentation that does not exist. Which
+  customers that happens to is the fairness question, not a distortion of it.
+  The correction reorders this audit and the reordering is recorded below rather
+  than quietly applied.
 - *Automation rate*, the share of tickets in the segment answered automatically
   rather than escalated. Included because a segment can look fine on quality
   while quietly being escalated twice as often, and that is also a fairness
@@ -81,8 +92,14 @@ five fail it. Those failures are reported as failures.
 A 5.8 point gap in retrieval recall, and it is the largest single quality gap in
 the audit. Everything else about this comparison is even or better for
 non-fluent tickets: they are automated at the same rate, and the classifier gets
-their intent right on every one of the 120. On verified resolution the gap is
-1.94 points, 90.8% against 88.9%, which passes the five-point target.
+their intent right on every one of the 120. On verified resolution corrected,
+non-fluent tickets come out ahead, 73.5% against 70.5%, a spread of 2.92 points
+which passes. That is not a sign the segment is well served. It is ahead because
+the system answers fewer of its tickets from nothing, 17.3% against 22.3%, and
+the mechanism is the retrieval gap itself: a phrasing the retriever handles badly
+returns nothing to ground on, so the ticket escalates and never enters the
+numerator as a failure. The segment is protected by the same weakness that harms
+it. On the restricted measure it is 1.94 points behind, 88.9% against 90.8%.
 
 So the harm, where there is harm, is entirely in retrieval. The system
 understands what non-fluent customers are asking. It is less good at finding the
@@ -97,9 +114,13 @@ mechanism.
 | Business | 164 | 111 | 81.1% | 90.1% | 96.8% |
 | Standard | 253 | 155 | 80.6% | 89.0% | 96.0% |
 
-Spread of 5.52 points, which fails. Enterprise is best served on every measure
-that matters and is also the largest segment by ticket value. Retrieval recall
-is flat across the three within 0.8 points, so this is not a retrieval story:
+Spread of 7.54 points corrected, which fails. Business is best on the corrected
+measure at 75.2%, enterprise second at 74.3% and standard worst at 67.7%, and the
+ordering differs from the restricted column beside it because the three send
+ungrounded answers at different rates: standard 24.0%, enterprise 21.4%,
+business 16.5%. Enterprise is much the best served on the tickets the corpus
+covers, 94.5%, and gives most of that back on the ones it does not. Retrieval
+recall is flat across the three within 0.8 points, so this is not a retrieval story:
 enterprise tickets are longer and more specific, and length is the variable
 doing the work, as the length segment below shows.
 
@@ -119,19 +140,27 @@ system reverses that and widens it in enterprise's favour.
 | North America | 170 | 110 | 81.8% | 91.8% | 96.8% |
 | Europe | 151 | 102 | 81.5% | 85.3% | 96.5% |
 
-Spread of 9.71 points, the widest in the audit, and the one I understand least.
-Europe is 9.7 points below Latin America on verified resolution while sitting
-mid-table on retrieval recall, so the right article is being found and the wrong
-one is being cited. My working hypothesis is composition: Europe carries a
-heavier share of `data_residency` and `compliance_request` traffic, where
-neighbouring articles are easy to confuse and the corpus is thinnest. I have not
-proved that on 102 verifiable tickets and I am not going to claim it. It is the
-first thing I would test with more data.
+Spread of 3.09 points corrected, which passes. This was the widest finding in
+the audit before the denominator was corrected, at 9.71 points, and the paragraph
+that stood here explained Europe's 85.3% as composition: a heavier share of
+`data_residency` and `compliance_request` traffic, where neighbouring articles
+are easy to confuse and the corpus is thinnest. That explanation was reasoning
+about an artefact. Europe has the **lowest** uncovered rate of the four regions
+at 17.1%, and the weakest citation accuracy on the tickets that are covered. The
+two effects run in opposite directions and very nearly cancel, which is why the
+dimension looks different depending on which measure is quoted, and why both are
+now in the table. Corrected, the four sit between 69.6% and 72.7%.
+
+The citation weakness on covered European tickets is real and unexplained, and it
+is the thing I would test next. It is a retrieval and citation question, not a
+fairness gap, and the earlier version of this document presented it as the
+latter.
 
 Asia Pacific is the quieter finding. It has the lowest automation rate of the
-four at 77.3% and the lowest retrieval recall, and its verified resolution is
-second best. It escalates more and is right more often when it does answer,
-which is the system failing in the safe direction.
+four at 77.3%, the lowest retrieval recall, and the highest uncovered rate at
+25.0%, which puts it last on the corrected measure at 69.6% while sitting second
+on the restricted one. It escalates more than the others and still sends the
+largest share of ungrounded answers when it does reply.
 
 ### Channel
 
@@ -142,7 +171,17 @@ which is the system failing in the safe direction.
 | Documentation comment | 78 | 42 | 79.5% | 90.5% | 95.8% |
 | Chat | 155 | 107 | 82.6% | 86.9% | 94.1% |
 
-Spread of 7.37 points, which fails. Chat is worst on both quality measures and
+Spread of 12.39 points corrected, which fails, and this is the widest finding in
+the audit once the denominator is right. Documentation comment is the worst
+segment at 61.3%, reading a comfortable 90.5% on the restricted measure, and the
+whole of the difference is coverage: 32.3% of what the system answers on that
+channel goes out on a ticket no article covers, twice chat's 16.4%. Somebody
+commenting under a documentation page is often commenting because the page did
+not answer them, so the corpus is least likely to hold the answer exactly where
+the system is being asked. That is the finding the corrected denominator exists
+to surface, and it was invisible before.
+
+Chat is worst on both restricted quality measures and
 the cause is structural rather than mysterious: chat tickets have no subject
 line, and the retriever applies a title boost of 2.6 to subject terms, so a chat
 ticket hands the retriever less to work with. Chat messages are also shorter,
@@ -164,8 +203,12 @@ this audit where a below-average segment is still an improvement.
 | Long | 390 | 256 | 85.1% | 91.0% | 96.8% |
 | Short | 110 | 65 | 68.2% | 87.7% | 94.7% |
 
-Spread of 3.33 points on resolution, which passes, and 17 points on automation,
-which is the number that actually matters. My first explanation for it was that
+Spread of 5.82 points on corrected resolution, which fails, and 17 points on
+automation, which is still the number that matters most. Short tickets come out
+ahead corrected, 76.0% against 70.2%, for the same reason non-fluent tickets do:
+they carry the lowest uncovered rate in the whole audit at 13.3%, because the
+policy rule removes them before they can be answered from nothing. On the
+restricted measure they are 3.3 points behind. My first explanation for it was that
 a short ticket gives BM25 fewer terms to match, so retrieval returns less or
 nothing and `R-02-no-grounding` escalates. The decision log says otherwise.
 `R-02-no-grounding` did not fire once on the 500-ticket run. Of the 35
@@ -353,9 +396,14 @@ analysis deduplicates by body for exactly this reason; the segment tables do
 not, because they are answering the framework's question about what the
 population experiences.
 
-Region is unexplained. The 9.71 point European gap is the largest finding in the
-audit and I have a hypothesis rather than a cause. It should not be presented to
-CloudServe as understood.
+Two segments are unexplained, and neither is the one this document used to name.
+Europe's citation accuracy on covered tickets, 85.3% against a mid-table
+retrieval recall, has a hypothesis rather than a cause and should not be
+presented to CloudServe as understood. The documentation comment channel's 32.3%
+uncovered rate has an explanation that is close to tautological and no
+measurement behind it. The 9.71 point European gap that this section used to
+lead with was mostly an artefact of the denominator, and the reasoning I wrote to
+explain it is the more useful thing to have learned here than the number was.
 
 ---
 
@@ -363,8 +411,8 @@ CloudServe as understood.
 
 | Dimension | Spread | Within five points | Assessment |
 |---|---|---|---|
-| Language fluency | 1.94 points resolution, 5.8 retrieval | Resolution yes, retrieval no | Real, concentrated in three intents, fixable with expansion terms |
-| Ticket length | 3.33 points | Yes | Real but safe: short tickets escalate rather than get bad answers |
-| Customer tier | 5.52 points | No | Real, driven by length, commercially sensitive |
-| Channel | 7.37 points | No | Real and structural: chat has no subject line for the title boost |
-| Region | 9.71 points | No | Real and not yet explained |
+| Channel | 12.39 points | No | Widest in the audit. Documentation comment answers a third of its tickets from documentation that does not exist |
+| Customer tier | 7.54 points | No | Standard tier receives the most ungrounded answers of the three, 24.0% |
+| Ticket length | 5.82 points | No | Short tickets come out ahead; the policy rule removes them before they can be answered from nothing |
+| Region | 3.09 points | Yes | Passes once corrected. Was 9.71 and the widest finding; that was the denominator, not the regions |
+| Language fluency | 2.92 points resolution, 5.8 retrieval | Resolution yes, retrieval no | Real, concentrated in three intents, fixable with expansion terms |

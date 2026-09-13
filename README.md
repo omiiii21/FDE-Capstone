@@ -15,7 +15,7 @@ This fixes the delivery problem, not the answer problem.
 ![Tests](https://img.shields.io/badge/tests-298%20passing-2f7a41?style=flat-square)
 ![Acceptance](https://img.shields.io/badge/acceptance%20criteria-12%2F12-2f7a41?style=flat-square)
 ![Runs offline](https://img.shields.io/badge/API%20key-not%20required-2f7a41?style=flat-square)
-![Unattended run](https://img.shields.io/badge/80%20tickets-0.08s-1f6f5c?style=flat-square)
+![Unattended run](https://img.shields.io/badge/80%20tickets-under%20a%20second-1f6f5c?style=flat-square)
 
 <sub>Om Mengshetti · Forward Deployed AI Engineering capstone · September 2026</sub>
 
@@ -156,10 +156,10 @@ somebody to find.
 
 | Measure | Baseline | Target | Achieved | |
 | --- | ---: | ---: | ---: | :--- |
-| First contact resolution | 43.8% | 60% | **81.4%** | **met** |
+| First contact resolution | 43.8% | 65% | **81.4%** | **met** |
 | Verified resolution <sub>answered *and* citing an article the labels agree with</sub> | — | — | **71.3%** | |
-| Escalation rate | 56.2% | ≤ 30% | **18.6%** | **met** |
-| Median time to first reply | 214 min | < 5 min | **< 1 s** | **met** |
+| Escalation rate | 56.2% | ≤ 35% | **18.6%** | **met** |
+| Median time to first reply | 214 min | < 1 min | **< 1 s** | **met** |
 | Intent precision <sub>body-disjoint split</sub> | — | 85% | **92.2%** | **met** |
 | Retrieval recall@5 | — | — | **96.4%** | |
 | Citation accuracy | — | 95% | **71.3%** | **missed** |
@@ -167,7 +167,7 @@ somebody to find.
 | Private data in outbound text | — | 0 | **0** | **met** |
 | Never-auto-respond breaches | — | 0 | **0 of 87** | **met** |
 | Decision log reconciliation | — | exact | **2,500 / 500** | **met** |
-| Cross-group variation <sub>by region</sub> | — | < 5 pts | **9.7 pts** | **missed** |
+| Cross-group variation <sub>widest of five segments: channel</sub> | — | < 5 pts | **12.4 pts** | **missed** |
 
 > **Verified resolution and citation accuracy are measured over every automatic
 > answer, including the ones the documentation cannot cover.** Measured only over
@@ -232,7 +232,7 @@ cp .env.example .env               # works as-is; edit only to add a model key
 That is the whole setup. Confirm it:
 
 ```bash
-python -m pytest tests/ -q         # 218 passing
+python -m pytest tests/ -q         # 298 passing
 ```
 
 ### The unattended evaluation run
@@ -398,7 +398,7 @@ lost. The procedure is in [`docs/incident_response.md`](docs/incident_response.m
 <br>
 
 ```
-src/                    the system, eleven modules
+src/                    the system, sixteen modules
 prompts/build/          prompts that run inside it, versioned
 prompts/evaluation/     prompts used to judge its output
 evaluation/harness.py   the unattended run
@@ -406,7 +406,7 @@ evaluation/metrics.py   every metric calculation
 evaluation/results/     dated output from each run
 scripts/                the analyses behind the design decisions
 models/                 the trained classifier, committed as JSON
-tests/                  218 tests: python -m pytest tests/ -q
+tests/                  298 tests: python -m pytest tests/ -q
 docs/architecture.md    how it fits together and why
 docs/decisions/         seven architecture decision records
 data/                   the four supplied data files, plus the probe set

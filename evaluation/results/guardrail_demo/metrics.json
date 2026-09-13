@@ -1,10 +1,10 @@
 {
   "run": {
-    "run_id": "run-20260918T015904Z-f673a0",
-    "started_at": "2026-09-18T01:59:04Z",
-    "finished_at": "2026-09-18T01:59:04Z",
+    "run_id": "run-20260918T053709Z-cb58f0",
+    "started_at": "2026-09-18T05:37:09Z",
+    "finished_at": "2026-09-18T05:37:09Z",
     "duration_seconds": 0.03,
-    "tickets_per_second": 277.86,
+    "tickets_per_second": 271.55,
     "input_path": "data/guardrail_probe_tickets.json",
     "output_dir": "evaluation/results/guardrail_demo",
     "system_version": "2.1.0",
@@ -136,6 +136,9 @@
           "automation_rate": 0.0,
           "verified_resolution_rate": 0.0,
           "verified_basis": 0,
+          "verified_resolution_rate_answerable_only": 0.0,
+          "verified_resolution_rate_answerable_only_basis": 0,
+          "auto_answers_on_tickets_the_corpus_does_not_cover": 0,
           "retrieval_recall": 0.0,
           "classification_accuracy": 0.0
         },
@@ -144,6 +147,9 @@
           "automation_rate": 0.0,
           "verified_resolution_rate": 0.0,
           "verified_basis": 0,
+          "verified_resolution_rate_answerable_only": 0.0,
+          "verified_resolution_rate_answerable_only_basis": 0,
+          "auto_answers_on_tickets_the_corpus_does_not_cover": 0,
           "retrieval_recall": 0.0,
           "classification_accuracy": 0.0
         },
@@ -152,6 +158,9 @@
           "automation_rate": 0.0,
           "verified_resolution_rate": 0.0,
           "verified_basis": 0,
+          "verified_resolution_rate_answerable_only": 0.0,
+          "verified_resolution_rate_answerable_only_basis": 0,
+          "auto_answers_on_tickets_the_corpus_does_not_cover": 0,
           "retrieval_recall": 0.0,
           "classification_accuracy": 0.0
         }
@@ -167,6 +176,9 @@
           "automation_rate": 0.0,
           "verified_resolution_rate": 0.0,
           "verified_basis": 0,
+          "verified_resolution_rate_answerable_only": 0.0,
+          "verified_resolution_rate_answerable_only_basis": 0,
+          "auto_answers_on_tickets_the_corpus_does_not_cover": 0,
           "retrieval_recall": 0.0,
           "classification_accuracy": 0.0
         },
@@ -175,6 +187,9 @@
           "automation_rate": 0.0,
           "verified_resolution_rate": 0.0,
           "verified_basis": 0,
+          "verified_resolution_rate_answerable_only": 0.0,
+          "verified_resolution_rate_answerable_only_basis": 0,
+          "auto_answers_on_tickets_the_corpus_does_not_cover": 0,
           "retrieval_recall": 0.0,
           "classification_accuracy": 0.0
         }
@@ -190,6 +205,9 @@
           "automation_rate": 0.0,
           "verified_resolution_rate": 0.0,
           "verified_basis": 0,
+          "verified_resolution_rate_answerable_only": 0.0,
+          "verified_resolution_rate_answerable_only_basis": 0,
+          "auto_answers_on_tickets_the_corpus_does_not_cover": 0,
           "retrieval_recall": 0.0,
           "classification_accuracy": 0.0
         },
@@ -198,6 +216,9 @@
           "automation_rate": 0.0,
           "verified_resolution_rate": 0.0,
           "verified_basis": 0,
+          "verified_resolution_rate_answerable_only": 0.0,
+          "verified_resolution_rate_answerable_only_basis": 0,
+          "auto_answers_on_tickets_the_corpus_does_not_cover": 0,
           "retrieval_recall": 0.0,
           "classification_accuracy": 0.0
         },
@@ -206,6 +227,9 @@
           "automation_rate": 0.0,
           "verified_resolution_rate": 0.0,
           "verified_basis": 0,
+          "verified_resolution_rate_answerable_only": 0.0,
+          "verified_resolution_rate_answerable_only_basis": 0,
+          "auto_answers_on_tickets_the_corpus_does_not_cover": 0,
           "retrieval_recall": 0.0,
           "classification_accuracy": 0.0
         },
@@ -214,6 +238,9 @@
           "automation_rate": 0.0,
           "verified_resolution_rate": 0.0,
           "verified_basis": 0,
+          "verified_resolution_rate_answerable_only": 0.0,
+          "verified_resolution_rate_answerable_only_basis": 0,
+          "auto_answers_on_tickets_the_corpus_does_not_cover": 0,
           "retrieval_recall": 0.0,
           "classification_accuracy": 0.0
         },
@@ -222,6 +249,9 @@
           "automation_rate": 0.0,
           "verified_resolution_rate": 0.0,
           "verified_basis": 0,
+          "verified_resolution_rate_answerable_only": 0.0,
+          "verified_resolution_rate_answerable_only_basis": 0,
+          "auto_answers_on_tickets_the_corpus_does_not_cover": 0,
           "retrieval_recall": 0.0,
           "classification_accuracy": 0.0
         }
@@ -237,6 +267,9 @@
           "automation_rate": 0.0,
           "verified_resolution_rate": 0.0,
           "verified_basis": 0,
+          "verified_resolution_rate_answerable_only": 0.0,
+          "verified_resolution_rate_answerable_only_basis": 0,
+          "auto_answers_on_tickets_the_corpus_does_not_cover": 0,
           "retrieval_recall": 0.0,
           "classification_accuracy": 0.0
         },
@@ -245,6 +278,9 @@
           "automation_rate": 0.0,
           "verified_resolution_rate": 0.0,
           "verified_basis": 0,
+          "verified_resolution_rate_answerable_only": 0.0,
+          "verified_resolution_rate_answerable_only_basis": 0,
+          "auto_answers_on_tickets_the_corpus_does_not_cover": 0,
           "retrieval_recall": 0.0,
           "classification_accuracy": 0.0
         },
@@ -253,6 +289,9 @@
           "automation_rate": 0.0,
           "verified_resolution_rate": 0.0,
           "verified_basis": 0,
+          "verified_resolution_rate_answerable_only": 0.0,
+          "verified_resolution_rate_answerable_only_basis": 0,
+          "auto_answers_on_tickets_the_corpus_does_not_cover": 0,
           "retrieval_recall": 0.0,
           "classification_accuracy": 0.0
         },
@@ -261,6 +300,9 @@
           "automation_rate": 0.0,
           "verified_resolution_rate": 0.0,
           "verified_basis": 0,
+          "verified_resolution_rate_answerable_only": 0.0,
+          "verified_resolution_rate_answerable_only_basis": 0,
+          "auto_answers_on_tickets_the_corpus_does_not_cover": 0,
           "retrieval_recall": 0.0,
           "classification_accuracy": 0.0
         }
@@ -276,6 +318,9 @@
           "automation_rate": 0.0,
           "verified_resolution_rate": 0.0,
           "verified_basis": 0,
+          "verified_resolution_rate_answerable_only": 0.0,
+          "verified_resolution_rate_answerable_only_basis": 0,
+          "auto_answers_on_tickets_the_corpus_does_not_cover": 0,
           "retrieval_recall": 0.0,
           "classification_accuracy": 0.0
         },
@@ -284,6 +329,9 @@
           "automation_rate": 0.0,
           "verified_resolution_rate": 0.0,
           "verified_basis": 0,
+          "verified_resolution_rate_answerable_only": 0.0,
+          "verified_resolution_rate_answerable_only_basis": 0,
+          "auto_answers_on_tickets_the_corpus_does_not_cover": 0,
           "retrieval_recall": 0.0,
           "classification_accuracy": 0.0
         }

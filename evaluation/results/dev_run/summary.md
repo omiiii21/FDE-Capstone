@@ -1,8 +1,8 @@
-# Evaluation run dev_run
+# Evaluation run run-20260918T053434Z-09be1d
 
 Input: `data/development_tickets.json`  
-Started: 2026-09-18T02:51:05Z  
-Duration: 0.62s (800.63 tickets/sec)  
+Started: 2026-09-18T05:34:34Z  
+Duration: 0.69s (721.17 tickets/sec)  
 Provider: offline (available: False)  
 Retrieval: lexical, top_k=5, floor=4.2  
 Confidence threshold: 0.62
