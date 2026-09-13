@@ -1,10 +1,10 @@
 {
   "run": {
-    "run_id": "run-20260917T181948Z-7ba777",
-    "started_at": "2026-09-17T18:19:48Z",
-    "finished_at": "2026-09-17T18:19:48Z",
+    "run_id": "run-20260917T190130Z-123e6e",
+    "started_at": "2026-09-17T19:01:30Z",
+    "finished_at": "2026-09-17T19:01:30Z",
     "duration_seconds": 0.08,
-    "tickets_per_second": 981.37,
+    "tickets_per_second": 978.75,
     "input_path": "data/validation_tickets.json",
     "output_dir": "evaluation/results/validation_run",
     "system_version": "2.1.0",
@@ -225,7 +225,7 @@
       "mean_seconds": 0.0003,
       "median_seconds": 0.0003,
       "p95_seconds": 0.0004,
-      "p99_seconds": 0.0006,
+      "p99_seconds": 0.0005,
       "max_seconds": 0.0007,
       "p95_by_channel": {
         "forum": 0.0007,

@@ -24,7 +24,9 @@ Grounding checks citations at paragraph level, not sentence level. That is a cor
 
 ## Consequences
 
-On the 500-ticket development run, grounding fired 93 times, the confidence floor 14 and commitments 5. Private data fired zero times, and there were zero breaches of the 87 tickets flagged `must_not_auto_respond`.
+On the 500-ticket development run, nothing was blocked at all. Not one of the 407 released responses failed a check, and the 93 escalations were diverted by routing before there was a reply to check. Private data fired zero times, and there were zero breaches of the 87 tickets flagged `must_not_auto_respond`.
+
+That zero is worth reading twice, because it is not evidence that the checks are strong. It is evidence that nothing unsafe reached them: routing takes the policy classes and the high-cost classes out first, and the extractive generator can only emit sentences that already exist in the corpus. The evidence that these block is `tests/test_guardrails.py` and the fault-injection run described below.
 
 The patterns are narrow on purpose. The customer identifier rule matches `CUST-nnnn` rather than any long digit string, because a broad rule flagged port numbers and byte counts in every second deployment answer, and a guardrail that cries wolf gets switched off.
 

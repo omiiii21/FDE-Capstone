@@ -1,10 +1,10 @@
 {
   "run": {
-    "run_id": "run-20260917T181948Z-dea305",
-    "started_at": "2026-09-17T18:19:48Z",
-    "finished_at": "2026-09-17T18:19:48Z",
+    "run_id": "run-20260917T190130Z-9692d7",
+    "started_at": "2026-09-17T19:01:30Z",
+    "finished_at": "2026-09-17T19:01:30Z",
     "duration_seconds": 0.02,
-    "tickets_per_second": 441.04,
+    "tickets_per_second": 446.19,
     "input_path": "data/guardrail_probe_tickets.json",
     "output_dir": "evaluation/results/guardrail_demo",
     "system_version": "2.1.0",

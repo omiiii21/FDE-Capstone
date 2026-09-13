@@ -14,7 +14,7 @@ There is a second requirement pulling in the same direction. The evaluation harn
 
 ## Decision
 
-The provider is a component with one interface and three implementations in `src/provider.py`. `OpenRouterProvider` does the real work, with exponential backoff and jitter, `Retry-After` honoured when the provider sends one, a prompt-keyed response cache, and a circuit breaker that stops calling for 60 seconds after repeated failure so that a long run does not rediscover the same outage on every ticket. `OfflineProvider` is unavailable on purpose, for the tests and for CI. `NullProvider` is selected automatically when no key is configured, and logged as a normal condition.
+The provider is a component with one interface and four implementations in `src/provider.py`. `OpenRouterProvider` does the real work, with exponential backoff and jitter, `Retry-After` honoured when the provider sends one, a prompt-keyed response cache, and a circuit breaker that stops calling for 60 seconds after repeated failure so that a long run does not rediscover the same outage on every ticket. `OfflineProvider` is unavailable on purpose, for the tests and for CI. `NullProvider` is selected automatically when no key is configured, and logged as a normal condition.
 
 Nothing above this module asks whether a provider is available. It asks for a completion and receives either text or a `ProviderUnavailable`, and callers do not retry, because retrying is the module's job and it has already tried.
 

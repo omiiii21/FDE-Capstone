@@ -78,7 +78,7 @@ are defined in `src/metrics.py`.
 
 One caveat that will otherwise waste your night. `guardrail_blocks_total`
 counts blocks, not activations, and it only increments when a check both fails
-and is blocking. On the escalation path only the private-data check blocks, so
+and is blocking. On the escalation path nothing blocks at all, so
 grounding and confidence-floor activations on handover notes do not appear here
 at all. A flat counter does not mean the guardrails are idle. For activations,
 go to the decision log.
@@ -108,7 +108,7 @@ LIMIT 5;
 ```sql
 -- Anything a guardrail flagged in the last day, newest first.
 -- Read action_taken, not prediction: a row can show "released" and still have
--- escalated, because on an escalation only the private-data check blocks.
+-- escalated, because on an escalation nothing blocks.
 SELECT ticket_id, timestamp, action_taken, confidence, guardrail_results
 FROM decisions
 WHERE stage = 'validation'

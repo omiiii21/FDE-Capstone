@@ -150,13 +150,20 @@ wrong.
 passed all five checks.
 
 **Read this before drawing a conclusion from a flat line.** This counter
-increments only when a check both fails and is blocking. On the escalation path
-only the private-data check blocks, because the checked text is an internal
-handover note that deliberately carries no citations. So the 93 grounding, 14
-confidence-floor and 5 commitment activations recorded in the decision log for
-the development run appear nowhere on this panel. A flat counter does not mean
-the guardrails are idle. For activations rather than blocks, query
-`decisions.db`; `docs/incident_response.md` has the SQL.
+increments only when a check both fails and is blocking, and on the escalation
+path nothing blocks at all. Not even the private-data check: the text being
+checked there is an internal handover note, and the CloudServe engineer reading
+it is entitled to see the customer's own name and account. So on both full runs
+this panel is flat, and correctly so.
+
+A flat counter does not mean the guardrails are idle, and it does not mean they
+are working either. It means nothing reached them. The panel earns its place
+once a model provider is configured, because that is the path where a draft can
+be unsafe. To see it move before then, run the fault injection:
+`PROVIDER=unsafe_demo python -m evaluation.harness --input
+data/guardrail_probe_tickets.json --output evaluation/results/guardrail_demo`.
+For every check result rather than blocks alone, query `decisions.db`;
+`docs/incident_response.md` has the SQL.
 
 **Bad shapes.** Any `pii` increment at all, which is coloured red for that
 reason: this counter has never moved in 580 evaluated tickets, and one

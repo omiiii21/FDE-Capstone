@@ -202,7 +202,7 @@ empty body, one carrying full-width characters, zero-width joiners, HTML
 entities and control bytes, and one with a twenty thousand character log
 pasted into it.
 
-Run normally, all nine are handled without incident and seven never reach
+Run normally, all nine are handled without incident and eight never reach
 generation. Run with `PROVIDER=unsafe_demo`, the simulated model promises a
 refund, invents a delivery date and quotes the customer's own words back, and
 the response is blocked on grounding and commitments and escalated instead,

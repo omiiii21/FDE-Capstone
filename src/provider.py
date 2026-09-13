@@ -2,12 +2,18 @@
 
 The system has to keep working when the provider is down, throttling or simply
 not configured (A11). That is handled by making the provider a component with
-three implementations behind one interface, rather than by wrapping calls in
+four implementations behind one interface, rather than by wrapping calls in
 try/except at every site:
 
   OpenRouterProvider  the real thing, with backoff and a response cache
   OfflineProvider     always unavailable, used in tests and in CI
   NullProvider        chosen automatically when no key is configured
+  UnsafeDemoProvider  fault injection, reachable only through PROVIDER=unsafe_demo
+
+The fourth is there because of an awkward property of the first three. On the
+default path nothing unsafe reaches the guardrails, so they never block, and
+"we could not make it fire" is not a demonstration. It returns a draft that
+deserves blocking so that A7 can be shown rather than argued.
 
 Nothing above this module asks whether a provider is available. It asks for a
 completion and gets either text or a ProviderUnavailable, and generate.py has a
