@@ -16,5 +16,12 @@ numpy==2.1.3
 
 pytest==8.3.4
 pytest-cov==6.0.0
+# Starlette's TestClient is built on httpx, and without it tests/test_api.py
+# skips the whole module rather than failing. A clean checkout was quietly
+# running 289 tests and reporting success while the nine that exercise the API
+# never ran, including the one that proves an unauthenticated caller cannot
+# halt automation. A skipped test that looks like a pass is worse than a
+# missing one.
+httpx==0.28.1
 flake8==7.1.1
 black==24.10.0
