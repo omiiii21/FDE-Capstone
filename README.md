@@ -130,18 +130,18 @@ somebody to find.
 
 | Measure | Baseline | Target | Achieved | |
 | --- | ---: | ---: | ---: | :--- |
-| First contact resolution | 43.8% | 60% | **81.4%** | ✅ |
+| First contact resolution | 43.8% | 60% | **81.4%** | **met** |
 | Verified resolution <sub>answered *and* citing the right article</sub> | — | — | **90.3%** | |
-| Escalation rate | 56.2% | ≤ 30% | **18.6%** | ✅ |
-| Median time to first reply | 214 min | < 5 min | **< 1 s** | ✅ |
-| Intent precision <sub>body-disjoint split</sub> | — | 85% | **92.2%** | ✅ |
+| Escalation rate | 56.2% | ≤ 30% | **18.6%** | **met** |
+| Median time to first reply | 214 min | < 5 min | **< 1 s** | **met** |
+| Intent precision <sub>body-disjoint split</sub> | — | 85% | **92.2%** | **met** |
 | Retrieval recall@5 | — | — | **96.4%** | |
-| Citation accuracy | — | 95% | **90.3%** | ❌ |
-| Calibration error (ECE) | — | < 5 pts | **0.009** | ✅ |
-| Private data in outbound text | — | 0 | **0** | ✅ |
-| Never-auto-respond breaches | — | 0 | **0 of 87** | ✅ |
-| Decision log reconciliation | — | exact | **2,500 / 500** | ✅ |
-| Cross-group variation <sub>by region</sub> | — | < 5 pts | **9.7 pts** | ❌ |
+| Citation accuracy | — | 95% | **90.3%** | **missed** |
+| Calibration error (ECE) | — | < 5 pts | **0.009** | **met** |
+| Private data in outbound text | — | 0 | **0** | **met** |
+| Never-auto-respond breaches | — | 0 | **0 of 87** | **met** |
+| Decision log reconciliation | — | exact | **2,500 / 500** | **met** |
+| Cross-group variation <sub>by region</sub> | — | < 5 pts | **9.7 pts** | **missed** |
 
 > **The classifier scores 99.2% on a random split and 92.2% on a body-disjoint one.**
 > The development set has 500 tickets but only 215 distinct ticket bodies, so a
@@ -184,7 +184,7 @@ a limitation, and [Running without a model provider](#running-without-a-model-pr
 explains why.
 
 ```bash
-git clone git@github.com:omiiii21/FDE-Capstone.git
+git clone https://github.com/omiiii21/FDE-Capstone.git
 cd FDE-Capstone
 
 python3 -m venv .venv

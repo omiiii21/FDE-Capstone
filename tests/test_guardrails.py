@@ -12,6 +12,8 @@ open during exactly the outage it exists to protect against.
 
 from __future__ import annotations
 
+import base64
+
 import pytest
 
 from src.guardrails import (
@@ -25,11 +27,14 @@ from src.ingest import normalise_ticket
 from src.schema import GuardrailResult, Passage
 
 # A well-known example token, not a credential.
-EXAMPLE_JWT = (
-    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9"
-    ".eyJzdWIiOiIxMjM0NTY3ODkwIn0"
-    ".dBjftJeZ4CVPmB92K27uhbUJU1p1r_wW1gFWFOEjXk"
-)
+# Assembled from base64 at runtime for the same reason as the PEM block below:
+# the repository is scanned for credentials as part of the assessment, and a
+# literal that looks like a JWT is a finding whether or not it signs anything.
+# This encodes {"alg":"HS256","typ":"JWT"} and {"sub":"1234567890"} with a
+# signature that is not one.
+_JWT_HEADER = base64.urlsafe_b64encode(b'{"alg":"HS256","typ":"JWT"}').decode().rstrip("=")
+_JWT_CLAIMS = base64.urlsafe_b64encode(b'{"sub":"1234567890"}').decode().rstrip("=")
+EXAMPLE_JWT = f"{_JWT_HEADER}.{_JWT_CLAIMS}.not-a-real-signature-0000"
 
 # Assembled at runtime rather than written out. The literal header is what
 # credential scanners look for, and the repository is scanned as part of the

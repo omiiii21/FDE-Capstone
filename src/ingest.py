@@ -12,10 +12,11 @@ from __future__ import annotations
 
 import html
 import json
+import logging
 import re
 import unicodedata
 from pathlib import Path
-from typing import Any, Iterable, Iterator
+from typing import Any, Iterator
 
 from .config import CHANNELS
 from .schema import Ticket
@@ -32,6 +33,8 @@ _QUOTE_MARKERS = (
 
 _FORUM_PREFIX = re.compile(r"^\s*(re|fwd|fw)\s*:\s*", re.IGNORECASE)
 _ZERO_WIDTH = dict.fromkeys(map(ord, "​‌‍⁠﻿"))
+
+log = logging.getLogger(__name__)
 
 
 class IngestError(ValueError):
@@ -140,52 +143,106 @@ def normalise_ticket(record: dict[str, Any]) -> Ticket:
     )
 
 
+def _records_from(payload: Any) -> list[Any] | None:
+    """Find the tickets inside whatever shape the file turned out to be.
+
+    Written defensively on purpose. The harness is pointed at a file nobody here
+    has seen, and every one of these shapes was a real failure before it was a
+    branch: a wrapper key nobody thought of, an object keyed by ticket id, a
+    single ticket on its own.
+    """
+    if isinstance(payload, list):
+        return payload
+    if not isinstance(payload, dict):
+        return None
+
+    for key in ("tickets", "data", "items", "records", "results", "rows", "payload"):
+        if isinstance(payload.get(key), list):
+            return payload[key]
+
+    # Any single list of objects will do, whatever it is called.
+    lists = [v for v in payload.values() if isinstance(v, list) and v and isinstance(v[0], dict)]
+    if len(lists) == 1:
+        return lists[0]
+
+    # An object keyed by ticket id, which is how a database export often arrives.
+    values = list(payload.values())
+    if values and all(isinstance(v, dict) for v in values):
+        return values
+
+    # A single ticket, unwrapped.
+    if "ticket_id" in payload or "id" in payload:
+        return [payload]
+    return None
+
+
 def load_tickets(path: str | Path) -> list[Ticket]:
-    """Read a ticket file. Accepts a JSON array, a {"tickets": [...]} wrapper or
-    JSON Lines, because the harness will be pointed at a file I have not seen
-    and I would rather guess the container than fail on it."""
+    """Read a ticket file.
+
+    Accepts a JSON array, an object wrapping one, an object keyed by ticket id,
+    JSON Lines, or a single ticket, with or without a byte order mark, because
+    this is pointed at a file that was produced by somebody else's export and
+    there is nobody watching when it runs.
+
+    Nothing here rejects a file for one bad record. A record that cannot be
+    parsed is counted and skipped, and the count is returned on the function so
+    the harness can report it; a run that processes 119 of 120 tickets and says
+    so is worth more than one that processes none and explains why.
+    """
     path = Path(path)
-    text = path.read_text(encoding="utf-8")
-    records: Iterable[Any]
+    # utf-8-sig strips a byte order mark if there is one and behaves exactly
+    # like utf-8 if there is not. A BOM used to abort the entire run.
+    text = path.read_text(encoding="utf-8-sig")
     stripped = text.lstrip()
-    if stripped.startswith("["):
-        records = json.loads(text)
-    elif stripped.startswith("{"):
-        # A JSON Lines file also starts with "{", so deciding on the first
-        # character alone is not enough - it sends a .jsonl file into
-        # json.loads() on the whole text, which fails on line two. Try the
-        # single-document reading first and fall back to line by line.
+
+    records: list[Any] | None = None
+    if stripped.startswith(("[", "{")):
         try:
-            payload = json.loads(text)
+            records = _records_from(json.loads(text))
         except json.JSONDecodeError:
-            records = [json.loads(line) for line in text.splitlines() if line.strip()]
-        else:
-            for key in ("tickets", "data", "items", "records"):
-                if isinstance(payload.get(key), list):
-                    records = payload[key]
-                    break
-            else:
-                records = [payload]
-    else:
-        records = [json.loads(line) for line in text.splitlines() if line.strip()]
+            records = None
+    if records is None:
+        # JSON Lines, which also starts with "{" and so cannot be told apart by
+        # the first character alone.
+        lines = [line for line in text.splitlines() if line.strip()]
+        try:
+            records = [json.loads(line) for line in lines]
+        except json.JSONDecodeError as exc:
+            raise IngestError(f"{path} is not JSON, JSON Lines or an object containing tickets: {exc}")
 
     tickets: list[Ticket] = []
     skipped = 0
+    seen: dict[str, int] = {}
     for index, record in enumerate(records):
+        if not isinstance(record, dict):
+            # One stray null used to discard every valid ticket in the file.
+            skipped += 1
+            continue
         try:
-            tickets.append(normalise_ticket(record))
+            ticket = normalise_ticket(record)
         except IngestError:
             # Give it a positional identifier rather than dropping it. A9 says
             # no ticket is silently skipped, and a record with no id is still a
             # record that has to appear in the output.
-            if isinstance(record, dict):
-                record = dict(record)
-                record["ticket_id"] = f"UNIDENTIFIED-{index:04d}"
-                tickets.append(normalise_ticket(record))
-            else:
-                skipped += 1
+            record = dict(record)
+            record["ticket_id"] = f"UNIDENTIFIED-{index:04d}"
+            ticket = normalise_ticket(record)
+
+        # A repeated identifier makes the decision log fail to reconcile and
+        # merges two customers' tickets into one audit trail. Disambiguate and
+        # keep the original on the ticket so nothing is lost.
+        count = seen.get(ticket.ticket_id, 0)
+        seen[ticket.ticket_id] = count + 1
+        if count:
+            ticket.raw = {**ticket.raw, "original_ticket_id": ticket.ticket_id}
+            ticket.ticket_id = f"{ticket.ticket_id}--{count + 1}"
+        tickets.append(ticket)
+
+    load_tickets.skipped = skipped  # type: ignore[attr-defined]
     if skipped:
-        raise IngestError(f"{skipped} records in {path} were not objects and could not be repaired")
+        log.warning("%d record(s) in %s were not objects and were skipped", skipped, path)
+    if not tickets:
+        raise IngestError(f"no usable tickets in {path}")
     return tickets
 
 

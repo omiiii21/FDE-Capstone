@@ -23,7 +23,8 @@ _TOKEN = re.compile(r"[a-z0-9][a-z0-9_'\-]*")
 # Words too common in this corpus to carry signal. Deliberately short - an
 # aggressive stop list removes the "how do I" phrasing that distinguishes a
 # question from an incident report.
-STOPWORDS = frozenset("""
+STOPWORDS = frozenset(
+    """
     a about after all also am an and any are as at be been being but by can cant could
     did do does doing done dont for from get gets getting had has have having he her
     here hers him his how i if in into is it its just like me more most my no not now
@@ -31,7 +32,8 @@ STOPWORDS = frozenset("""
     so some such than that the their them then there these they this those to too
     up us very was we were what when where which while who why will with would you
     your yours
-    """.split())
+    """.split()
+)
 
 # Customer vocabulary on the left, documentation vocabulary on the right.
 # Applied additively: the original terms are always kept, so an expansion can
