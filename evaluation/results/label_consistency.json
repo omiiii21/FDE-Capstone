@@ -1,0 +1,277 @@
+{
+  "tickets": 500,
+  "distinct_bodies": 215,
+  "labels": {
+    "intent": {
+      "bodies_with_conflicting_values": 0,
+      "tickets_affected": 0,
+      "self_consistent": true,
+      "examples": []
+    },
+    "must_not_auto_respond": {
+      "bodies_with_conflicting_values": 0,
+      "tickets_affected": 0,
+      "self_consistent": true,
+      "examples": []
+    },
+    "expected_route": {
+      "bodies_with_conflicting_values": 35,
+      "tickets_affected": 202,
+      "self_consistent": false,
+      "examples": [
+        {
+          "ticket_ids": [
+            "DEV-0006",
+            "DEV-0039",
+            "DEV-0147",
+            "DEV-0227",
+            "DEV-0297",
+            "DEV-0404",
+            "DEV-0412"
+          ],
+          "values": [
+            "\"auto_respond\"",
+            "\"escalate\""
+          ]
+        },
+        {
+          "ticket_ids": [
+            "DEV-0009",
+            "DEV-0040",
+            "DEV-0042",
+            "DEV-0122",
+            "DEV-0127",
+            "DEV-0157",
+            "DEV-0163",
+            "DEV-0263",
+            "DEV-0315",
+            "DEV-0339",
+            "DEV-0345",
+            "DEV-0386",
+            "DEV-0423",
+            "DEV-0473"
+          ],
+          "values": [
+            "\"auto_respond\"",
+            "\"escalate\""
+          ]
+        },
+        {
+          "ticket_ids": [
+            "DEV-0014",
+            "DEV-0033",
+            "DEV-0069",
+            "DEV-0220",
+            "DEV-0321",
+            "DEV-0484"
+          ],
+          "values": [
+            "\"auto_respond\"",
+            "\"escalate\""
+          ]
+        }
+      ]
+    },
+    "answerable_from_docs": {
+      "bodies_with_conflicting_values": 41,
+      "tickets_affected": 240,
+      "self_consistent": false,
+      "examples": [
+        {
+          "ticket_ids": [
+            "DEV-0003",
+            "DEV-0028",
+            "DEV-0102",
+            "DEV-0109",
+            "DEV-0146",
+            "DEV-0191",
+            "DEV-0231",
+            "DEV-0248",
+            "DEV-0265",
+            "DEV-0351",
+            "DEV-0498"
+          ],
+          "values": [
+            "false",
+            "true"
+          ]
+        },
+        {
+          "ticket_ids": [
+            "DEV-0006",
+            "DEV-0039",
+            "DEV-0147",
+            "DEV-0227",
+            "DEV-0297",
+            "DEV-0404",
+            "DEV-0412"
+          ],
+          "values": [
+            "false",
+            "true"
+          ]
+        },
+        {
+          "ticket_ids": [
+            "DEV-0009",
+            "DEV-0040",
+            "DEV-0042",
+            "DEV-0122",
+            "DEV-0127",
+            "DEV-0157",
+            "DEV-0163",
+            "DEV-0263",
+            "DEV-0315",
+            "DEV-0339",
+            "DEV-0345",
+            "DEV-0386",
+            "DEV-0423",
+            "DEV-0473"
+          ],
+          "values": [
+            "false",
+            "true"
+          ]
+        }
+      ]
+    },
+    "urgency": {
+      "bodies_with_conflicting_values": 67,
+      "tickets_affected": 334,
+      "self_consistent": false,
+      "examples": [
+        {
+          "ticket_ids": [
+            "DEV-0003",
+            "DEV-0028",
+            "DEV-0102",
+            "DEV-0109",
+            "DEV-0146",
+            "DEV-0191",
+            "DEV-0231",
+            "DEV-0248",
+            "DEV-0265",
+            "DEV-0351",
+            "DEV-0498"
+          ],
+          "values": [
+            "\"high\"",
+            "\"low\"",
+            "\"medium\""
+          ]
+        },
+        {
+          "ticket_ids": [
+            "DEV-0005",
+            "DEV-0007",
+            "DEV-0077",
+            "DEV-0152",
+            "DEV-0246",
+            "DEV-0257",
+            "DEV-0355",
+            "DEV-0392"
+          ],
+          "values": [
+            "\"low\"",
+            "\"medium\""
+          ]
+        },
+        {
+          "ticket_ids": [
+            "DEV-0006",
+            "DEV-0039",
+            "DEV-0147",
+            "DEV-0227",
+            "DEV-0297",
+            "DEV-0404",
+            "DEV-0412"
+          ],
+          "values": [
+            "\"low\"",
+            "\"medium\""
+          ]
+        }
+      ]
+    },
+    "expected_doc_ids": {
+      "bodies_with_conflicting_values": 53,
+      "tickets_affected": 283,
+      "self_consistent": false,
+      "examples": [
+        {
+          "ticket_ids": [
+            "DEV-0003",
+            "DEV-0028",
+            "DEV-0102",
+            "DEV-0109",
+            "DEV-0146",
+            "DEV-0191",
+            "DEV-0231",
+            "DEV-0248",
+            "DEV-0265",
+            "DEV-0351",
+            "DEV-0498"
+          ],
+          "values": [
+            "[\"DOC-SEC-003\"]",
+            "[]"
+          ]
+        },
+        {
+          "ticket_ids": [
+            "DEV-0006",
+            "DEV-0039",
+            "DEV-0147",
+            "DEV-0227",
+            "DEV-0297",
+            "DEV-0404",
+            "DEV-0412"
+          ],
+          "values": [
+            "[\"DOC-DEPLOY-004\", \"DOC-ACCT-002\"]",
+            "[\"DOC-DEPLOY-004\"]",
+            "[]"
+          ]
+        },
+        {
+          "ticket_ids": [
+            "DEV-0009",
+            "DEV-0040",
+            "DEV-0042",
+            "DEV-0122",
+            "DEV-0127",
+            "DEV-0157",
+            "DEV-0163",
+            "DEV-0263",
+            "DEV-0315",
+            "DEV-0339",
+            "DEV-0345",
+            "DEV-0386",
+            "DEV-0423",
+            "DEV-0473"
+          ],
+          "values": [
+            "[\"DOC-DEPLOY-002\"]",
+            "[]"
+          ]
+        }
+      ]
+    }
+  },
+  "answerability_ceiling": {
+    "per_row": 0.714,
+    "body_any": 0.854,
+    "body_all": 0.374,
+    "reading": "per_row is what the report quotes. body_any and body_all are what the same labels give if a conflict is resolved generously or strictly. The true coverage gap lies between them and this data cannot narrow it further."
+  },
+  "citation_accuracy_rescored": {
+    "automatic_answers": 407,
+    "citation_accuracy_per_row": 0.7125,
+    "citation_accuracy_over_identical_text": 0.8649,
+    "swing_points": 15.23,
+    "replies_on_rows_labelled_uncovered": 86,
+    "of_those_an_identical_body_names_a_document": 57,
+    "and_the_system_cited_that_document": 53,
+    "reading": "The per-row figure is the one the report leads with, because it is the convention the run was scored under and it is the less flattering of the two. Neither reaches the 95% target, so the recommendation does not change."
+  }
+}

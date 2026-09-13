@@ -277,6 +277,7 @@ Every figure in the report comes from one of these, and they all write into
 | Command | What it establishes |
 | --- | --- |
 | `python -m scripts.documentation_gap` | Where the knowledge base fails to cover the queue |
+| `python -m scripts.label_consistency` | Whether the ground-truth labels agree with themselves. Four of six do not |
 | `python -m scripts.tune_threshold` | The routing threshold, from a cost model |
 | `python -m scripts.fairness_audit` | Segment comparison and the matched-pair test |
 | `python -m scripts.answerability_probe` | The negative result that removed a component |
