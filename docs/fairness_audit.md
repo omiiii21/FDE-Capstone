@@ -44,7 +44,16 @@ one of them is considerably stronger than the other.
   smaller than the segment.
 - *Verified resolution*, the share of automatic answers whose cited document
   matches an expected document. This is the closest thing available to "the
-  customer got the right answer", and it is a proxy, not an outcome.
+  customer got the right answer", and it is a proxy, not an outcome. Every
+  figure in this document uses the restricted population, meaning only the
+  automatic answers on tickets where the labels name an expected document at
+  all. The run report also carries the unrestricted version, which counts the
+  86 replies sent on tickets the corpus does not cover and comes out at 71.3%
+  against the restricted 90.3%. The restricted measure is the right one for a
+  fairness comparison, because the coverage gap is not spread evenly across
+  segments and mixing it in would report a documentation problem as a
+  discrimination problem. It is the wrong one for a headline, and the report
+  leads with the unrestricted figure for that reason.
 - *Automation rate*, the share of tickets in the segment answered automatically
   rather than escalated. Included because a segment can look fine on quality
   while quietly being escalated twice as often, and that is also a fairness
