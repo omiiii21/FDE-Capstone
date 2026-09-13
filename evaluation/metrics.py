@@ -354,10 +354,21 @@ def fairness_segments(rows: Sequence[dict[str, Any]]) -> dict[str, Any]:
     automatically and citing a document the labels agree with. Comparing raw
     automation rate would reward a segment the system answers more readily
     without checking whether it answered correctly.
+
+    The denominator is every automatic answer the group carries a coverage
+    label for, including the ones the corpus covers with nothing. Dividing by
+    answerable tickets only, which is what this function used to do, drops each
+    segment's ungrounded answers out of its own score: a segment the system
+    confidently answers from documentation that does not exist would score the
+    same as one it answers correctly. That is the harm most likely to fall
+    unevenly, because it follows from how a group phrases a question, so it
+    belongs in the numerator's denominator rather than beside it. Both figures
+    are reported and the spread is computed on the strict one.
     """
 
     def score(group: Sequence[dict[str, Any]]) -> dict[str, Any]:
         auto = [r for r in group if r["action"] == "auto_respond"]
+        labelled = [r for r in auto if r.get("expected_doc_ids") is not None]
         with_labels = [r for r in auto if r.get("expected_doc_ids")]
         verified = [r for r in with_labels if set(r["cited_doc_ids"]) & set(r["expected_doc_ids"])]
         answerable = [r for r in group if r.get("expected_doc_ids")]
@@ -365,8 +376,13 @@ def fairness_segments(rows: Sequence[dict[str, Any]]) -> dict[str, Any]:
         return {
             "n": len(group),
             "automation_rate": round(_safe_div(len(auto), len(group)), 4),
-            "verified_resolution_rate": round(_safe_div(len(verified), len(with_labels)), 4),
-            "verified_basis": len(with_labels),
+            "verified_resolution_rate": round(_safe_div(len(verified), len(labelled)), 4),
+            "verified_basis": len(labelled),
+            "verified_resolution_rate_answerable_only": round(_safe_div(len(verified), len(with_labels)), 4),
+            "verified_resolution_rate_answerable_only_basis": len(with_labels),
+            "auto_answers_on_tickets_the_corpus_does_not_cover": len(
+                [r for r in auto if r.get("expected_doc_ids") == []]
+            ),
             "retrieval_recall": round(_safe_div(len(hits), len(answerable)), 4),
             "classification_accuracy": round(
                 _safe_div(

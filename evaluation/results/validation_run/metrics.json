@@ -1,16 +1,16 @@
 {
   "run": {
-    "run_id": "run-20260918T015716Z-3b11ee",
-    "started_at": "2026-09-18T01:57:16Z",
-    "finished_at": "2026-09-18T01:57:17Z",
-    "duration_seconds": 0.11,
-    "tickets_per_second": 727.62,
+    "run_id": "validation_run",
+    "started_at": "2026-09-18T02:51:06Z",
+    "finished_at": "2026-09-18T02:51:06Z",
+    "duration_seconds": 0.12,
+    "tickets_per_second": 690.81,
     "input_path": "data/validation_tickets.json",
     "output_dir": "evaluation/results/validation_run",
     "system_version": "2.1.0",
     "python": "3.13.14",
     "platform": "macOS-26.5.2-arm64-arm-64bit-Mach-O",
-    "model_provider": "none",
+    "model_provider": "offline",
     "provider_available": false,
     "provider_model": "n/a",
     "retrieval": {
@@ -57,7 +57,7 @@
     "auto_answers_on_tickets_the_corpus_does_not_cover": 16,
     "escalation_rate": 0.1875,
     "automated_reply_seconds_mean": 0.0006,
-    "automated_reply_seconds_median": 0.0005,
+    "automated_reply_seconds_median": 0.0006,
     "blended_reply_minutes_mean": 40.13,
     "blended_reply_minutes_median": 0.0,
     "blended_reply_assumption": "escalated tickets are assumed to wait 214 minutes, the median human resolution time in the development set; the system does not control that queue",
@@ -230,15 +230,15 @@
     },
     "latency": {
       "mean_seconds": 0.0006,
-      "median_seconds": 0.0005,
-      "p95_seconds": 0.0007,
-      "p99_seconds": 0.0009,
-      "max_seconds": 0.0012,
+      "median_seconds": 0.0006,
+      "p95_seconds": 0.0008,
+      "p99_seconds": 0.001,
+      "max_seconds": 0.0011,
       "p95_by_channel": {
-        "forum": 0.0012,
-        "chat": 0.0007,
+        "forum": 0.0011,
+        "chat": 0.0008,
         "docs_comment": 0.0007,
-        "email": 0.0007
+        "email": 0.0009
       }
     },
     "calibration": {
@@ -295,57 +295,73 @@
         "business": {
           "n": 30,
           "automation_rate": 0.9333,
-          "verified_resolution_rate": 0.8571,
-          "verified_basis": 21,
+          "verified_resolution_rate": 0.6429,
+          "verified_basis": 28,
+          "verified_resolution_rate_answerable_only": 0.8571,
+          "verified_resolution_rate_answerable_only_basis": 21,
+          "auto_answers_on_tickets_the_corpus_does_not_cover": 7,
           "retrieval_recall": 1.0,
           "classification_accuracy": 1.0
         },
         "enterprise": {
           "n": 8,
           "automation_rate": 0.875,
-          "verified_resolution_rate": 0.8333,
-          "verified_basis": 6,
+          "verified_resolution_rate": 0.7143,
+          "verified_basis": 7,
+          "verified_resolution_rate_answerable_only": 0.8333,
+          "verified_resolution_rate_answerable_only_basis": 6,
+          "auto_answers_on_tickets_the_corpus_does_not_cover": 1,
           "retrieval_recall": 1.0,
           "classification_accuracy": 0.875
         },
         "standard": {
           "n": 42,
           "automation_rate": 0.7143,
-          "verified_resolution_rate": 0.9091,
-          "verified_basis": 22,
+          "verified_resolution_rate": 0.6667,
+          "verified_basis": 30,
+          "verified_resolution_rate_answerable_only": 0.9091,
+          "verified_resolution_rate_answerable_only_basis": 22,
+          "auto_answers_on_tickets_the_corpus_does_not_cover": 8,
           "retrieval_recall": 0.96,
           "classification_accuracy": 1.0
         }
       },
-      "verified_resolution_spread_points": 5.2,
+      "verified_resolution_spread_points": 2.38,
       "segments_compared": [
         "business",
         "standard"
       ],
-      "within_five_points": false
+      "within_five_points": true
     },
     "language_fluency": {
       "segments": {
         "fluent": {
           "n": 61,
           "automation_rate": 0.8197,
-          "verified_resolution_rate": 0.9024,
-          "verified_basis": 41,
+          "verified_resolution_rate": 0.74,
+          "verified_basis": 50,
+          "verified_resolution_rate_answerable_only": 0.9024,
+          "verified_resolution_rate_answerable_only_basis": 41,
+          "auto_answers_on_tickets_the_corpus_does_not_cover": 9,
           "retrieval_recall": 0.9773,
           "classification_accuracy": 0.9836
         },
         "non_fluent": {
           "n": 19,
           "automation_rate": 0.7895,
-          "verified_resolution_rate": 0.75,
-          "verified_basis": 8,
+          "verified_resolution_rate": 0.4,
+          "verified_basis": 15,
+          "verified_resolution_rate_answerable_only": 0.75,
+          "verified_resolution_rate_answerable_only_basis": 8,
+          "auto_answers_on_tickets_the_corpus_does_not_cover": 7,
           "retrieval_recall": 1.0,
           "classification_accuracy": 1.0
         }
       },
-      "verified_resolution_spread_points": null,
+      "verified_resolution_spread_points": 34.0,
       "segments_compared": [
-        "fluent"
+        "fluent",
+        "non_fluent"
       ],
       "within_five_points": false
     },
@@ -354,82 +370,107 @@
         "asia_pacific": {
           "n": 21,
           "automation_rate": 0.9048,
-          "verified_resolution_rate": 0.875,
-          "verified_basis": 16,
+          "verified_resolution_rate": 0.7368,
+          "verified_basis": 19,
+          "verified_resolution_rate_answerable_only": 0.875,
+          "verified_resolution_rate_answerable_only_basis": 16,
+          "auto_answers_on_tickets_the_corpus_does_not_cover": 3,
           "retrieval_recall": 1.0,
           "classification_accuracy": 1.0
         },
         "europe": {
           "n": 25,
           "automation_rate": 0.8,
-          "verified_resolution_rate": 0.875,
-          "verified_basis": 16,
+          "verified_resolution_rate": 0.7,
+          "verified_basis": 20,
+          "verified_resolution_rate_answerable_only": 0.875,
+          "verified_resolution_rate_answerable_only_basis": 16,
+          "auto_answers_on_tickets_the_corpus_does_not_cover": 4,
           "retrieval_recall": 1.0,
           "classification_accuracy": 1.0
         },
         "latin_america": {
           "n": 7,
           "automation_rate": 0.5714,
-          "verified_resolution_rate": 1.0,
-          "verified_basis": 3,
+          "verified_resolution_rate": 0.75,
+          "verified_basis": 4,
+          "verified_resolution_rate_answerable_only": 1.0,
+          "verified_resolution_rate_answerable_only_basis": 3,
+          "auto_answers_on_tickets_the_corpus_does_not_cover": 1,
           "retrieval_recall": 1.0,
           "classification_accuracy": 1.0
         },
         "north_america": {
           "n": 27,
           "automation_rate": 0.8148,
-          "verified_resolution_rate": 0.8571,
-          "verified_basis": 14,
+          "verified_resolution_rate": 0.5455,
+          "verified_basis": 22,
+          "verified_resolution_rate_answerable_only": 0.8571,
+          "verified_resolution_rate_answerable_only_basis": 14,
+          "auto_answers_on_tickets_the_corpus_does_not_cover": 8,
           "retrieval_recall": 0.9286,
           "classification_accuracy": 0.963
         }
       },
-      "verified_resolution_spread_points": 1.79,
+      "verified_resolution_spread_points": 19.13,
       "segments_compared": [
         "asia_pacific",
         "europe",
         "north_america"
       ],
-      "within_five_points": true
+      "within_five_points": false
     },
     "channel": {
       "segments": {
         "chat": {
           "n": 22,
           "automation_rate": 0.7727,
-          "verified_resolution_rate": 0.7692,
-          "verified_basis": 13,
+          "verified_resolution_rate": 0.5882,
+          "verified_basis": 17,
+          "verified_resolution_rate_answerable_only": 0.7692,
+          "verified_resolution_rate_answerable_only_basis": 13,
+          "auto_answers_on_tickets_the_corpus_does_not_cover": 4,
           "retrieval_recall": 0.9231,
           "classification_accuracy": 0.9545
         },
         "docs_comment": {
           "n": 16,
           "automation_rate": 0.75,
-          "verified_resolution_rate": 0.875,
-          "verified_basis": 8,
+          "verified_resolution_rate": 0.5833,
+          "verified_basis": 12,
+          "verified_resolution_rate_answerable_only": 0.875,
+          "verified_resolution_rate_answerable_only_basis": 8,
+          "auto_answers_on_tickets_the_corpus_does_not_cover": 4,
           "retrieval_recall": 1.0,
           "classification_accuracy": 1.0
         },
         "email": {
           "n": 31,
           "automation_rate": 0.871,
-          "verified_resolution_rate": 0.9524,
-          "verified_basis": 21,
+          "verified_resolution_rate": 0.7407,
+          "verified_basis": 27,
+          "verified_resolution_rate_answerable_only": 0.9524,
+          "verified_resolution_rate_answerable_only_basis": 21,
+          "auto_answers_on_tickets_the_corpus_does_not_cover": 6,
           "retrieval_recall": 1.0,
           "classification_accuracy": 1.0
         },
         "forum": {
           "n": 11,
           "automation_rate": 0.8182,
-          "verified_resolution_rate": 0.8571,
-          "verified_basis": 7,
+          "verified_resolution_rate": 0.6667,
+          "verified_basis": 9,
+          "verified_resolution_rate_answerable_only": 0.8571,
+          "verified_resolution_rate_answerable_only_basis": 7,
+          "auto_answers_on_tickets_the_corpus_does_not_cover": 2,
           "retrieval_recall": 1.0,
           "classification_accuracy": 1.0
         }
       },
-      "verified_resolution_spread_points": 18.32,
+      "verified_resolution_spread_points": 15.74,
       "segments_compared": [
         "chat",
+        "docs_comment",
         "email"
       ],
       "within_five_points": false
@@ -439,21 +480,27 @@
         "long": {
           "n": 53,
           "automation_rate": 0.9057,
-          "verified_resolution_rate": 0.8571,
-          "verified_basis": 35,
+          "verified_resolution_rate": 0.625,
+          "verified_basis": 48,
+          "verified_resolution_rate_answerable_only": 0.8571,
+          "verified_resolution_rate_answerable_only_basis": 35,
+          "auto_answers_on_tickets_the_corpus_does_not_cover": 13,
           "retrieval_recall": 0.9737,
           "classification_accuracy": 0.9811
         },
         "short": {
           "n": 27,
           "automation_rate": 0.6296,
-          "verified_resolution_rate": 0.9286,
-          "verified_basis": 14,
+          "verified_resolution_rate": 0.7647,
+          "verified_basis": 17,
+          "verified_resolution_rate_answerable_only": 0.9286,
+          "verified_resolution_rate_answerable_only_basis": 14,
+          "auto_answers_on_tickets_the_corpus_does_not_cover": 3,
           "retrieval_recall": 1.0,
           "classification_accuracy": 1.0
         }
       },
-      "verified_resolution_spread_points": 7.15,
+      "verified_resolution_spread_points": 13.97,
       "segments_compared": [
         "long",
         "short"

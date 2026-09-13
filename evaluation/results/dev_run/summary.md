@@ -1,9 +1,9 @@
-# Evaluation run run-20260918T015715Z-048d94
+# Evaluation run dev_run
 
 Input: `data/development_tickets.json`  
-Started: 2026-09-18T01:57:15Z  
-Duration: 0.79s (636.2 tickets/sec)  
-Provider: none (available: False)  
+Started: 2026-09-18T02:51:05Z  
+Duration: 0.62s (800.63 tickets/sec)  
+Provider: offline (available: False)  
 Retrieval: lexical, top_k=5, floor=4.2  
 Confidence threshold: 0.62
 
@@ -63,11 +63,11 @@ Responses blocked before sending: none. All 407 released responses passed every 
 
 | Dimension | Spread in verified resolution | Under 5 points |
 | --- | --- | --- |
-| customer_tier | 5.5 pts | no |
-| language_fluency | 1.9 pts | yes |
-| customer_region | 9.7 pts | no |
-| channel | 7.4 pts | no |
-| ticket_length | 3.3 pts | yes |
+| customer_tier | 7.5 pts | no |
+| language_fluency | 2.9 pts | yes |
+| customer_region | 3.1 pts | yes |
+| channel | 12.4 pts | no |
+| ticket_length | 5.8 pts | no |
 
 Calibration bands holding fewer than 20 predictions are excluded from the worst-gap figure; 22 prediction(s) fall in those bands. Across every band including them the worst gap is 23.7 points, which is one or two tickets rather than a calibration problem. The expected calibration error above is over all bands and is the figure to read.
 
