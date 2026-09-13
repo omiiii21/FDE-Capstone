@@ -103,15 +103,31 @@ away its only strong signal.
   | `--ink` on `--surface` | 18.36:1 |
 
   `--muted` on `--surface-2` is the tightest at 5.02:1, so that is the pair to
-  recompute if either token moves. `--field-line` sits at 1.50:1 on the field and
-  is meant to: it is a hairline dividing two readings, not a control boundary or
-  a state indicator, and a divider loud enough to pass 3:1 would fight the
-  figures it separates. Any new pair is computed before it ships.
+  recompute if either token moves. Any new pair is computed before it ships.
+
+- **A boundary that identifies a control needs 3:1, and `--rule` does not reach
+  it.** `--rule` is 1.52:1 on `--surface`, which is correct for a divider and
+  wrong for the edge of an input. The distinction is the one WCAG 1.4.11 draws:
+  a hairline separating two readings carries no information, so it may be quiet;
+  the border of a text field is the only thing saying a text field is there. So
+  dividers use `--rule` and `--field-line`, and **control boundaries use
+  `--muted` at 5.95:1**. An earlier version of this document argued the first
+  half of that and then specified `--rule` for inputs, which contradicted it.
 - Secondary text on the colour field is tinted from the field's own hue. Grey on
   a coloured surface is the tell that a palette was assembled rather than chosen.
 - The three outcome colours are reserved. Answered, escalated, blocked. They
   never decorate anything else, because the moment they do they stop meaning
   anything.
+- **This costs something and the cost is accepted.** The standing figures on the
+  head carry a delta against CloudServe's baseline, and green-for-better,
+  amber-for-worse is the obvious encoding. It is also the encoding that would
+  put a green number a few centimetres from a green "answered" chip meaning
+  something entirely different. So deltas use `--field-ink-dim` with a direction
+  arrow and a screen-reader phrase, and an operator reads the direction rather
+  than seeing it. That is a real loss of glanceability, traded for keeping three
+  colours that mean exactly one thing each about a live ticket. Revisit it only
+  by adding a fourth pair that is visibly not one of the three, never by
+  borrowing one.
 - No gradients. Not on the field, not on a button, not behind text.
 
 ---
@@ -121,7 +137,9 @@ away its only strong signal.
 **Two families, and each has a job it does not share.**
 
 - **Fira Sans** for everything a person reads as language: headings, prose,
-  labels, buttons, explanatory copy.
+  buttons, explanatory copy. Buttons are Fira Sans 14px at weight 600, in
+  sentence case, not uppercase mono: a button is an instruction to a person, not
+  a reading.
 - **Fira Code** for everything a person reads as data: identifiers, scores,
   percentages, rule names, document ids, timestamps, code. Monospace here is not
   costume for "technical", it is what lets a column of figures line up and what
@@ -134,7 +152,9 @@ clamp-sized heading that shrinks inside a panel looks worse, not better.
 
 ```
 --t-2xl  32px   the one page heading
---t-xl   24px   a reading on the instrument head
+--t-xl   24px   a reading: a standing figure, the verdict, the intent, the
+                confidence. Wherever a number or a state is the thing being
+                read, on the head or in the body.
 --t-lg   18px   a panel heading
 --t-md   16px   body
 --t-sm   14px   dense body, table cells
@@ -158,7 +178,10 @@ Nothing outside that list. Line height 1.5 for prose, 1.35 for dense cells.
 
 ## 4 Space and structure
 
-A 4px base, used as 8 / 12 / 16 / 20 / 24 / 32. Nothing between.
+A 4px base, used as 8 / 12 / 16 / 20 / 24 / 32. Nothing between those steps.
+The base itself, 4px, is available for the inner padding of small controls
+only: a chip around 12px text cannot take 8px vertically without becoming a
+32px slab in a dense row.
 
 ```
 --s-1 8px   --s-2 12px   --s-3 16px   --s-4 20px   --s-5 24px   --s-6 32px
@@ -194,7 +217,7 @@ set.
 | Buttons | Square-ish (3px), 1px border, no shadow. Primary is `--accent` filled. Destructive is `--blocked` outlined, filled only on hover, because halting automation should take a deliberate second. |
 | Chips | 12px Fira Code, 3px radius, 1px border, the semantic field as background. Used for rule identifiers, channel, tier, and state. |
 | Rows | A selectable row shows selection with a 2px left edge in `--accent` and `--surface-2` behind it, not with a colour wash. |
-| Inputs | 1px `--rule`, 3px radius, `--surface`. Focus is a 2px `--accent` ring offset 1px, never a removed outline. |
+| Inputs | 1px `--muted`, 3px radius, `--surface`. Focus is a 2px `--accent` ring offset 1px, never a removed outline. |
 | Definition | Any term a non-engineer would not know carries `border-bottom: 1px dotted`. It opens on hover **and** focus, closes on Escape, and is wired with `aria-describedby`. |
 | Tables | Header row is `--surface-2`, 12px uppercase Fira Code. Rows separated by `--rule-soft`. Figures right-aligned and tabular. |
 
@@ -261,9 +284,20 @@ The walkthrough exists to reach one moment: **a ticket arrives and the system
 shows its full reasoning and the rule that decided it.** Not to tour the
 interface.
 
-Four steps, skippable at every one and with Escape, replayable from a quiet
+Five steps: the ticket rail, the ticket as it arrived, the classification and
+its confidence, the retrieved passages, and the routing decision with the rule
+that made it. Skippable at every one and with Escape, replayable from a quiet
 control, anchored to real elements, and it spotlights rather than blocking
-behind a modal. It fires once, from `localStorage`, wrapped in try/catch, and
+behind a modal.
+
+The spotlight is four dimmed bands framing the anchor, not a spread
+`box-shadow`. The shadow is the obvious implementation and section 1 forbids it.
+The first replacement was a full-viewport overlay clipped by a self-intersecting
+polygon, which is the clever version and shipped a bug: the nonzero winding rule
+resolved the crossing the other way and left the whole masthead and instrument
+head unpainted while the work area below them dimmed correctly. Four rectangles
+cannot be ambiguous about which side is inside, they animate on the same
+properties, and they are three lines longer. Prefer them. It fires once, from `localStorage`, wrapped in try/catch, and
 the page is perfect if that throws.
 
 ---

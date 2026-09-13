@@ -4,68 +4,76 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Operator console · CloudServe support triage</title>
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%230d6154' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='3' y='3' width='18' height='18'/%3E%3Cpath d='M3 9h18'/%3E%3Cpath d='M9 21V9'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600&family=Fira+Sans:wght@300;400;500;600;700&display=swap">
 <style>
 /* ===========================================================================
    CloudServe operator console
-   Grid, hairlines, strong left alignment, a strict modular type scale, light
-   only. The page is an instrument, not a brochure: the measured figures sit in
-   a thin strip because they do not change while the page is open, and the one
-   thing that does change - a ticket resolving into a decision - is the largest
-   and the only animated thing on the screen.
+   An instrument panel, not a dashboard. One machined surface divided by
+   hairlines: readings sit in cells, the cells share edges, and nothing floats.
+   The dividers are the grid itself - a 1px gap filled by the rule colour -
+   rather than a border on each child, so two adjacent readings share one line.
+   Radius is 0 on everything structural and 3px on small controls only. There
+   is no drop shadow anywhere on this page.
+   Every token here comes from docs/DESIGN.md. Where this file and that
+   document disagree, this file is wrong.
    =========================================================================== */
 
 :root{
   color-scheme:light;
-  accent-color:#0d6154;
 
-  /* --- palette ------------------------------------------------------------
-     Measured against the grounds each colour actually lands on. --muted is the
-     project's #6b7a74 darkened to #5c6b65: the original scores 4.35:1 on
-     --paper and 3.76:1 on --miss-bg. The value below clears 4.5:1 everywhere
-     it is used (lowest is 4.68:1, on --miss-bg). */
-  --paper:#fbfbf9;
+  /* --- ground and surfaces ----------------------------------------------- */
+  --field:#0c3f38;
+  --field-2:#0a342e;
+  --field-line:#1d5b51;
+  --field-ink:#eef4f2;
+  --field-ink-dim:#9dc0b8;
+
+  --paper:#f2f4f1;
   --surface:#ffffff;
-  --surface-2:#f4f6f2;
-  --ink:#101917;
-  --ink-2:#3c4a45;
-  --muted:#5c6b65;
-  --rule:#dfe4dc;
-  --accent:#0d6154;
-  --accent-wash:#e2edea;
-  --on-accent:#ffffff;
-  --good:#1f6b32;   --good-bg:#e8f2e9;   --good-edge:#c6ddcb;
-  --warn:#9a5410;   --warn-bg:#fbeee0;   --warn-edge:#e9d3b4;
-  --miss:#97301f;   --miss-bg:#fbe6e2;   --miss-edge:#eec8c0;
-  /* Inverted surface, used for the definition popovers. Its secondary text is
-     tinted from the same hue rather than dropped to grey: 8.68:1 on --ink. */
-  --invert:#101917;
-  --on-invert:#fbfbf9;
-  --on-invert-2:#a9b8b2;
-  --scrim:rgba(16,25,23,.42);
-  --select:#d6e4e0;
+  --surface-2:#e9ede7;
+  --rule:#ccd4ca;
+  --rule-soft:#e0e5dd;
 
-  /* --- type scale: 12 / 14 / 16 / 18 / 24 / 32, nothing else -------------- */
+  /* --- text on light ------------------------------------------------------ */
+  --ink:#0e1614;
+  --ink-2:#38443f;
+  --muted:#59675f;
+
+  /* --- the one accent ----------------------------------------------------- */
+  --accent:#0b5a4e;
+  --accent-weak:#dceae6;
+  --accent-ink:#ffffff;
+
+  /* --- the three outcomes, and only these three --------------------------- */
+  --answered:#1c6430;   --answered-field:#e2efe4;   --answered-line:#b9d5bf;
+  --escalated:#8c4a0c;  --escalated-field:#f8ecdd;  --escalated-line:#e6cfaf;
+  --blocked:#8c2c1c;    --blocked-field:#f9e4df;    --blocked-line:#ecc4ba;
+
+  /* The walkthrough spotlight needs something to dim the page with. It is
+     --ink at 38%, not a colour of its own, and no text ever sits on it. */
+  --scrim:rgba(14,22,20,.38);
+
+  caret-color:var(--accent);
+  accent-color:var(--accent);
+
+  /* --- type: 12 / 14 / 16 / 18 / 24 / 32, nothing else -------------------- */
   --t-xs:12px; --t-sm:14px; --t-md:16px; --t-lg:18px; --t-xl:24px; --t-2xl:32px;
 
-  /* --- spacing scale: 8 / 12 / 16 / 20 / 24 / 32 ------------------------- */
+  /* --- space: 8 / 12 / 16 / 20 / 24 / 32 ---------------------------------- */
   --s-1:8px; --s-2:12px; --s-3:16px; --s-4:20px; --s-5:24px; --s-6:32px;
 
   --ui:"Fira Sans",-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;
   --mono:"Fira Code",ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
 
-  /* 150-250ms for state, one longer curve reserved for the decision. */
-  --motion:170ms cubic-bezier(.2,0,0,1);
-  --motion-slow:220ms cubic-bezier(.2,0,0,1);
-  --expo:cubic-bezier(.16,1,.3,1);
+  --motion:180ms cubic-bezier(.2,0,0,1);
+  --motion-slow:240ms cubic-bezier(.2,0,0,1);
 }
 
-*{box-sizing:border-box;-webkit-tap-highlight-color:rgba(13,97,84,.14)}
-html{-webkit-text-size-adjust:100%;text-size-adjust:100%;scrollbar-color:var(--muted) var(--surface-2);
-  scrollbar-width:thin}
+*{box-sizing:border-box;-webkit-tap-highlight-color:rgba(11,90,78,.14)}
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%;
+  scrollbar-color:var(--rule) var(--surface-2);scrollbar-width:thin}
 html,body{margin:0}
 body{
   background:var(--paper);
@@ -83,40 +91,38 @@ button{font:inherit;color:inherit;background:none;border:0}
 code{font-family:var(--mono);font-size:var(--t-xs)}
 strong,b{font-weight:600}
 
-/* --- browser surfaces, all themed from the palette ---------------------- */
-::selection{background:var(--select);color:var(--ink)}
-input,textarea,select{caret-color:var(--accent)}
+/* --- the surfaces the browser draws, all themed ------------------------- */
+::selection{background:var(--accent-weak);color:var(--ink)}
 ::placeholder{color:var(--muted);opacity:1}
 ::-webkit-scrollbar{width:10px;height:10px}
 ::-webkit-scrollbar-track{background:var(--surface-2)}
-::-webkit-scrollbar-thumb{background:var(--muted);border:2px solid var(--surface-2)}
-::-webkit-scrollbar-thumb:hover{background:var(--ink-2)}
+::-webkit-scrollbar-thumb{background:var(--rule);border-radius:0}
+::-webkit-scrollbar-thumb:hover{background:var(--muted)}
 ::-webkit-scrollbar-corner{background:var(--surface-2)}
 ::marker{color:var(--muted)}
-a{color:var(--accent);text-decoration-thickness:1px;text-underline-offset:3px}
+a{color:var(--accent);text-decoration-thickness:1px;text-underline-offset:2px}
 a:hover{text-decoration-thickness:2px}
 a:active{color:var(--ink)}
 :target{scroll-margin-top:var(--s-6)}
-
-svg.i{width:16px;height:16px;flex:none;display:block}
-svg.i-sm{width:12px;height:12px}
-svg.i-lg{width:20px;height:20px}
-
-/* focus is never invisible and never hidden behind a neighbour */
 :focus{outline:none}
-:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
+.on-field :focus-visible{outline-color:var(--field-ink)}
 .inset-focus:focus-visible{outline-offset:-2px}
+
+/* --- icons: Lucide outline, 16px, stroke 1.5, one weight throughout ------ */
+svg.i{width:16px;height:16px;flex:none;display:block;stroke-width:1.5}
 
 .sr-only{
   position:absolute;width:1px;height:1px;margin:-1px;padding:0;overflow:hidden;
   clip:rect(0 0 0 0);clip-path:inset(50%);white-space:nowrap;border:0;
 }
 .skip-link{
-  position:absolute;left:var(--s-3);top:-64px;z-index:120;background:var(--ink);color:var(--on-invert);
-  font-family:var(--mono);font-size:var(--t-xs);letter-spacing:.06em;padding:14px var(--s-3);
-  transition:top var(--motion);
+  position:absolute;left:var(--s-3);top:-64px;z-index:120;background:var(--field);
+  color:var(--field-ink);font-family:var(--mono);font-size:var(--t-xs);letter-spacing:.1em;
+  text-transform:uppercase;padding:var(--s-2) var(--s-3);transition:top var(--motion);
+  display:inline-flex;align-items:center;min-height:44px;
 }
-.skip-link:focus-visible{top:var(--s-1);outline-offset:2px}
+.skip-link:focus-visible{top:var(--s-1)}
 
 @media (prefers-reduced-motion: reduce){
   *,*::before,*::after{
@@ -127,88 +133,91 @@ svg.i-lg{width:20px;height:20px}
   }
 }
 
-/* ---------------------------------------------------------------- shell -- */
-.wrap{max-width:1440px;margin:0 auto;padding-inline:var(--s-6)}
+/* ============================================================== shell === */
+.page{max-width:1440px;margin:0 auto;padding-inline:var(--s-6)}
 
-/* ---------------------------------------------------------------- header - */
-.masthead{border-bottom:1px solid var(--rule)}
-.masthead-row{
+/* ============================================================ masthead === */
+.masthead{
   display:flex;flex-wrap:wrap;justify-content:space-between;align-items:flex-start;
-  gap:var(--s-3) var(--s-6);padding-top:var(--s-5);padding-bottom:var(--s-4);
+  gap:var(--s-3) var(--s-6);padding-top:var(--s-6);padding-bottom:var(--s-4);
 }
-.brand{display:flex;gap:var(--s-2);align-items:flex-start;min-width:0}
-.brand-mark{color:var(--accent);margin-top:3px}
-h1{font-size:var(--t-xl);font-weight:600;letter-spacing:-.02em;line-height:1.2}
-.strap{font-size:var(--t-sm);color:var(--ink-2);max-width:66ch;margin-top:var(--s-1)}
+.brand{min-width:0;flex:1 1 520px}
+h1{font-size:var(--t-2xl);font-weight:600;letter-spacing:-.01em;line-height:1.2;text-wrap:balance}
+.strap{font-size:var(--t-sm);color:var(--ink-2);max-width:72ch;margin-top:var(--s-1)}
 .byline{text-align:right;flex:none}
-.byline .who{font-size:var(--t-lg);font-weight:600;letter-spacing:-.01em;line-height:1.3;white-space:nowrap}
-.byline .what{font-family:var(--mono);font-size:var(--t-xs);letter-spacing:.02em;color:var(--muted);
-  margin-top:6px;line-height:1.5}
+.byline .who{font-size:var(--t-lg);font-weight:600;letter-spacing:-.01em;line-height:1.35;
+  white-space:nowrap}
+.byline .what{font-family:var(--mono);font-size:var(--t-xs);letter-spacing:.02em;
+  color:var(--muted);margin-top:var(--s-1);line-height:1.35}
 
-/* --------------------------------------------------- the measured strip -- */
-/* Six figures on one line at 12/14px. They were true before the page loaded
-   and will be true after it closes, so they are reference, not headline. */
-.strip{border-top:1px solid var(--rule);padding-top:var(--s-2);padding-bottom:var(--s-2)}
-.strip-row{display:flex;flex-wrap:wrap;align-items:flex-start;gap:var(--s-2) var(--s-3);
-  justify-content:space-between}
-.ledger{display:flex;flex-wrap:wrap;align-items:stretch;flex:1 1 640px;min-width:0}
-/* No rules between the figures on one line: the label-over-value pairing does
-   the grouping, and a stripe of verticals would be six more marks for nothing.
-   Below 860px they wrap, and there each one takes a hairline of its own. */
-.led{position:relative;padding:4px var(--s-5) 4px 0;min-width:0;min-height:44px}
-.led:last-child{padding-right:0}
-.led dt{font-family:var(--mono);font-size:var(--t-xs);font-weight:500;letter-spacing:.08em;
-  text-transform:uppercase;color:var(--muted);line-height:1.5;white-space:nowrap}
-.led dd{font-family:var(--mono);font-size:var(--t-sm);font-weight:600;line-height:1.5;
-  display:flex;align-items:baseline;gap:6px;flex-wrap:wrap;color:var(--ink)}
-.led dd small{font-family:var(--ui);font-size:var(--t-xs);font-weight:400;color:var(--muted)}
-.delta{display:inline-flex;align-items:center;gap:3px;font-family:var(--mono);font-size:var(--t-xs);
-  font-weight:600}
-.delta.good{color:var(--good)}
-.delta.warn{color:var(--warn)}
-.strip-tools{display:flex;flex-wrap:wrap;gap:var(--s-1);align-items:center;flex:none}
+/* ==================================================== instrument head === */
+/* One saturated block carrying the standing figures and the controls that
+   change the system's state. The only place colour is used at volume, and its
+   weight is what stops the page reading as a document. */
+.head{display:grid;gap:1px;background:var(--field-line);color:var(--field-ink)}
+.figures{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:1px;
+  background:var(--field-line)}
+.fig{background:var(--field);padding:var(--s-3);min-width:0;position:relative}
+.fig dt{
+  font-family:var(--mono);font-size:var(--t-xs);font-weight:500;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--field-ink-dim);line-height:1.35;
+  min-height:calc(2 * 1.35 * 12px);
+}
+.fig dd{font-family:var(--mono);font-size:var(--t-xl);font-weight:600;line-height:1.35;
+  margin-top:var(--s-2);font-variant-numeric:tabular-nums;overflow-wrap:anywhere}
+.fig dd .unit{font-family:var(--ui);font-size:var(--t-xs);font-weight:400;
+  color:var(--field-ink-dim);letter-spacing:0}
+.fig-sub{display:flex;flex-wrap:wrap;align-items:center;gap:var(--s-1);margin-top:var(--s-1);
+  font-family:var(--mono);font-size:var(--t-xs);color:var(--field-ink-dim);line-height:1.35}
+.delta{display:inline-flex;align-items:center;gap:4px;font-variant-numeric:tabular-nums}
 
-/* the run record, closed by default */
-.runrec{border-top:1px solid var(--rule);margin-top:var(--s-2);padding-top:var(--s-2)}
-.runrec[hidden]{display:none}
-.runrec table{min-width:420px}
-.runrec .hint{margin-bottom:var(--s-2)}
-.runline{font-family:var(--mono);font-size:var(--t-xs);color:var(--muted);line-height:1.6;
-  overflow-wrap:anywhere;margin-top:var(--s-2)}
-
-/* ----------------------------------------------------------- kill switch - */
-.opsbar{border-top:1px solid var(--rule);padding-top:var(--s-2);padding-bottom:var(--s-2)}
-.ops-row{display:flex;flex-wrap:wrap;align-items:center;gap:var(--s-2) var(--s-3)}
-.state-pill{
-  display:inline-flex;align-items:center;gap:var(--s-1);min-height:44px;padding:10px var(--s-3);
-  font-family:var(--mono);font-size:var(--t-xs);font-weight:600;letter-spacing:.08em;
+/* --- the controls that change the system's state ------------------------ */
+.ops{background:var(--field-2);padding:var(--s-3)}
+.ops-row{display:flex;flex-wrap:wrap;align-items:flex-end;gap:var(--s-2) var(--s-3)}
+.lamp{
+  display:inline-flex;align-items:center;gap:var(--s-1);min-height:44px;
+  padding:var(--s-2) var(--s-3);border-radius:3px;
+  font-family:var(--mono);font-size:var(--t-xs);font-weight:600;letter-spacing:.1em;
   text-transform:uppercase;white-space:nowrap;
-  border:1px solid var(--rule);background:var(--surface-2);color:var(--muted);
+  border:1px solid var(--field-line);background:var(--field);color:var(--field-ink-dim);
   transition:color var(--motion),background-color var(--motion),border-color var(--motion);
 }
-.state-pill.live{background:var(--good-bg);border-color:var(--good-edge);color:var(--good)}
-.state-pill.halted{background:var(--miss-bg);border-color:var(--miss-edge);color:var(--miss)}
-.ops-controls{display:flex;align-items:flex-end;gap:var(--s-1);flex-wrap:wrap}
-.ops-note{flex:1 1 320px;min-width:260px;font-size:var(--t-xs);color:var(--muted);line-height:1.5}
-.ops-note.err{color:var(--miss)}
+.lamp.live{background:var(--answered-field);border-color:var(--answered-line);color:var(--answered)}
+.lamp.halted{background:var(--blocked-field);border-color:var(--blocked-line);color:var(--blocked)}
+.ops-note{flex:1 1 300px;min-width:240px;font-size:var(--t-xs);color:var(--field-ink-dim);
+  line-height:1.5;max-width:72ch}
+.ops-note code{color:var(--field-ink)}
+.ops-note.err{color:var(--blocked-field)}
 
-/* ------------------------------------------------------------- controls -- */
-.field{display:grid;gap:4px;min-width:0}
-.field > label,.lbl{
-  font-family:var(--mono);font-size:var(--t-xs);font-weight:500;letter-spacing:.08em;
-  text-transform:uppercase;color:var(--muted);line-height:1.5;
+/* ============================================================== labels === */
+/* The instrument's voice: Fira Code, 12px, uppercase, .1em, used for every
+   field label on the page. */
+.lbl,.field > label,.panel-head .meta,thead th,.runners-head,.rail-state,.k,.wt-step{
+  font-family:var(--mono);font-size:var(--t-xs);font-weight:500;letter-spacing:.1em;
+  text-transform:uppercase;line-height:1.35;
 }
+
+/* ============================================================ controls === */
+.field{display:grid;gap:var(--s-1);min-width:0}
+.field > label{color:var(--muted)}
+.on-field .field > label{color:var(--field-ink-dim)}
 .field input,.field select,.field textarea{
   font-family:var(--ui);font-size:var(--t-sm);line-height:1.5;color:var(--ink);
-  background:var(--surface);border:1px solid var(--rule);border-radius:0;
-  padding:10px var(--s-2);min-height:44px;width:100%;
+  background:var(--surface);border:1px solid var(--muted);border-radius:3px;
+  padding:var(--s-2);min-height:44px;width:100%;
   transition:border-color var(--motion),background-color var(--motion);
 }
+.on-field .field input{background:var(--field);border-color:var(--field-ink-dim);
+  color:var(--field-ink)}
+.on-field .field input::placeholder{color:var(--field-ink-dim)}
 .field input.mono{font-family:var(--mono)}
 .field textarea{min-height:104px;resize:vertical}
-.field input:hover,.field select:hover,.field textarea:hover{border-color:var(--muted)}
-.field input:focus-visible,.field select:focus-visible,.field textarea:focus-visible{border-color:var(--accent)}
-.field input[aria-invalid="true"]{border-color:var(--miss);background:var(--miss-bg)}
+.field input:hover,.field select:hover,.field textarea:hover{border-color:var(--ink)}
+.on-field .field input:hover{border-color:var(--field-ink)}
+.field input:focus-visible,.field select:focus-visible,.field textarea:focus-visible{
+  border-color:var(--accent)}
+.field input[aria-invalid="true"]{border-color:var(--blocked);background:var(--blocked-field);
+  color:var(--ink)}
 .field input:disabled,.field select:disabled,.field textarea:disabled{
   background:var(--surface-2);color:var(--muted);cursor:not-allowed;border-style:dashed}
 .field-hint{font-size:var(--t-xs);color:var(--muted);line-height:1.5}
@@ -216,381 +225,376 @@ h1{font-size:var(--t-xl);font-weight:600;letter-spacing:-.02em;line-height:1.2}
 .btn{
   position:relative;overflow:hidden;
   display:inline-flex;align-items:center;justify-content:center;gap:var(--s-1);
-  font-family:var(--mono);font-size:var(--t-xs);font-weight:600;letter-spacing:.06em;
-  text-transform:uppercase;min-height:44px;padding:10px var(--s-3);cursor:pointer;
-  border:1px solid var(--ink);background:transparent;color:var(--ink);border-radius:0;
+  font-family:var(--ui);font-size:var(--t-sm);font-weight:600;line-height:1.35;
+  min-height:44px;padding:var(--s-2) var(--s-3);cursor:pointer;
+  border:1px solid var(--ink);background:var(--surface);color:var(--ink);border-radius:3px;
   transition:background-color var(--motion),color var(--motion),border-color var(--motion),
     transform var(--motion),opacity var(--motion);
 }
 .btn:hover{background:var(--ink);color:var(--paper)}
 .btn:active{transform:translateY(1px)}
-.btn[disabled]{opacity:.45;cursor:not-allowed;border-style:dashed}
-.btn[disabled]:hover{background:transparent;color:var(--ink);transform:none}
-.btn.danger{border-color:var(--miss);color:var(--miss)}
-.btn.danger:hover{background:var(--miss);color:var(--on-accent)}
-.btn.danger[disabled]:hover{background:transparent;color:var(--miss)}
-.btn.primary{background:var(--accent);border-color:var(--accent);color:var(--on-accent);width:100%}
+.btn[disabled]{opacity:.5;cursor:not-allowed;border-style:dashed}
+.btn[disabled]:hover{background:var(--surface);color:var(--ink);transform:none}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:var(--accent-ink);width:100%}
 .btn.primary:hover{background:var(--ink);border-color:var(--ink);color:var(--paper)}
-.btn.primary[disabled]:hover{background:var(--accent);border-color:var(--accent);color:var(--on-accent)}
-/* Busy says so in words. A looping bar would be the only perpetual motion on
-   the page, for a call that finishes in under a millisecond. */
+.btn.primary[disabled]:hover{background:var(--accent);border-color:var(--accent);
+  color:var(--accent-ink)}
+/* Halting automation should take a deliberate second, so the destructive
+   control is outlined and fills only under the pointer. */
+.btn.danger{border-color:var(--blocked);color:var(--blocked)}
+.btn.danger:hover{background:var(--blocked);border-color:var(--blocked);color:var(--accent-ink)}
+.btn.danger[disabled]:hover{background:var(--surface);color:var(--blocked)}
+.on-field .btn{background:var(--field);border-color:var(--field-ink-dim);color:var(--field-ink)}
+.on-field .btn:hover{background:var(--field-ink);border-color:var(--field-ink);color:var(--field)}
+.on-field .btn[disabled]:hover{background:var(--field);color:var(--field-ink)}
+.on-field .btn.danger{border-color:var(--blocked-line);color:var(--blocked-field)}
+.on-field .btn.danger:hover{background:var(--blocked);border-color:var(--blocked);
+  color:var(--accent-ink)}
+.on-field .btn.danger[disabled]:hover{background:var(--field);color:var(--blocked-field)}
 .btn[aria-busy="true"]{cursor:progress}
-
-.ghost{
-  display:inline-flex;align-items:center;gap:6px;min-height:44px;padding:10px var(--s-2);cursor:pointer;
-  font-family:var(--mono);font-size:var(--t-xs);font-weight:500;letter-spacing:.04em;
-  color:var(--ink-2);border:1px solid transparent;
-  transition:color var(--motion),border-color var(--motion),background-color var(--motion);
+.btn[aria-busy="true"]::after{
+  content:"";position:absolute;left:0;right:0;bottom:0;height:2px;background:currentColor;
 }
-.ghost:hover{color:var(--accent);border-color:var(--rule);background:var(--surface)}
-.ghost:active{color:var(--ink)}
-.ghost[aria-expanded="true"]{color:var(--accent);border-color:var(--rule);background:var(--surface)}
-.ghost[aria-expanded="true"] .chev-d{transform:rotate(180deg)}
-.ghost .chev-d{transition:transform var(--motion)}
 
 .link-btn{
-  display:inline-flex;align-items:center;gap:6px;min-height:44px;cursor:pointer;
-  font-family:var(--mono);font-size:var(--t-xs);font-weight:500;letter-spacing:.04em;
-  color:var(--accent);border-bottom:1px solid var(--accent);
-  transition:color var(--motion),border-color var(--motion);
+  display:inline-flex;align-items:center;gap:var(--s-1);min-height:44px;cursor:pointer;
+  font-family:var(--ui);font-size:var(--t-sm);font-weight:600;color:var(--accent);
+  border-bottom:1px solid var(--accent);transition:color var(--motion),border-color var(--motion);
 }
 .link-btn:hover{color:var(--ink);border-color:var(--ink)}
-.link-btn:active{opacity:.7}
+.link-btn:active{color:var(--ink);opacity:.7}
 
-/* --------------------------------------------------- definition trigger -- */
+/* ========================================================= definitions === */
 .def{
-  font:inherit;letter-spacing:inherit;text-transform:inherit;color:inherit;padding:0;cursor:help;
-  text-align:inherit;text-decoration:underline dotted;text-decoration-color:currentColor;
-  text-decoration-thickness:1px;text-underline-offset:3px;
-  transition:color var(--motion),text-decoration-color var(--motion);
+  font:inherit;letter-spacing:inherit;text-transform:inherit;color:inherit;cursor:help;
+  text-align:inherit;padding:0;border:0;border-bottom:1px dotted var(--muted);
+  transition:color var(--motion),border-color var(--motion);
 }
-.def:hover,.def[data-open="1"]{color:var(--accent);text-decoration-color:var(--accent)}
+.on-field .def,.deftip .def{border-bottom-color:var(--field-ink-dim)}
+.def:hover,.def[data-open="1"]{color:var(--accent);border-bottom-color:var(--accent)}
+.on-field .def:hover,.on-field .def[data-open="1"]{color:var(--field-ink);
+  border-bottom-color:var(--field-ink)}
 .def:active{color:var(--ink)}
-.def:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
-/* Standalone labels take the whole cell as their target; inline triggers
-   inside a sentence are exempt from the 44px rule. */
-.led .def::after,.readout .def::after,.rail-name .def::after{content:"";position:absolute;inset:0}
+/* A label standing alone takes its whole cell as the target; a trigger inside
+   a sentence is exempt from the 44px rule. */
+.fig dt .def::after,.readout .k .def::after,.rail-name .def::after{
+  content:"";position:absolute;inset:0}
 
 .deftip{
-  position:fixed;z-index:200;display:none;max-width:320px;
-  background:var(--invert);color:var(--on-invert);padding:var(--s-2) var(--s-3);
-  font-size:var(--t-sm);line-height:1.5;
+  position:fixed;z-index:200;display:none;max-width:320px;border-radius:0;
+  background:var(--field);color:var(--field-ink);border:1px solid var(--field-ink-dim);
+  padding:var(--s-2) var(--s-3);font-size:var(--t-sm);line-height:1.5;
 }
 .deftip.open{display:block}
-.deftip[popover]{margin:0;border:0;inset:auto;overflow:visible}
-.deftip .t{display:block;font-family:var(--mono);font-size:var(--t-xs);font-weight:500;
-  letter-spacing:.02em;color:var(--on-invert-2);margin-bottom:4px;line-height:1.5}
+.deftip[popover]{margin:0;inset:auto;overflow:visible}
+.deftip .t{
+  display:block;font-family:var(--mono);font-size:var(--t-xs);font-weight:500;
+  letter-spacing:.1em;text-transform:uppercase;color:var(--field-ink-dim);
+  margin-bottom:var(--s-1);line-height:1.35;
+}
 
-/* ---------------------------------------------------------------- layout - */
-main{padding-top:var(--s-6);padding-bottom:var(--s-6)}
-.shell{display:grid;grid-template-columns:320px minmax(0,1fr);gap:var(--s-6);align-items:start}
-.rail{display:grid;gap:var(--s-6);min-width:0}
-.work{display:grid;gap:var(--s-6);min-width:0}
-.split{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:var(--s-6);align-items:start}
-.col{display:grid;gap:var(--s-6);min-width:0}
+/* ============================================================= utility === */
+.utility{display:flex;flex-wrap:wrap;gap:var(--s-1);padding-top:var(--s-2);
+  padding-bottom:var(--s-2)}
 
-/* a panel is a heading, a hairline and whitespace. Not a box. */
-.panel{min-width:0}
+/* ========================================================== the panels === */
+/* Panels share edges. The 1px grid gap is the divider; no child carries a
+   border of its own, and the block is closed by a single rule outside. */
+.shell{
+  display:grid;grid-template-columns:320px minmax(0,1fr);gap:1px;
+  background:var(--rule);border:1px solid var(--rule);
+}
+.rail{display:grid;grid-template-rows:auto auto 1fr;gap:1px;background:var(--rule);min-width:0}
+.rail-fill{background:var(--surface)}
+.work{display:grid;gap:1px;background:var(--rule);min-width:0}
+.split{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:1px;
+  background:var(--rule);min-width:0}
+.col{display:grid;gap:1px;background:var(--rule);min-width:0}
+
+.panel{background:var(--surface);min-width:0}
+/* a panel standing on its own, outside the machined block, closes itself */
+.panel.outlined{border:1px solid var(--rule);margin-bottom:var(--s-2)}
 .panel-head{
   display:flex;justify-content:space-between;align-items:baseline;gap:var(--s-2);
-  padding-bottom:var(--s-1);border-bottom:1px solid var(--rule);
+  background:var(--surface-2);border-bottom:1px solid var(--rule);
+  padding:var(--s-2) var(--s-3);
 }
-.panel-head h2{font-size:var(--t-lg);font-weight:600;letter-spacing:-.01em;line-height:1.3}
-.panel-head .meta{
-  font-family:var(--mono);font-size:var(--t-xs);color:var(--muted);text-align:right;
-  overflow-wrap:anywhere;line-height:1.5;
-}
-.panel-body{padding-top:var(--s-3);min-width:0}
-.hint{font-size:var(--t-xs);color:var(--muted);line-height:1.6;max-width:78ch}
+.panel-head h2{font-size:var(--t-lg);font-weight:600;letter-spacing:-.01em;line-height:1.35;
+  text-wrap:balance}
+.panel-head .meta{color:var(--muted);text-align:right;overflow-wrap:anywhere;min-width:0}
+.panel-body{padding:var(--s-3);min-width:0}
+.hint{font-size:var(--t-xs);color:var(--muted);line-height:1.5;max-width:75ch}
 .hint + *{margin-top:var(--s-3)}
 
-/* ----------------------------------------------------------- sample rail - */
-.samples{display:grid;border-top:1px solid var(--rule);margin-top:var(--s-3)}
+/* a group of cells sharing edges inside a panel */
+.cells{display:grid;gap:1px;background:var(--rule)}
+
+/* =========================================================== the rail === */
+.samples{display:grid;gap:1px;background:var(--rule-soft);border-top:1px solid var(--rule);
+  margin-top:var(--s-3);margin-inline:calc(var(--s-3) * -1);margin-bottom:calc(var(--s-3) * -1)}
 .sample{
-  display:grid;gap:4px;width:100%;text-align:left;cursor:pointer;
-  border-bottom:1px solid var(--rule);padding:var(--s-2) var(--s-1);
-  margin-inline:calc(var(--s-1) * -1);min-height:44px;
-  transition:background-color var(--motion);
+  display:grid;gap:var(--s-1);width:100%;text-align:left;cursor:pointer;
+  background:var(--surface);border-left:2px solid var(--surface);
+  padding:var(--s-2) var(--s-3);min-height:44px;
+  transition:background-color var(--motion),border-color var(--motion);
 }
-.sample:hover{background:var(--surface-2)}
-.sample:active{background:var(--accent-wash)}
-.sample[aria-current="true"]{background:var(--surface-2)}
+.sample:hover{background:var(--surface-2);border-left-color:var(--surface-2)}
+.sample:active{background:var(--accent-weak);border-left-color:var(--accent)}
+.sample[aria-current="true"]{background:var(--surface-2);border-left-color:var(--accent)}
 .sample[aria-current="true"] .sample-id{color:var(--accent)}
 .sample[aria-current="true"] .go{color:var(--accent);opacity:1}
-.sample-top{display:flex;justify-content:space-between;align-items:center;gap:var(--s-1)}
+.sample-top{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;
+  gap:var(--s-1)}
 .sample-id{
   font-family:var(--mono);font-size:var(--t-sm);font-weight:600;letter-spacing:.01em;
-  display:inline-flex;align-items:center;gap:6px;transition:color var(--motion);
+  display:inline-flex;align-items:center;gap:var(--s-1);min-width:0;
+  transition:color var(--motion);
 }
-.sample .go{color:var(--muted);opacity:0;transition:opacity var(--motion),transform var(--motion),color var(--motion)}
+.sample .go{color:var(--muted);opacity:0;
+  transition:opacity var(--motion),transform var(--motion),color var(--motion)}
 .sample:hover .go{opacity:1;color:var(--accent);transform:translateX(2px)}
 .sample:focus-visible .go{opacity:1;color:var(--accent)}
 .sample-why{font-size:var(--t-xs);color:var(--ink-2);line-height:1.5}
-.sample-meta{font-family:var(--mono);font-size:var(--t-xs);color:var(--muted);line-height:1.5}
+.sample-meta{font-family:var(--mono);font-size:var(--t-xs);color:var(--muted);line-height:1.35}
 
+/* ============================================================== chips === */
 .chip{
+  display:inline-flex;align-items:center;gap:4px;border-radius:3px;
   font-family:var(--mono);font-size:var(--t-xs);font-weight:500;letter-spacing:.02em;
-  padding:3px var(--s-1);white-space:nowrap;line-height:1.4;
-  background:var(--warn-bg);color:var(--warn);border:1px solid var(--warn-edge);
+  padding:4px var(--s-1);white-space:nowrap;line-height:1.35;
+  background:var(--escalated-field);color:var(--escalated);border:1px solid var(--escalated-line);
 }
-.chip.answered{background:var(--good-bg);color:var(--good);border-color:var(--good-edge)}
+.chip.answered{background:var(--answered-field);color:var(--answered);
+  border-color:var(--answered-line)}
+.chip.plain{background:var(--surface);color:var(--ink-2);border-color:var(--rule)}
+.chip.plain b{color:var(--muted);font-weight:500}
+.chip.flagged b{color:var(--escalated);font-weight:500}
 
-.form-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:var(--s-1)}
+.form-grid{display:grid;gap:var(--s-2)}
 .form-stack{display:grid;gap:var(--s-2);margin-top:var(--s-2)}
 
-/* ---------------------------------------------------------- empty/error -- */
-.empty{border-top:2px solid var(--ink);padding-top:var(--s-3);max-width:78ch}
-.empty h2{font-size:var(--t-xl);font-weight:600;letter-spacing:-.02em;line-height:1.3}
+/* ======================================================= empty / error === */
+.empty{padding:var(--s-5) var(--s-3);max-width:75ch}
+.empty h2{font-size:var(--t-xl);font-weight:600;letter-spacing:-.01em;line-height:1.35;
+  text-wrap:balance}
 .empty p{color:var(--ink-2);font-size:var(--t-md);margin-top:var(--s-2)}
-.failure{
-  background:var(--miss-bg);border-top:2px solid var(--miss);padding:var(--s-3) var(--s-4);
-  color:var(--ink);font-size:var(--t-sm);
-}
+.failure{background:var(--blocked-field);padding:var(--s-3);color:var(--ink);font-size:var(--t-sm)}
 .failure b{
-  display:flex;align-items:center;gap:6px;font-family:var(--mono);font-size:var(--t-xs);
-  font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--miss);
+  display:flex;align-items:center;gap:var(--s-1);font-family:var(--mono);font-size:var(--t-xs);
+  font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--blocked);
   margin-bottom:var(--s-1);
 }
 
-/* ------------------------------------------------- ticket as it arrived -- */
-.facts{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:var(--s-3)}
-.fact{
-  font-family:var(--mono);font-size:var(--t-xs);line-height:1.4;color:var(--ink-2);
-  border:1px solid var(--rule);padding:3px var(--s-1);white-space:nowrap;
-}
-.fact b{color:var(--muted);font-weight:500}
-.fact.flagged{background:var(--warn-bg);border-color:var(--warn-edge);color:var(--warn)}
-.fact.flagged b{color:var(--warn)}
-.ticket-subject{font-size:var(--t-xl);font-weight:600;letter-spacing:-.02em;line-height:1.3;
-  margin-bottom:var(--s-2)}
+/* ============================================ the ticket as it arrived === */
+.facts{display:flex;flex-wrap:wrap;gap:var(--s-1);margin-bottom:var(--s-3)}
+.ticket-subject{font-size:var(--t-lg);font-weight:600;letter-spacing:-.01em;line-height:1.35;
+  margin-bottom:var(--s-2);text-wrap:balance}
 .ticket-text{
   white-space:pre-wrap;overflow-wrap:anywhere;font-size:var(--t-md);color:var(--ink-2);
-  max-width:86ch;border-left:2px solid var(--rule);padding-left:var(--s-3);
-  max-height:280px;overflow:auto;
+  max-width:80ch;background:var(--surface-2);padding:var(--s-2) var(--s-3);
+  max-height:280px;overflow:auto;line-height:1.5;
 }
 
-/* -------------------------------------------------------------- verdict -- */
-/* The one filled surface, and the one authored motion moment on the page. The
-   coloured wash sweeps in under text that is already at full opacity, so
-   nothing appears from nothing: the decision arrives, it does not fade up. */
+/* ============================================================ verdict === */
+/* The one authored moment on the page: the band and the panels under it
+   settle in from an already-visible resting state. Nothing fades up. */
 .verdict{
-  position:relative;isolation:isolate;
-  display:grid;grid-template-columns:minmax(0,1fr) minmax(0,auto);gap:var(--s-5) var(--s-6);
-  padding:var(--s-5);background:var(--surface-2);--edge:var(--rule);--tint:var(--surface-2);
-  --edge-color:var(--muted);
+  display:grid;grid-template-columns:minmax(0,1fr) minmax(0,280px);gap:1px;background:var(--rule);
+  --v-field:var(--surface-2);--v-ink:var(--ink);--v-line:var(--rule);
 }
-/* Secondary text inside the band is tinted from the band's own hue rather than
-   dropped to a neutral grey. Measured on their grounds: 5.26, 5.42 and 5.50:1. */
-.verdict.answered{--tint:var(--good-bg);--edge:var(--good-edge);--edge-color:var(--good);
-  --muted-on:#55675c}
-.verdict.escalated{--tint:var(--warn-bg);--edge:var(--warn-edge);--edge-color:var(--warn);
-  --muted-on:#6d5f4d}
-.verdict.stopped{--tint:var(--miss-bg);--edge:var(--miss-edge);--edge-color:var(--miss);
-  --muted-on:#6f5850}
-.verdict::before{
-  content:"";position:absolute;inset:0;z-index:-1;background:var(--tint);
-  animation:wash 300ms var(--expo) both;
-}
-.verdict::after{
-  content:"";position:absolute;left:0;right:0;top:0;height:2px;background:var(--edge-color);
-  transform-origin:left;animation:draw 340ms var(--expo) both;
-}
-@keyframes wash{from{clip-path:inset(0 100% 0 0)}to{clip-path:inset(0 0 0 0)}}
-@keyframes draw{from{transform:scaleX(0)}to{transform:scaleX(1)}}
-@keyframes settle{from{transform:translateY(6px)}to{transform:translateY(0)}}
-.verdict-line{display:flex;flex-wrap:wrap;align-items:baseline;gap:var(--s-2);
-  animation:settle 260ms 40ms var(--expo) both}
-.verdict-line h2{font-size:var(--t-2xl);font-weight:600;letter-spacing:-.025em;line-height:1.2}
-.verdict.answered .verdict-line h2{color:var(--good)}
-.verdict.escalated .verdict-line h2{color:var(--warn)}
-.verdict.stopped .verdict-line h2{color:var(--miss)}
+.verdict.answered{--v-field:var(--answered-field);--v-ink:var(--answered);
+  --v-line:var(--answered-line)}
+.verdict.escalated{--v-field:var(--escalated-field);--v-ink:var(--escalated);
+  --v-line:var(--escalated-line)}
+.verdict.stopped{--v-field:var(--blocked-field);--v-ink:var(--blocked);--v-line:var(--blocked-line)}
+.verdict-main{background:var(--v-field);padding:var(--s-5)}
+.verdict-line{display:flex;flex-wrap:wrap;align-items:center;gap:var(--s-2);
+  animation:settle 220ms 40ms cubic-bezier(.2,0,0,1) both}
+.verdict-line h2{font-size:var(--t-xl);font-weight:600;letter-spacing:-.01em;line-height:1.35;
+  color:var(--v-ink);text-wrap:balance}
 .verdict-rule{
-  font-family:var(--mono);font-size:var(--t-sm);font-weight:600;letter-spacing:.01em;
-  padding:4px var(--s-1);background:var(--surface);border:1px solid currentColor;white-space:nowrap;
-  cursor:help;transition:background-color var(--motion),color var(--motion);
+  font-family:var(--mono);font-size:var(--t-xs);font-weight:600;letter-spacing:.02em;
+  padding:4px var(--s-1);background:var(--surface);border:1px solid var(--v-line);
+  border-radius:3px;color:var(--v-ink);white-space:nowrap;line-height:1.35;
 }
-.verdict-rule .def{text-decoration-color:currentColor;color:inherit}
-.verdict-rule:hover{background:currentColor}
-.verdict-rule:hover .def{color:var(--surface)}
-.verdict.answered .verdict-rule{color:var(--good)}
-.verdict.escalated .verdict-rule{color:var(--warn)}
-.verdict.stopped .verdict-rule{color:var(--miss)}
-.verdict-reason{margin-top:var(--s-2);font-size:var(--t-md);color:var(--ink-2);max-width:80ch;
-  animation:settle 260ms 80ms var(--expo) both}
-.readout{
-  display:grid;gap:var(--s-2);align-content:start;min-width:168px;
-  border-left:1px solid var(--edge);padding-left:var(--s-5);
-  animation:settle 260ms 120ms var(--expo) both;
-}
-.readout > div{position:relative}
-.readout .k{
-  font-family:var(--mono);font-size:var(--t-xs);font-weight:500;letter-spacing:.08em;
-  text-transform:uppercase;color:var(--muted-on,var(--muted));line-height:1.5;
-}
-.readout .v{
-  font-family:var(--mono);font-size:var(--t-lg);font-weight:600;line-height:1.3;overflow-wrap:anywhere;
-}
-.readout .v small{font-size:var(--t-xs);font-weight:400;color:var(--muted-on,var(--muted))}
+.verdict-reason{margin-top:var(--s-2);font-size:var(--t-md);color:var(--ink-2);max-width:75ch;
+  animation:settle 220ms 80ms cubic-bezier(.2,0,0,1) both}
+.readout{display:grid;gap:1px;background:var(--rule);
+  animation:settle 220ms 120ms cubic-bezier(.2,0,0,1) both}
+.readout > div{background:var(--surface);padding:var(--s-3);position:relative;min-width:0}
+.readout .k{color:var(--muted)}
+.readout .v{font-family:var(--mono);font-size:var(--t-lg);font-weight:600;line-height:1.35;
+  margin-top:4px;overflow-wrap:anywhere;font-variant-numeric:tabular-nums}
+.readout .v .unit{font-family:var(--ui);font-size:var(--t-xs);font-weight:400;color:var(--muted)}
 .readout .v.text{font-size:var(--t-sm)}
+@keyframes settle{from{transform:translateY(6px)}to{transform:translateY(0)}}
 
-/* ------------------------------------------------------- classification -- */
-.intent-line{display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:var(--s-2)}
-.intent{font-family:var(--mono);font-size:var(--t-xl);font-weight:600;letter-spacing:-.02em;line-height:1.3}
-.conf{font-family:var(--mono);font-size:var(--t-xl);font-weight:600;line-height:1.3}
-.conf.low{color:var(--warn)}
-.meter{
-  height:10px;background:var(--surface-2);border:1px solid var(--rule);
-  margin-top:var(--s-2);position:relative;overflow:hidden;
-}
-.meter i{display:block;height:100%;background:var(--good);transform-origin:left;
-  animation:draw 420ms 60ms var(--expo) both}
-.meter i.low{background:var(--warn)}
+/* ===================================================== classification === */
+.intent-line{display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;
+  gap:var(--s-2)}
+.intent{font-family:var(--mono);font-size:var(--t-xl);font-weight:600;letter-spacing:-.01em;
+  line-height:1.35}
+.conf{font-family:var(--mono);font-size:var(--t-xl);font-weight:600;line-height:1.35;
+  font-variant-numeric:tabular-nums}
+.conf.low{color:var(--escalated)}
+.meter{height:10px;background:var(--surface-2);border:1px solid var(--rule);
+  margin-top:var(--s-2);position:relative;overflow:hidden}
+.meter i{display:block;height:100%;background:var(--accent);transform-origin:left;
+  animation:draw 380ms 60ms cubic-bezier(.2,0,0,1) both}
+.meter i.low{background:var(--escalated)}
 .meter u{position:absolute;top:-2px;bottom:-2px;width:2px;background:var(--ink)}
-.meter-legend{
-  display:flex;justify-content:space-between;gap:var(--s-2);flex-wrap:wrap;
-  font-family:var(--mono);font-size:var(--t-xs);color:var(--muted);margin-top:6px;line-height:1.5;
-}
-.sub-note{font-size:var(--t-xs);color:var(--ink-2);margin-top:var(--s-3);max-width:78ch;line-height:1.6}
+@keyframes draw{from{transform:scaleX(0)}to{transform:scaleX(1)}}
+.meter-legend{display:flex;justify-content:space-between;gap:var(--s-2);flex-wrap:wrap;
+  font-family:var(--mono);font-size:var(--t-xs);color:var(--muted);margin-top:var(--s-1);
+  line-height:1.35}
+.sub-note{font-size:var(--t-xs);color:var(--ink-2);margin-top:var(--s-3);max-width:75ch;
+  line-height:1.5}
 .sub-note b{font-family:var(--mono);font-weight:600;color:var(--ink)}
-.runners{margin-top:var(--s-3);border-top:1px solid var(--rule);padding-top:var(--s-1)}
+.runners{margin-top:var(--s-3)}
 .runners-head,.runner{
   display:grid;grid-template-columns:minmax(0,1fr) auto;gap:var(--s-2);
-  font-family:var(--mono);font-size:var(--t-xs);padding-top:3px;padding-bottom:3px;line-height:1.5;
+  font-family:var(--mono);font-size:var(--t-xs);line-height:1.35;
+  padding-top:var(--s-1);padding-bottom:var(--s-1);
 }
-.runners-head{
-  font-weight:500;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);
-  border-bottom:1px solid var(--rule);padding-bottom:6px;margin-bottom:4px;
-}
-.runner{color:var(--ink-2)}
-.runner span:last-child{color:var(--ink)}
+.runners-head{color:var(--muted);border-bottom:1px solid var(--rule)}
+.runners-head span:last-child{text-align:right}
+.runner{color:var(--ink-2);border-bottom:1px solid var(--rule-soft)}
+.runner:last-child{border-bottom:0}
+.runner span:last-child{color:var(--ink);text-align:right;font-variant-numeric:tabular-nums}
 
-/* ------------------------------------------------------------- passages -- */
-.passages{border-top:1px solid var(--rule);margin-top:var(--s-3)}
-.passage{border-bottom:1px solid var(--rule);transition:background-color var(--motion)}
+/* =========================================================== passages === */
+.passages{display:grid;gap:1px;background:var(--rule-soft);border-top:1px solid var(--rule);
+  margin-top:var(--s-3);margin-inline:calc(var(--s-3) * -1);margin-bottom:calc(var(--s-3) * -1)}
+.passage{background:var(--surface);transition:background-color var(--motion)}
 .passage:hover{background:var(--surface-2)}
-.passage.is-current{background:var(--accent-wash)}
+.passage.is-current{background:var(--accent-weak)}
 .passage-head{
-  display:grid;grid-template-columns:28px minmax(0,1fr) 84px 16px;align-items:center;
+  display:grid;grid-template-columns:24px minmax(0,1fr) 80px 16px;align-items:center;
   gap:var(--s-2);width:100%;text-align:left;cursor:pointer;min-height:44px;
-  padding:var(--s-1);margin-inline:calc(var(--s-1) * -1);
+  padding:var(--s-2) var(--s-3);
 }
-.passage-head:active{background:var(--accent-wash)}
 .mark{
-  font-family:var(--mono);font-size:var(--t-xs);font-weight:600;line-height:1;
+  font-family:var(--mono);font-size:var(--t-xs);font-weight:600;line-height:1;border-radius:3px;
   text-align:center;width:24px;height:24px;display:grid;place-items:center;
-  background:var(--accent);color:var(--on-accent);transition:background-color var(--motion)}
+  background:var(--accent);color:var(--accent-ink);
+}
 /* Not cited: the slot stays empty. A box here reads as an unticked checkbox. */
 .mark.none{background:none;color:transparent}
 .p-cell{min-width:0}
-.p-title{
-  display:block;font-size:var(--t-sm);line-height:1.5;color:var(--ink);
-  overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
-}
-.p-id{display:block;font-family:var(--mono);font-size:var(--t-xs);color:var(--muted);line-height:1.5}
-.p-score{font-family:var(--mono);font-size:var(--t-sm);text-align:right;line-height:1.5}
-.p-bar{display:block;height:2px;background:var(--accent);margin-top:3px;margin-left:auto;opacity:.6}
-.chev-d{color:var(--muted);margin-inline:auto;transition:transform var(--motion),color var(--motion)}
+.p-title{display:block;font-size:var(--t-sm);line-height:1.35;color:var(--ink);
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.p-id{display:block;font-family:var(--mono);font-size:var(--t-xs);color:var(--muted);
+  line-height:1.35}
+.p-score{font-family:var(--mono);font-size:var(--t-sm);text-align:right;line-height:1.35;
+  font-variant-numeric:tabular-nums}
+.p-bar{display:block;height:2px;background:var(--accent);margin-top:4px;margin-left:auto}
+.chev-d{color:var(--muted);margin-inline:auto;
+  transition:transform var(--motion),color var(--motion)}
 .passage-head:hover .chev-d{color:var(--accent)}
 .passage.open .chev-d{transform:rotate(180deg);color:var(--accent)}
-.passage-detail{padding:0 0 var(--s-3) 40px}
-.section-name{
-  font-family:var(--mono);font-size:var(--t-xs);letter-spacing:.02em;
-  color:var(--muted);margin-bottom:6px;line-height:1.5;overflow-wrap:anywhere;
-}
+.passage-detail{padding:0 var(--s-3) var(--s-3) 52px}
+.section-name{font-family:var(--mono);font-size:var(--t-xs);letter-spacing:.02em;
+  color:var(--muted);margin-bottom:var(--s-1);line-height:1.35;overflow-wrap:anywhere}
 .excerpt{
   white-space:pre-wrap;overflow-wrap:anywhere;background:var(--surface-2);
-  border-left:2px solid var(--rule);padding:var(--s-2) var(--s-3);
-  font-size:var(--t-sm);color:var(--ink-2);max-height:480px;overflow:auto;
+  padding:var(--s-2) var(--s-3);font-size:var(--t-sm);color:var(--ink-2);
+  max-height:480px;overflow:auto;line-height:1.5;
 }
 
-/* ---------------------------------------------------------------- reply -- */
-.reply{font-size:var(--t-md);max-width:76ch;overflow-wrap:anywhere;color:var(--ink)}
+/* ============================================================== reply === */
+.reply{font-size:var(--t-md);max-width:75ch;overflow-wrap:anywhere;color:var(--ink);
+  line-height:1.5}
 .reply p{margin-bottom:var(--s-2)}
 .reply p:last-child{margin-bottom:0}
-.reply .sig{color:var(--muted);font-size:var(--t-sm);border-top:1px solid var(--rule);
+.reply .sig{color:var(--muted);font-size:var(--t-sm);border-top:1px solid var(--rule-soft);
   padding-top:var(--s-2);margin-top:var(--s-3)}
 .cite{
   position:relative;display:inline-block;font-family:var(--mono);font-size:var(--t-xs);
-  font-weight:600;color:var(--accent);background:var(--surface);
-  border:1px solid var(--accent);padding:1px 5px;cursor:pointer;line-height:1.4;
+  font-weight:600;color:var(--accent);background:var(--surface);border-radius:3px;
+  border:1px solid var(--accent);padding:0 4px;cursor:pointer;line-height:1.35;
   vertical-align:baseline;transition:background-color var(--motion),color var(--motion);
 }
 .cite::after{content:"";position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);
   width:44px;height:44px}
-.cite:hover,.cite.lit,.cite:focus-visible{background:var(--accent);color:var(--on-accent)}
+.cite:hover,.cite.lit,.cite:focus-visible{background:var(--accent);color:var(--accent-ink)}
 .cite:active{background:var(--ink);border-color:var(--ink);color:var(--paper)}
-.cite-list{margin-top:var(--s-3);border-top:1px solid var(--rule);padding-top:var(--s-1);display:grid}
+.cite-list{margin-top:var(--s-3);border-top:1px solid var(--rule);display:grid}
 .cite-row{
   display:flex;gap:var(--s-1);flex-wrap:wrap;align-items:baseline;
-  font-family:var(--mono);font-size:var(--t-xs);color:var(--ink-2);
-  padding-top:4px;padding-bottom:4px;line-height:1.5;
+  font-family:var(--mono);font-size:var(--t-xs);color:var(--ink-2);line-height:1.35;
+  padding-top:var(--s-1);padding-bottom:var(--s-1);border-bottom:1px solid var(--rule-soft);
 }
+.cite-row:last-child{border-bottom:0}
 .cite-row b{color:var(--accent)}
 .cite-row .dim{color:var(--muted)}
 .note-text{
   white-space:pre-wrap;overflow-wrap:anywhere;font-size:var(--t-md);color:var(--ink-2);
-  max-width:80ch;border-left:2px solid var(--rule);padding-left:var(--s-3);
+  max-width:75ch;background:var(--surface-2);padding:var(--s-2) var(--s-3);line-height:1.5;
 }
 
-/* ----------------------------------------------------------- guardrails -- */
-.rails{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:var(--s-3);margin-top:var(--s-3)}
-.rail-cell{border-top:2px solid var(--good);padding-top:var(--s-1);min-width:0}
-.rail-cell.fail{border-top-color:var(--miss);background:var(--miss-bg);padding:var(--s-1) var(--s-2) var(--s-2)}
-.rail-cell.flag{border-top-color:var(--warn);background:var(--warn-bg);padding:var(--s-1) var(--s-2) var(--s-2)}
-.rail-cell.na{border-top-color:var(--rule)}
-.rail-top{display:flex;align-items:center;gap:6px;color:var(--good)}
-.rail-cell.fail .rail-top{color:var(--miss)}
-.rail-cell.flag .rail-top{color:var(--warn)}
+/* ========================================================= guardrails === */
+.rails{grid-template-columns:repeat(5,minmax(0,1fr));border-bottom:1px solid var(--rule)}
+.rail-cell{background:var(--surface);padding:var(--s-3);min-width:0}
+.rail-cell.blank{display:none}
+.rail-cell.fail{background:var(--blocked-field)}
+.rail-cell.flag{background:var(--escalated-field)}
+.rail-cell.na{background:var(--surface-2)}
+.rail-top{display:flex;align-items:center;gap:var(--s-1);color:var(--answered)}
+.rail-cell.fail .rail-top{color:var(--blocked)}
+.rail-cell.flag .rail-top{color:var(--escalated)}
 .rail-cell.na .rail-top{color:var(--muted)}
 .rail-name{
   position:relative;font-family:var(--mono);font-size:var(--t-sm);font-weight:600;color:var(--ink);
-  line-height:1.5;overflow-wrap:anywhere;min-height:24px;display:flex;align-items:center;
+  line-height:1.35;overflow-wrap:anywhere;min-height:24px;display:flex;align-items:center;
 }
-.rail-state{
-  font-family:var(--mono);font-size:var(--t-xs);font-weight:600;letter-spacing:.08em;
-  text-transform:uppercase;margin-top:6px;color:var(--good);line-height:1.5;
-}
-.rail-cell.fail .rail-state{color:var(--miss)}
-.rail-cell.flag .rail-state{color:var(--warn)}
+.rail-state{margin-top:var(--s-1);color:var(--answered)}
+.rail-cell.fail .rail-state{color:var(--blocked)}
+.rail-cell.flag .rail-state{color:var(--escalated)}
 .rail-cell.na .rail-state{color:var(--muted)}
-.rail-detail{font-size:var(--t-xs);color:var(--ink-2);margin-top:4px;line-height:1.5;overflow-wrap:anywhere}
+.rail-detail{font-size:var(--t-xs);color:var(--ink-2);margin-top:var(--s-1);line-height:1.5;
+  overflow-wrap:anywhere}
 
-/* --------------------------------------------------------- decision log -- */
-.scroller{overflow-x:auto;margin-top:var(--s-3);border-top:1px solid var(--rule)}
-table{border-collapse:collapse;width:100%;min-width:760px;font-size:var(--t-sm);table-layout:fixed}
-th,td{padding:var(--s-1) var(--s-2);text-align:left;border-bottom:1px solid var(--rule);
-  vertical-align:top;overflow-wrap:break-word}
-thead th{
-  font-family:var(--mono);font-size:var(--t-xs);font-weight:500;letter-spacing:.08em;
-  text-transform:uppercase;color:var(--muted);background:var(--surface-2);white-space:nowrap;
-}
+/* ======================================================= decision log === */
+.scroller{overflow-x:auto;border-top:1px solid var(--rule)}
+.scroller + .panel-body{border-top:1px solid var(--rule)}
+table{border-collapse:collapse;width:100%;min-width:760px;font-size:var(--t-sm);
+  table-layout:fixed}
+th,td{padding:var(--s-1) var(--s-2);text-align:left;border-bottom:1px solid var(--rule-soft);
+  vertical-align:top;overflow-wrap:break-word;line-height:1.35}
+thead th{color:var(--muted);background:var(--surface-2);white-space:nowrap;
+  border-bottom:1px solid var(--rule)}
 tbody tr{transition:background-color var(--motion)}
 tbody tr:hover{background:var(--surface-2)}
 tbody tr:last-child td{border-bottom:0}
 td.mono{font-family:var(--mono);font-size:var(--t-xs)}
+td.num,th.num{font-family:var(--mono);font-size:var(--t-xs);text-align:right;
+  font-variant-numeric:tabular-nums}
 td.reason{color:var(--ink-2);font-size:var(--t-xs);line-height:1.5}
 .stage{font-family:var(--mono);font-size:var(--t-xs);font-weight:600;letter-spacing:.02em}
-.stage i{display:block;font-style:normal;font-weight:400;color:var(--muted);margin-top:2px}
-.reqs{display:flex;flex-wrap:wrap;gap:4px;margin-top:6px}
+.stage i{display:block;font-style:normal;font-weight:400;color:var(--muted);margin-top:4px}
+.reqs{display:flex;flex-wrap:wrap;gap:4px;margin-top:var(--s-1)}
 .req{
-  font-family:var(--mono);font-size:var(--t-xs);color:var(--muted);
-  border:1px solid var(--rule);padding:2px 5px;white-space:nowrap;line-height:1.4;
+  font-family:var(--mono);font-size:var(--t-xs);color:var(--muted);border-radius:3px;
+  border:1px solid var(--rule);padding:0 4px;white-space:nowrap;line-height:1.35;
 }
 .dim{color:var(--muted)}
 col.c-stage{width:11%} col.c-model{width:19%} col.c-pred{width:15%}
-col.c-conf{width:9%} col.c-act{width:13%} col.c-reason{width:33%}
+col.c-conf{width:13%} col.c-act{width:13%} col.c-reason{width:29%}
+.runline{font-family:var(--mono);font-size:var(--t-xs);color:var(--muted);line-height:1.5;
+  overflow-wrap:anywhere}
 
-/* --------------------------------------------------------------- footer -- */
+/* ============================================================= footer === */
 footer{
   border-top:1px solid var(--rule);margin-top:var(--s-6);padding-top:var(--s-2);
-  font-family:var(--mono);font-size:var(--t-xs);color:var(--muted);
+  padding-bottom:var(--s-6);font-family:var(--mono);font-size:var(--t-xs);color:var(--muted);
   display:flex;flex-wrap:wrap;gap:var(--s-1) var(--s-5);line-height:1.5;
 }
 
-/* ----------------------------------------------------------- walkthrough - */
+/* ======================================================== walkthrough === */
 /* Not a modal. The page stays visible and usable behind; only the keyboard is
    held inside the step, which is what makes the step readable in order. */
-.wt-dim{position:fixed;z-index:57;pointer-events:none;box-shadow:0 0 0 9999px var(--scrim);
+.wt-dim{position:fixed;inset:0;z-index:57;pointer-events:none}
+.wt-band{position:fixed;background:var(--scrim);
   transition:top var(--motion-slow),left var(--motion-slow),width var(--motion-slow),
     height var(--motion-slow)}
 .wt-ring{position:fixed;z-index:58;pointer-events:none;outline:2px solid var(--accent);
@@ -598,59 +602,58 @@ footer{
     height var(--motion-slow)}
 .wt-card{
   position:fixed;z-index:60;width:min(392px,calc(100vw - 32px));max-height:calc(100vh - 32px);
-  overflow:auto;background:var(--surface);border:1px solid var(--ink);
-  padding:var(--s-3) var(--s-4) var(--s-4);
+  overflow:auto;background:var(--surface);border:1px solid var(--ink);border-radius:0;
+  padding:var(--s-3);
 }
-.wt-step{font-family:var(--mono);font-size:var(--t-xs);font-weight:500;letter-spacing:.08em;
-  text-transform:uppercase;color:var(--accent);line-height:1.5}
-.wt-card h2{font-size:var(--t-lg);font-weight:600;letter-spacing:-.01em;line-height:1.3;
-  margin-top:4px}
-/* :focus, not :focus-visible: the card is only ever focused in code, and a
-   keyboard visitor needs to see where the step put them. */
-.wt-card:focus{outline:2px solid var(--accent);outline-offset:3px}
-.wt-card p{font-size:var(--t-sm);color:var(--ink-2);line-height:1.6;margin-top:var(--s-1)}
+.wt-step{color:var(--accent)}
+.wt-card h2{font-size:var(--t-lg);font-weight:600;letter-spacing:-.01em;line-height:1.35;
+  margin-top:var(--s-1);text-wrap:balance}
+.wt-card:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
+.wt-card p{font-size:var(--t-sm);color:var(--ink-2);line-height:1.5;margin-top:var(--s-1)}
 .wt-actions{display:flex;flex-wrap:wrap;align-items:center;gap:var(--s-1);margin-top:var(--s-3)}
 .wt-actions .spacer{flex:1 1 auto}
+.wt-actions .btn{padding-inline:var(--s-2)}
 .wt-dots{display:flex;gap:4px;align-items:center}
 .wt-dots span{width:16px;height:2px;background:var(--rule)}
 .wt-dots span.on{background:var(--accent)}
 
-/* ---------------------------------------------------------- responsive -- */
-@media (max-width:1240px){
+/* ========================================================= responsive === */
+/* Structural, not fluid. Type never scales with the viewport. */
+@media (max-width:1199px){
+  .figures{grid-template-columns:repeat(3,minmax(0,1fr))}
   .shell{grid-template-columns:280px minmax(0,1fr)}
-}
-@media (max-width:1080px){
-  .shell{grid-template-columns:minmax(0,1fr)}
   .split{grid-template-columns:minmax(0,1fr)}
   .rails{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .rail-cell.blank{display:block}
 }
-@media (max-width:860px){
-  .wrap{padding-inline:var(--s-4)}
-  .led{flex:1 1 44%;padding:var(--s-1) var(--s-3) 4px 0;border-top:1px solid var(--rule)}
-  .byline{text-align:left;flex:1 1 100%}
-  .verdict{grid-template-columns:minmax(0,1fr)}
-  .readout{border-left:0;border-top:1px solid var(--edge);padding-left:0;padding-top:var(--s-3);
-    grid-template-columns:repeat(3,minmax(0,1fr))}
+@media (max-width:1023px){
+  .page{padding-inline:var(--s-4)}
+  .figures{grid-template-columns:repeat(2,minmax(0,1fr))}
+  /* one column: the ticket rail moves above the work area */
+  .shell{grid-template-columns:minmax(0,1fr)}
+  .rail{grid-template-rows:auto auto}
+  .rail-fill{display:none}
   .rails{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .form-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .verdict{grid-template-columns:minmax(0,1fr)}
+  .readout{grid-template-columns:repeat(3,minmax(0,1fr))}
 }
 @media (max-width:560px){
-  .wrap{padding-inline:var(--s-3)}
-  /* one line per figure, label left and value right: six rows read as a spec
-     table rather than six stacked blocks taking half the screen. */
-  .led{flex:1 1 100%;display:flex;justify-content:space-between;align-items:baseline;
-    gap:var(--s-2);padding:var(--s-1) 0;border-top:1px solid var(--rule)}
-  .led dt{white-space:normal}
-  .led dd{justify-content:flex-end;text-align:right}
+  .page{padding-inline:var(--s-3)}
+  h1{font-size:var(--t-xl)}
+  .masthead{padding-top:var(--s-5)}
+  .byline{text-align:left}
+  .fig dd{font-size:var(--t-lg)}
   .rails{grid-template-columns:minmax(0,1fr)}
+  .rail-cell.blank{display:none}
   .form-grid{grid-template-columns:minmax(0,1fr)}
   .readout{grid-template-columns:minmax(0,1fr)}
-  .byline{text-align:left}
-  .verdict{padding:var(--s-3)}
-  .verdict-line h2{font-size:var(--t-xl)}
-  .passage-head{grid-template-columns:28px minmax(0,1fr) 64px 16px}
-  .passage-detail{padding-left:0}
-  .wt-card{left:var(--s-1) !important;right:var(--s-1);width:auto;bottom:var(--s-1);top:auto !important;
-    max-height:64vh}
+  .verdict-main{padding:var(--s-3)}
+  .passage-head{grid-template-columns:24px minmax(0,1fr) 56px 16px;padding-inline:var(--s-2)}
+  .passage-detail{padding-left:var(--s-2);padding-right:var(--s-2)}
+  .sample{padding-inline:var(--s-2)}
+  .wt-card{left:var(--s-1) !important;right:var(--s-1);width:auto;bottom:var(--s-1);
+    top:auto !important;max-height:64vh}
   .deftip{max-width:calc(100vw - 24px)}
 }
 </style>
@@ -659,70 +662,54 @@ footer{
 
 <a class="skip-link" href="#work">Skip to the ticket</a>
 
-<header class="masthead">
-  <div class="wrap">
-    <div class="masthead-row">
-      <div class="brand">
-        <span class="brand-mark" aria-hidden="true">
-          <svg class="i i-lg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-               stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-            <rect x="3" y="3" width="18" height="18"/><path d="M3 9h18"/><path d="M9 21V9"/>
-          </svg>
-        </span>
-        <div>
-          <h1>Operator console</h1>
-          <p class="strap">CloudServe support triage, one ticket at a time, with everything the system
-            decided about it: what it thought the ticket was, what it retrieved, which rule routed it,
-            what would be sent, and the five log rows that reconstruct the lot afterwards.</p>
-        </div>
-      </div>
-      <div class="byline">
-        <p class="who">Om Mengshetti</p>
-        <p class="what">Forward Deployed AI Engineering capstone</p>
-      </div>
-    </div>
-  </div>
+<div class="page">
 
-  <div class="strip">
-    <div class="wrap">
-      <div class="strip-row">
-        <dl class="ledger" id="ledger" aria-label="Measured figures from the recorded runs"></dl>
-        <div class="strip-tools">
-          <button class="ghost" id="runrecBtn" type="button" aria-expanded="false" aria-controls="runrec">
-            <span id="runrecIcon" aria-hidden="true"></span>Measured run
-          </button>
-          <button class="ghost" id="tourBtn" type="button">
-            <span id="tourIcon" aria-hidden="true"></span>Show me around
-          </button>
-        </div>
-      </div>
-      <div class="runrec" id="runrec" hidden></div>
+  <header class="masthead">
+    <div class="brand">
+      <h1>Operator console</h1>
+      <p class="strap">CloudServe support triage, one ticket at a time, with everything the system
+        decided about it: what it thought the ticket was, what it retrieved, which rule routed it,
+        what would be sent, and the five log rows that reconstruct the lot afterwards.</p>
     </div>
-  </div>
+    <div class="byline">
+      <p class="who">Om Mengshetti</p>
+      <p class="what">Forward Deployed AI Engineering capstone</p>
+    </div>
+  </header>
 
-  <div class="opsbar">
-    <div class="wrap ops-row">
-      <p class="state-pill" id="killState">
-        <span id="killIcon" aria-hidden="true"></span><span id="killLabel">Checking</span>
-      </p>
-      <div class="ops-controls">
-        <div class="field">
+  <section class="head on-field" aria-label="Standing figures and the state of the system">
+    <dl class="figures" id="figures" aria-label="Measured figures from the recorded runs"></dl>
+    <div class="ops">
+      <div class="ops-row">
+        <p class="lamp" id="killState">
+          <span id="killIcon" aria-hidden="true"></span><span id="killLabel">Checking</span>
+        </p>
+        <div class="field" style="width:184px;flex:none">
           <label for="adminToken">Admin token</label>
           <input id="adminToken" class="mono" type="password" autocomplete="off" spellcheck="false"
-                 style="width:188px" aria-describedby="opsNote">
+                 aria-describedby="opsNote">
         </div>
         <button class="btn danger" id="haltBtn" type="button">Halt automation</button>
         <button class="btn" id="resumeBtn" type="button">Resume</button>
+        <p class="ops-note" id="opsNote" aria-live="polite">Writes <code>storage/HALT</code> through
+          <code>POST /admin/halt</code>. The next ticket accepted routes on R-00 and goes to a person
+          with its draft attached. Nothing in flight is lost.</p>
       </div>
-      <p class="ops-note" id="opsNote" aria-live="polite">Writes <code>storage/HALT</code> through
-        <code>POST /admin/halt</code>. The next ticket accepted routes on R-00 and goes to a person
-        with its draft attached. Nothing in flight is lost.</p>
     </div>
-  </div>
-</header>
+  </section>
 
-<main class="wrap">
-  <div class="shell">
+  <div class="utility">
+    <button class="btn" id="runrecBtn" type="button" aria-expanded="false" aria-controls="runrec">
+      <span id="runrecIcon" aria-hidden="true"></span>Measured run
+    </button>
+    <button class="btn" id="tourBtn" type="button">
+      <span id="tourIcon" aria-hidden="true"></span>Show me around
+    </button>
+  </div>
+
+  <section class="panel outlined" id="runrec" hidden aria-label="The measured run record"></section>
+
+  <main class="shell">
 
     <div class="rail">
       <section class="panel" id="samplesPanel">
@@ -730,7 +717,7 @@ footer{
           <h2>Sample tickets</h2>
           <span class="meta" id="sampleCount"></span>
         </div>
-        <div class="panel-body" style="padding-top:var(--s-2)">
+        <div class="panel-body">
           <p class="hint">Real records from the validation set and the guardrail probe file, picked
             because each one takes a different route through the rules. Select one to run it.</p>
           <div class="samples" id="samples"></div>
@@ -770,30 +757,36 @@ footer{
               <textarea id="fBody" spellcheck="false">my deployment keeps dying and I cannot work out why</textarea>
             </div>
           </div>
-          <div style="margin-top:var(--s-2)">
+          <div class="form-stack">
             <button class="btn primary" id="runBtn" type="button">Run through the pipeline</button>
           </div>
         </div>
       </section>
+
+      <div class="rail-fill" aria-hidden="true"></div>
     </div>
 
     <div class="work" id="work">
-      <div class="empty">
-        <h2>Nothing submitted yet</h2>
-        <p>Pick a sample on the left, or write a ticket and run it. The console posts to
-          <code>/tickets</code> and reads the audit trail back from <code>/decisions/{ticket_id}</code>,
-          which are the same endpoints anything else integrating with this system would use.</p>
+      <div class="panel">
+        <div class="empty">
+          <h2>Nothing submitted yet</h2>
+          <p>Pick a sample on the left, or write a ticket and run it. The console posts to
+            <code>/tickets</code> and reads the audit trail back from
+            <code>/decisions/{ticket_id}</code>, which are the same endpoints anything else
+            integrating with this system would use.</p>
+        </div>
       </div>
     </div>
 
-  </div>
+  </main>
 
   <footer>
     <span>Offline by default: no API key, no network call on this path</span>
     <span>Rules R-00 to R-06, first match wins</span>
     <span>Every figure above is read from a metrics report, none are typed in</span>
   </footer>
-</main>
+
+</div>
 
 <p class="sr-only" id="srStatus" role="status" aria-live="polite"></p>
 <div class="sr-only" id="defSource"></div>
@@ -812,13 +805,13 @@ const words = s => String(s || "").replace(/_/g, " ");
 const REDUCED = !!(window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches);
 
 /* ===========================================================================
-   Icons. One set, Lucide outline, inlined, every one drawn on the same
-   24-unit grid at stroke-width 2 with round caps and joins. No unicode glyph
-   is ever used as an icon, and no icon carries meaning on its own: each sits
-   beside a text label or inside a control with an accessible name.
+   Icons. Lucide outline, inlined as SVG, one library and one weight: 16px at
+   stroke-width 1.5, stroke="currentColor", aria-hidden="true". No unicode
+   glyph is ever used as an icon, and no icon carries meaning on its own: each
+   sits beside a text label or inside a control with an accessible name.
    =========================================================================== */
 const SVG_OPEN = '<svg class="i" viewBox="0 0 24 24" fill="none" stroke="currentColor" ' +
-  'stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">';
+  'stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">';
 const ICON = {
   arrowRight: SVG_OPEN + '<path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>',
   chevronDown: SVG_OPEN + '<path d="m6 9 6 6 6-6"/></svg>',
@@ -836,7 +829,7 @@ const ICON = {
   table: SVG_OPEN + '<path d="M12 3v18"/><rect width="18" height="18" x="3" y="3"/><path d="M3 9h18"/>' +
     '<path d="M3 15h18"/></svg>'
 };
-const sized = (icon, cls) => icon.replace('class="i"', 'class="i ' + cls + '"');
+const withClass = (icon, cls) => icon.replace('class="i"', 'class="i ' + cls + '"');
 
 /* ===========================================================================
    Plain-language definitions. Every jargon term on the page is defined here
@@ -1159,25 +1152,27 @@ window.addEventListener("scroll", () => { if (tipFor) { placeTip(tipFor); } }, t
 window.addEventListener("resize", () => { if (tipFor) { placeTip(tipFor); } });
 
 /* ===========================================================================
-   Measured figures. They were true before the page opened and will be true
-   after it closes, so they sit on one 12/14px line rather than in a wall of
-   large numbers. The full run record is one keystroke away and closed by
-   default.
+   The standing figures on the instrument head. They were true before the page
+   opened and will be true after it closes, so they are reference readings
+   rather than news. The full run record is one keystroke away, closed by
+   default, and every figure in it is read from a file on disk.
    =========================================================================== */
 
 function deltaPoints(value, baseline, betterWhen) {
   if (value === null || value === undefined || baseline === null || baseline === undefined) { return ""; }
   const points = (value - baseline) * 100;
-  const improved = betterWhen === "down" ? points < 0 : points > 0;
   const icon = points < 0 ? ICON.arrowDown : ICON.arrowUp;
-  return '<span class="delta ' + (improved ? "good" : "warn") + '">' +
-    sized(icon, "i-sm") + Math.abs(points).toFixed(1) + '</span>';
+  const direction = points < 0 ? "below" : "above";
+  const sense = (betterWhen === "down" ? points < 0 : points > 0) ? "better" : "worse";
+  return '<span class="delta">' + icon + Math.abs(points).toFixed(1) + ' pts' +
+    '<span class="sr-only"> ' + direction + ' the baseline, which is ' + sense + '</span></span>';
 }
 
-function ledgerItem(item) {
-  return '<div class="led"><dt>' + defHTML(item.k, item.label) + '</dt>' +
-    '<dd>' + item.v + (item.unit ? '<small>' + esc(item.unit) + '</small>' : '') +
-    (item.delta || "") + (item.sub ? '<small>' + item.sub + '</small>' : '') + '</dd></div>';
+function figureItem(item) {
+  const sub = (item.delta || "") + (item.sub ? '<span>' + item.sub + '</span>' : "");
+  return '<div class="fig"><dt>' + defHTML(item.k, item.label) + '</dt>' +
+    '<dd>' + item.v + (item.unit ? '<span class="unit">' + esc(item.unit) + '</span>' : '') + '</dd>' +
+    (sub ? '<div class="fig-sub">' + sub + '</div>' : '') + '</div>';
 }
 
 function renderStats(stats) {
@@ -1187,7 +1182,7 @@ function renderStats(stats) {
   const live = stats.live || {};
   STATE.stats = stats;
 
-  $("#ledger").innerHTML = [
+  $("#figures").innerHTML = [
     {k: "fcr", v: pct(dev.first_contact_resolution),
       delta: deltaPoints(dev.first_contact_resolution, dev.baseline_first_contact_resolution, "up")},
     {k: "escalation", v: pct(dev.escalation_rate),
@@ -1198,7 +1193,7 @@ function renderStats(stats) {
     {k: "calibration", v: fixed(dev.expected_calibration_error, 4)},
     {k: "decisions", v: grouped(dev.decisions_logged)},
     {k: "kb", v: grouped(corpus.documents), unit: " articles"}
-  ].map(ledgerItem).join("");
+  ].map(figureItem).join("");
 
   const rows = [
     ["Tickets processed", grouped(dev.tickets_processed), grouped(val.tickets_processed), null],
@@ -1230,16 +1225,17 @@ function renderStats(stats) {
   ];
 
   $("#runrec").innerHTML =
-    '<p class="hint">Read straight out of the two metrics reports the evaluation harness wrote. ' +
-    'Nothing on this page computes a figure of its own, so anything here can be traced back to a ' +
-    'file on disk.</p>' +
-    '<div class="scroller" style="border-top:0;margin-top:0"><table style="min-width:420px">' +
-    '<thead><tr><th scope="col">Figure</th><th scope="col">Development, 500</th>' +
-    '<th scope="col">Validation, 80</th></tr></thead><tbody>' +
+    '<div class="panel-head"><h2>Measured run</h2><span class="meta">evaluation/results</span></div>' +
+    '<div class="panel-body"><p class="hint">Read straight out of the two metrics reports the ' +
+    'evaluation harness wrote. Nothing on this page computes a figure of its own, so anything here ' +
+    'can be traced back to a file on disk.</p></div>' +
+    '<div class="scroller"><table style="min-width:520px">' +
+    '<thead><tr><th scope="col">Figure</th><th scope="col" class="num">Development, 500</th>' +
+    '<th scope="col" class="num">Validation, 80</th></tr></thead><tbody>' +
     rows.map(row => '<tr><td>' + (row[3] ? defHTML(row[3], row[0]) : esc(row[0])) + '</td>' +
-      '<td class="mono">' + row[1] + '</td><td class="mono">' + row[2] + '</td></tr>').join("") +
+      '<td class="num">' + row[1] + '</td><td class="num">' + row[2] + '</td></tr>').join("") +
     '</tbody></table></div>' +
-    '<p class="runline">' + [
+    '<div class="panel-body"><p class="runline">' + [
       "development input " + esc(dev.input_path || "unknown"),
       "model provider " + esc(dev.model_provider || "none"),
       defHTML("conf-threshold", "confidence threshold") + " " + fixed(live.confidence_threshold, 2),
@@ -1247,7 +1243,7 @@ function renderStats(stats) {
       defHTML("relevance-floor", "relevance floor") + " " + fixed(corpus.floor, 1),
       defHTML("kb", "knowledge base") + " " + grouped(corpus.documents) + " articles in " +
         grouped(corpus.chunks) + " " + defHTML("passage", "passages")
-    ].join(" &middot; ") + '</p>';
+    ].join(" &middot; ") + '</p></div>';
 }
 
 /* ---------------- sample rail ---------------- */
@@ -1260,7 +1256,7 @@ function renderSamples(samples) {
     return '<button class="sample inset-focus" type="button" aria-current="false" ' +
       'data-id="' + esc(s.ticket_id) + '">' +
       '<span class="sample-top"><span class="sample-id">' + esc(s.ticket_id) +
-        sized(ICON.arrowRight, "i-sm go") + '</span>' +
+        withClass(ICON.arrowRight, "go") + '</span>' +
         '<span class="chip' + (answered ? " answered" : "") + '">' + esc(s.expected_rule) + '</span></span>' +
       '<span class="sample-why">' + esc(s.demonstrates) + '</span>' +
       '<span class="sample-meta">' + esc([s.channel, s.customer_tier, words(s.language_fluency), s.source]
@@ -1302,24 +1298,25 @@ async function runComposed() {
     received_at: new Date().toISOString().replace(/\.\d+Z$/, "Z")
   };
   const button = $("#runBtn");
-  const label = button.textContent;
+  const resting = button.textContent;
   button.setAttribute("aria-busy", "true");
-  button.disabled = true;
   button.textContent = "Running";
+  button.disabled = true;
   markSample(null);
   try { await submit(ticket, {source: "written in the console", demonstrates: "", labels: null}); }
   finally {
     button.removeAttribute("aria-busy");
+    button.textContent = resting;
     button.disabled = false;
-    button.textContent = label;
   }
 }
 
 async function submit(ticket, meta) {
   const work = $("#work");
   work.setAttribute("aria-busy", "true");
-  work.innerHTML = '<div class="empty"><h2>Running</h2><p>' + esc(ticket.ticket_id) +
-    ' is going through ingest, classification, retrieval, routing, generation and validation.</p></div>';
+  work.innerHTML = '<div class="panel"><div class="empty"><h2>Running</h2><p>' + esc(ticket.ticket_id) +
+    ' is going through ingest, classification, retrieval, routing, generation and validation.</p>' +
+    '</div></div>';
   let response;
   try {
     response = await getJSON("/tickets", {
@@ -1329,8 +1326,8 @@ async function submit(ticket, meta) {
     });
   } catch (err) {
     work.setAttribute("aria-busy", "false");
-    work.innerHTML = '<div class="failure"><b>' + sized(ICON.circleX, "i-sm") +
-      'The ticket was not processed</b>' + esc(err.message) + '</div>';
+    work.innerHTML = '<div class="panel"><div class="failure"><b>' + ICON.circleX +
+      'The ticket was not processed</b>' + esc(err.message) + '</div></div>';
     announce("The ticket was not processed. " + err.message);
     return;
   }
@@ -1403,8 +1400,8 @@ function ticketPanel(ticket, meta) {
       (meta && meta.source ? ' &middot; ' + esc(meta.source) : '') + '</span></div>' +
     '<div class="panel-body">' +
     '<div class="facts">' + facts.map(f =>
-      '<span class="fact' + (f[0] === "fluency" && flagged ? " flagged" : "") + '"><b>' + esc(f[0]) +
-      '</b> ' + esc(f[1]) + '</span>').join("") + '</div>' +
+      '<span class="chip ' + (f[0] === "fluency" && flagged ? "flagged" : "plain") + '"><b>' +
+      esc(f[0]) + '</b> ' + esc(f[1]) + '</span>').join("") + '</div>' +
     (ticket.subject ? '<p class="ticket-subject">' + esc(ticket.subject) + '</p>' : '') +
     '<div class="ticket-text">' + esc(ticket.body || "(the body was empty)") + '</div>' +
     '</div></section>';
@@ -1418,12 +1415,12 @@ function verdictPanel(r, routing, shape) {
     ? defHTML(key, routing.rule)
     : esc(routing.rule || "none");
   return '<section class="verdict ' + shape[1] + '" id="verdict" aria-labelledby="verdictHead">' +
-    '<div><div class="verdict-line"><h2 id="verdictHead">' + esc(shape[0]) + '</h2>' +
+    '<div class="verdict-main"><div class="verdict-line"><h2 id="verdictHead">' + esc(shape[0]) + '</h2>' +
     '<span class="verdict-rule">' + badge + '</span></div>' +
     '<p class="verdict-reason">' + esc(routing.reason || "No routing reason was recorded.") + '</p></div>' +
     '<div class="readout">' +
     '<div><div class="k">' + defHTML("latency", "Latency") + '</div><div class="v">' +
-      latency + '<small> ms</small></div></div>' +
+      latency + '<span class="unit"> ms</span></div></div>' +
     '<div><div class="k">' + defHTML("threshold-applied", "Threshold applied") + '</div><div class="v">' +
       fixed(routing.threshold_applied, 2) + '</div></div>' +
     '<div><div class="k">' + defHTML("generated-by", "Generated by") + '</div><div class="v text">' +
@@ -1511,7 +1508,7 @@ function passagesCard(r) {
         (marker ? ' &middot; cited [' + esc(marker) + ']' : '') + '</span></span>' +
       '<span class="p-score">' + fixed(p.score, 2) +
         '<i class="p-bar" style="width:' + width + 'px"></i></span>' +
-      sized(ICON.chevronDown, "i-sm chev-d") +
+      withClass(ICON.chevronDown, "chev-d") +
       '</button><div class="passage-detail" hidden></div></div>';
   }).join("");
   const blank = '<p class="hint">Nothing in the ' + defHTML("kb", "knowledge base") +
@@ -1556,9 +1553,9 @@ function guardrailsCard(r) {
   return '<section class="panel" id="railsCard"><div class="panel-head"><h2>Guardrails</h2>' +
     '<span class="meta">' + (r.blocked_by && r.blocked_by.length
       ? esc(r.blocked_by.join(", ")) + " blocked" : "nothing blocked") + '</span></div>' +
-    '<div class="panel-body" style="padding-top:var(--s-2)">' +
-    '<div class="rails">' + cells + '</div>' +
-    '<p class="hint" style="margin-top:var(--s-3)">' + esc(note) + '</p></div></section>';
+    '<div class="cells rails">' + cells +
+      '<div class="rail-cell blank" aria-hidden="true"></div></div>' +
+    '<div class="panel-body"><p class="hint">' + esc(note) + '</p></div></section>';
 }
 
 /* ---------------- decision log ---------------- */
@@ -1588,14 +1585,15 @@ async function loadDecisions(ticketId) {
     '<colgroup><col class="c-stage"><col class="c-model"><col class="c-pred">' +
     '<col class="c-conf"><col class="c-act"><col class="c-reason"></colgroup><thead><tr>' +
     '<th scope="col">Stage</th><th scope="col">Model</th><th scope="col">Prediction</th>' +
-    '<th scope="col">Confidence</th><th scope="col">Action</th><th scope="col">Reason</th>' +
+    '<th scope="col" class="num">Confidence</th><th scope="col">Action</th>' +
+    '<th scope="col">Reason</th>' +
     '</tr></thead><tbody>' + rows.map(row =>
       '<tr><td><span class="stage">' + esc(row.stage) + '<i>' + esc((row.timestamp || "").slice(11)) +
       '</i></span></td>' +
       '<td class="mono">' + esc(row.model_name) + '<br><span class="dim">' +
         esc(row.model_version) + '</span></td>' +
       '<td class="mono">' + esc(row.prediction) + '</td>' +
-      '<td class="mono">' + fixed(row.confidence, 4) + '</td>' +
+      '<td class="num">' + fixed(row.confidence, 4) + '</td>' +
       '<td class="mono">' + esc(row.action_taken) + '</td>' +
       '<td class="reason">' + esc(row.reason) +
         '<div class="reqs">' + (row.requirement_ids || []).map(id =>
@@ -1607,10 +1605,10 @@ async function loadDecisions(ticketId) {
     : '';
   card.innerHTML = '<div class="panel-head"><h2>Decision log</h2><span class="meta">GET /decisions/' +
     esc(ticketId) + '</span></div>' +
-    '<div class="panel-body" style="padding-top:var(--s-2)"><p class="hint">' + rows.length +
+    '<div class="panel-body"><p class="hint">' + rows.length +
     ' rows, in the order the decisions were taken, read back out of the SQLite ' +
     defHTML("decision-log", "log") + '. This is the reconstruction path: months later, it is how ' +
-    'anyone answers why the system did this.' + esc(extra) + '</p>' + table + '</div>';
+    'anyone answers why the system did this.' + esc(extra) + '</p></div>' + table;
 }
 
 /* ---------------- interaction ---------------- */
@@ -1762,7 +1760,8 @@ const TOUR = [
        "is what gets quoted in a compliance review."}
 ];
 
-const tour = {index: 0, open: false, dim: null, ring: null, card: null, anchor: null, frame: 0,
+const tour = {index: 0, open: false, dim: null, bands: null, ring: null, card: null,
+  anchor: null, observer: null,
   seenInMemory: false, returnTo: null};
 
 function tourSeen() {
@@ -1779,6 +1778,13 @@ function markTourSeen() {
 function tourBuild() {
   tour.dim = document.createElement("div");
   tour.dim.className = "wt-dim";
+  tour.bands = {};
+  ["top", "bottom", "left", "right"].forEach(function (side) {
+    const band = document.createElement("div");
+    band.className = "wt-band";
+    tour.bands[side] = band;
+    tour.dim.appendChild(band);
+  });
   tour.ring = document.createElement("div");
   tour.ring.className = "wt-ring";
   tour.card = document.createElement("div");
@@ -1793,7 +1799,7 @@ function tourBuild() {
     '<h2 id="wtHead"></h2><p id="wtBody"></p>' +
     '<div class="wt-actions">' +
       '<div class="wt-dots" id="wtDots" aria-hidden="true"></div><span class="spacer"></span>' +
-      '<button class="ghost" type="button" id="wtSkip">Skip</button>' +
+      '<button class="btn" type="button" id="wtSkip">Skip</button>' +
       '<button class="btn" type="button" id="wtBack">Back</button>' +
       '<button class="btn primary" type="button" id="wtNext" style="width:auto">Next</button>' +
     '</div>';
@@ -1821,9 +1827,17 @@ function tourBuild() {
   });
 }
 
-/* The spotlight is clipped to what is actually on screen. A panel three
-   screens tall would otherwise put the ring off both edges and dim nothing,
-   which is the same as having no spotlight at all. */
+/* The spotlight is an overlay with a hole in it rather than a spread shadow,
+   because nothing on this page carries a drop shadow. The hole is cut by four
+   bands framing the anchor rather than by one self-intersecting polygon: the
+   polygon version relied on the nonzero winding rule resolving a path that
+   crosses itself twice, and it resolved the other way, leaving the masthead and
+   the instrument head unpainted while everything below them dimmed. Four
+   rectangles cannot be ambiguous about which side is inside.
+
+   It is clipped to what is actually on screen: a panel three screens tall would
+   otherwise put the ring off both edges and dim nothing, which is the same as
+   having no spotlight at all. */
 function tourPlace() {
   const anchor = tour.anchor;
   if (!anchor) { return; }
@@ -1836,37 +1850,48 @@ function tourPlace() {
   const bottom = Math.max(top + 72, Math.min(rect.bottom + pad, floor));
   const left = Math.max(4, rect.left - pad);
   const width = Math.min(rect.width + pad * 2, window.innerWidth - left - 4);
-  [tour.dim, tour.ring].forEach(node => {
-    node.style.top = Math.round(top) + "px";
-    node.style.left = Math.round(left) + "px";
-    node.style.width = Math.round(width) + "px";
-    node.style.height = Math.round(bottom - top) + "px";
-  });
+  const right = left + width;
+  const l = Math.round(left);
+  const rr = Math.round(right);
+  const t = Math.round(top);
+  const b = Math.round(bottom);
+  const bands = tour.bands;
+  Object.assign(bands.top.style, {left: "0px", top: "0px", width: "100%", height: t + "px"});
+  Object.assign(bands.bottom.style, {left: "0px", top: b + "px", width: "100%", bottom: "0px",
+    height: "auto"});
+  Object.assign(bands.left.style, {left: "0px", top: t + "px", width: l + "px",
+    height: (b - t) + "px"});
+  Object.assign(bands.right.style, {left: rr + "px", top: t + "px", right: "0px",
+    width: "auto", height: (b - t) + "px"});
+  tour.ring.style.top = t + "px";
+  tour.ring.style.left = l + "px";
+  tour.ring.style.width = Math.round(width) + "px";
+  tour.ring.style.height = Math.round(bottom - top) + "px";
   if (narrow) { return; }
-  // Below the spotlight, else above it, else beside it. A panel that fills the
-  // viewport has no room either side of it vertically, and a card dropped over
-  // the middle of it hides the very thing the step is pointing at.
-  const gap = 16;
-  let cardTop;
-  let cardLeft = rect.left;
-  if (card.height + gap <= window.innerHeight - bottom) {
-    cardTop = bottom + gap;
-  } else if (card.height + gap <= top) {
-    cardTop = top - card.height - gap;
-  } else {
-    cardTop = Math.max(gap, (window.innerHeight - card.height) / 2);
-    if (left + width + gap + card.width <= window.innerWidth - gap) { cardLeft = left + width + gap; }
-    else if (left - gap - card.width >= gap) { cardLeft = left - gap - card.width; }
+  let cardTop = bottom + 16;
+  if (cardTop + card.height > window.innerHeight - 16) {
+    cardTop = Math.max(16, top - card.height - 16);
   }
-  if (cardLeft + card.width > window.innerWidth - gap) { cardLeft = window.innerWidth - card.width - gap; }
-  tour.card.style.top = Math.round(Math.max(gap, cardTop)) + "px";
-  tour.card.style.left = Math.round(Math.max(gap, cardLeft)) + "px";
+  if (cardTop + card.height > window.innerHeight - 16) {
+    cardTop = Math.max(16, (window.innerHeight - card.height) / 2);
+  }
+  let cardLeft = rect.left;
+  if (cardLeft + card.width > window.innerWidth - 16) { cardLeft = window.innerWidth - card.width - 16; }
+  tour.card.style.top = Math.round(cardTop) + "px";
+  tour.card.style.left = Math.round(Math.max(16, cardLeft)) + "px";
 }
 
+/* The spotlight used to be repositioned from a requestAnimationFrame loop that
+   re-entered itself for as long as the walkthrough was open. It worked, and it
+   read layout and wrote styles on every frame of an animation that has nothing
+   to animate: the anchor only moves when the page scrolls, the window resizes,
+   or a panel below it changes size. Those are three events, so it listens for
+   three events. A frame loop also never lets the page go idle, which is its own
+   kind of rude on a laptop and is what made a headless render of this page hang
+   rather than finish. */
 function tourTrack() {
   if (!tour.open) { return; }
   tourPlace();
-  tour.frame = window.requestAnimationFrame(tourTrack);
 }
 
 function tourGo(index) {
@@ -1883,15 +1908,27 @@ function tourGo(index) {
     '<span class="' + (i <= index ? "on" : "") + '"></span>').join("");
   $("#wtBack", tour.card).disabled = index === 0;
   $("#wtNext", tour.card).textContent = index === TOUR.length - 1 ? "Done" : "Next";
-  // A panel taller than the viewport is scrolled to its top, not its middle:
-  // centring one puts its heading off screen, which is the part that explains it.
-  const rect = anchor.getBoundingClientRect();
-  const tall = rect.height > window.innerHeight * 0.6;
-  const target = tall
-    ? window.scrollY + rect.top - 24
-    : window.scrollY + rect.top - Math.max(24, (window.innerHeight - rect.height) / 2);
-  window.scrollTo({top: Math.max(0, target), behavior: REDUCED ? "auto" : "smooth"});
+  // Scroll only when the step's anchor is not already on screen. This used to
+  // scroll unconditionally, and on step one that was actively wrong: the ticket
+  // rail starts just below the instrument head, is taller than the viewport, so
+  // it took the "scroll a tall panel to its top" branch and pushed the masthead
+  // and the whole head off the screen before saying a word. The first thing the
+  // walkthrough did was throw away what the operator was looking at.
+  //
+  // A panel taller than the viewport is still scrolled to its top rather than
+  // its middle when it does need scrolling: centring one puts its heading off
+  // screen, which is the part that explains it.
+  const box = anchor.getBoundingClientRect();
+  const tall = box.height > window.innerHeight * 0.6;
+  const onScreen = Math.min(box.bottom, window.innerHeight) - Math.max(box.top, 0);
+  const enough = Math.min(box.height, window.innerHeight * 0.4);
+  if (box.top < 0 || onScreen < enough) {
+    anchor.scrollIntoView({behavior: REDUCED ? "auto" : "smooth", block: tall ? "start" : "center"});
+  }
   tourPlace();
+  // Once more after the browser has laid the card out, because the card's own
+  // height decides where it sits and the first pass measured the previous step.
+  window.requestAnimationFrame(tourPlace);
   tour.card.focus();
 }
 
@@ -1904,13 +1941,20 @@ function tourStart() {
   tour.dim.style.display = tour.ring.style.display = tour.card.style.display = "";
   document.body.setAttribute("data-tour", "open");
   tourGo(0);
-  tour.frame = window.requestAnimationFrame(tourTrack);
+  window.addEventListener("scroll", tourTrack, {passive: true, capture: true});
+  window.addEventListener("resize", tourTrack, {passive: true});
+  if (window.ResizeObserver && !tour.observer) {
+    tour.observer = new ResizeObserver(tourTrack);
+  }
+  if (tour.observer) { tour.observer.observe(document.body); }
 }
 
 function tourEnd() {
   if (!tour.open) { return; }
   tour.open = false;
-  window.cancelAnimationFrame(tour.frame);
+  window.removeEventListener("scroll", tourTrack, {capture: true});
+  window.removeEventListener("resize", tourTrack);
+  if (tour.observer) { tour.observer.disconnect(); }
   tour.dim.style.display = tour.ring.style.display = tour.card.style.display = "none";
   document.body.removeAttribute("data-tour");
   markTourSeen();
@@ -1942,8 +1986,8 @@ function toggleRunRecord() {
 
 async function boot() {
   buildHiddenDefinitions();
-  $("#runrecIcon").innerHTML = sized(ICON.chevronDown, "i-sm chev-d");
-  $("#tourIcon").innerHTML = sized(ICON.compass, "i-sm");
+  $("#runrecIcon").innerHTML = withClass(ICON.chevronDown, "chev-d");
+  $("#tourIcon").innerHTML = ICON.compass;
   $("#killIcon").innerHTML = ICON.circleMinus;
   $("#haltBtn").addEventListener("click", () => admin("/admin/halt"));
   $("#resumeBtn").addEventListener("click", () => admin("/admin/resume"));
@@ -1953,8 +1997,8 @@ async function boot() {
 
   try { renderStats(await getJSON("/api/stats")); }
   catch (err) {
-    $("#ledger").innerHTML = '<div class="led"><dt>Measured figures</dt><dd>' +
-      '<small>unavailable: ' + esc(err.message) + '</small></dd></div>';
+    $("#figures").innerHTML = '<div class="fig"><dt>Measured figures</dt><dd>' +
+      '<span class="unit">unavailable: ' + esc(err.message) + '</span></dd></div>';
   }
 
   refreshHealth();

@@ -2,39 +2,143 @@
   {
     "source": "cloudserve-triage/docs/images/raw/console-answered.png",
     "output": "cloudserve-triage/docs/images/console-answered.png",
-    "scale": 0.78,
+    "scale": 0.39,
     "callouts": [
-      {"n": 1, "box": [28, 186, 1412, 312],
-       "text": "The two figures the client actually watches, with the change against today's baseline. Read from the harness output; nothing on this page is a number somebody typed in."},
-      {"n": 2, "box": [28, 468, 1412, 556],
-       "text": "The kill switch. Halting writes a file, and the next ticket routes on R-00 and goes to a person with its draft attached. No deployment, and nothing in flight is lost."},
-      {"n": 3, "box": [28, 700, 358, 1240],
-       "text": "Eight real tickets, each chosen because it takes a different route through the rules. The chip on each says which rule will fire before you click it."},
-      {"n": 4, "box": [382, 798, 1412, 1002],
-       "text": "The routing decision. The rule that made it, and the reason in the words a support manager would use rather than an engineer."},
-      {"n": 5, "box": [382, 1026, 886, 1272],
-       "text": "Intent, with a calibrated confidence: the probability this prediction is correct, not the softmax mass on the winning class. The bar is marked at the routing threshold."},
-      {"n": 6, "box": [906, 1026, 1412, 1700],
-       "text": "The retrieved passages with their BM25 scores. The cited one is open, showing the actual article text the citation resolves to. That is acceptance criterion A6, checked by eye."},
-      {"n": 7, "box": [382, 1414, 886, 1838],
-       "text": "The reply as it would be sent. The [1] marker lights up the passage it came from, and the closing paragraph tells the customer a machine drafted it."}
+      {
+        "n": 1,
+        "box": [
+          67,
+          325,
+          2813,
+          587
+        ],
+        "text": "The four figures the client watches, each against the baseline measured from their own history. Citation accuracy reads 71.3% over every automatic answer, with the flattering 90.3% over covered tickets only underneath it, because quoting one without the other is how the first draft of this project overstated itself.",
+        "at": [
+          64,
+          456
+        ]
+      },
+      {
+        "n": 2,
+        "box": [
+          67,
+          595,
+          2813,
+          797
+        ],
+        "text": "The kill switch. Halting writes a file; the next ticket routes on R-00 to a person with its draft attached. Nothing in flight is lost, and it needs the admin token, so it cannot be tripped by accident."
+      },
+      {
+        "n": 3,
+        "box": [
+          69,
+          941,
+          703,
+          3837
+        ],
+        "text": "Eight real tickets, each picked because it takes a different route through the eight rules. Three are adversarial probes from the fault-injection file rather than the validation set.",
+        "at": [
+          64,
+          1400
+        ]
+      },
+      {
+        "n": 4,
+        "box": [
+          711,
+          1407,
+          2811,
+          1859
+        ],
+        "text": "The routing decision: the rule that made it, named, and the reason written for a support manager rather than for me. Every decision on every path names its rule, including the decision not to answer."
+      },
+      {
+        "n": 5,
+        "box": [
+          711,
+          1867,
+          1757,
+          2691
+        ],
+        "text": "Intent with a calibrated confidence, which is the probability this prediction is correct rather than the model's raw score. Urgency sits below it and comes from a policy table, not a model, because the labels disagree with themselves on 334 of 500 tickets."
+      },
+      {
+        "n": 6,
+        "box": [
+          1765,
+          1867,
+          2811,
+          3813
+        ],
+        "text": "The retrieved passages with their BM25 scores, not probabilities. The cited passage is open by default and any row expands to the text the citation actually points at, so a disputed answer can be checked against the source in one click."
+      },
+      {
+        "n": 7,
+        "box": [
+          711,
+          2699,
+          1757,
+          3813
+        ],
+        "text": "The reply as it would be sent. Every [1] marker lights up the passage it came from. The extractive generator can only quote sentences already in the corpus, which is what makes the degraded path safe to fall back to."
+      }
     ]
   },
   {
     "source": "cloudserve-triage/docs/images/raw/console-escalated.png",
     "output": "cloudserve-triage/docs/images/console-escalated.png",
-    "scale": 0.78,
+    "scale": 0.39,
     "callouts": [
-      {"n": 1, "box": [382, 798, 1224, 1002],
-       "text": "A security incident, recognised with 100% confidence, and escalated anyway. R-01 is a policy rule: no confidence is high enough for this class. That is the whole design in one line."},
-      {"n": 2, "box": [1228, 812, 1410, 988],
-       "text": "Latency, the threshold that was applied, and which generator produced the text. All three are written to the decision log."},
-      {"n": 3, "box": [382, 1026, 886, 1272],
-       "text": "The classification is confident and correct. It is not what decided the outcome, which is the point of putting policy ahead of confidence."},
-      {"n": 4, "box": [382, 1414, 886, 1612],
-       "text": "The handover note. Daniel, the tier two engineer, asked for exactly this: what the customer wants, what documentation looked relevant, and what the system was unsure about."},
-      {"n": 5, "box": [906, 1026, 1412, 1412],
-       "text": "The articles were retrieved and deliberately not sent. They travel with the escalation so the engineer does not start from a blank page."}
+      {
+        "n": 1,
+        "box": [
+          711,
+          1407,
+          2811,
+          1859
+        ],
+        "text": "A security incident, recognised correctly and escalated anyway. R-01 reads the predicted class, so four policy classes never auto-respond however confident the model is. Confidence cannot buy its way past this rule."
+      },
+      {
+        "n": 2,
+        "box": [
+          711,
+          1867,
+          1757,
+          2691
+        ],
+        "text": "The classification is confident and right. It is deliberately not what decided the outcome: showing the confidence next to an escalation is the point, because an operator needs to see that the system understood the ticket and still refused it."
+      },
+      {
+        "n": 3,
+        "box": [
+          1765,
+          1867,
+          2811,
+          3825
+        ],
+        "text": "The articles were retrieved and deliberately not sent. They travel with the escalation so the engineer picking it up starts from what the system already found instead of searching again."
+      },
+      {
+        "n": 4,
+        "box": [
+          711,
+          2699,
+          1757,
+          3825
+        ],
+        "text": "The handover note rather than a reply. Daniel, the tier two engineer, asked for exactly this in his interview: what the system thought, what it found, and why it stopped."
+      },
+      {
+        "n": 5,
+        "box": [
+          711,
+          3833,
+          2811,
+          4385
+        ],
+        "text": "All five guardrails report on every ticket, including the ones that passed. A coverage test is meaningless if the quiet path is the unlogged path, so an escalated ticket writes the same five decision records as an answered one."
+      }
     ]
   }
 ]
