@@ -441,6 +441,19 @@ a single reviewer, and the report says so.
 
 ---
 
+## Licence
+
+Copyright 2026 Om Mengshetti. All rights reserved. Read it, run it, quote it with
+attribution, build your own thing from the ideas. Do not submit any part of it,
+in any form, as your own work for a course, an assessment or a hiring exercise.
+The full terms are in [LICENSE](LICENSE), including a note that the contents of
+`data/` belong to the assessment and are not mine to licence to you.
+
+The documents under `submission/` are watermarked and carry authorship in their
+PDF metadata.
+
+---
+
 ## Attribution
 
 The BM25 implementation in [`src/retrieve.py`](src/retrieve.py) follows

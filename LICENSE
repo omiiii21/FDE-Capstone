@@ -1,0 +1,42 @@
+Copyright (c) 2026 Om Mengshetti. All rights reserved.
+
+This repository is the work product of an individual Forward Deployed AI
+Engineering capstone assessment. It is published so that other people can read
+it, learn from it and argue with it. It is not published for reuse.
+
+WHAT YOU MAY DO
+
+  Read any of it. Run it. Point at it. Quote it in a discussion, a blog post, a
+  code review or a talk, with attribution to Om Mengshetti and a link back to
+  this repository. Borrow an idea and build your own thing from scratch.
+
+WHAT YOU MAY NOT DO
+
+  Submit any part of this, in any form, as your own work for any course,
+  assessment, interview exercise or hiring process. That is the specific thing
+  this licence exists to prohibit, and paraphrasing it does not make it yours.
+
+  Redistribute the documents. The PDFs are watermarked and carry authorship in
+  their metadata; removing either does not transfer authorship.
+
+  Use it commercially, or publish a derivative work from it, without written
+  permission.
+
+THE DATA IS NOT MINE TO LICENCE
+
+  Everything under `data/` is the assessment's own material, supplied with the
+  capstone pack. It is included so the evaluation can be reproduced and it is
+  not covered by the permissions above. Do not redistribute it separately.
+
+NO WARRANTY
+
+  Provided as is, without warranty of any kind, express or implied. The author
+  is not liable for any claim, damage or other liability arising from it.
+
+  It is also not production software. It was built in three weeks against a
+  fixed brief, its limits are documented at length in the report rather than
+  hidden, and several of its numbers are bounded rather than measured. Read
+  section 10 of the report before trusting any figure in it.
+
+Om Mengshetti
+omengshetti@gmail.com
