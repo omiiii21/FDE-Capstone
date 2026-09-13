@@ -12,7 +12,9 @@ Run with: python -m pytest tests/ -q
 
 from __future__ import annotations
 
+import os
 import sys
+import tempfile
 from pathlib import Path
 from typing import Iterator
 
@@ -22,6 +24,19 @@ import requests
 REPO_ROOT = Path(__file__).resolve().parent.parent
 if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
+
+# These have to be set before src.config is imported for the first time, because
+# Settings reads the environment once at import and is frozen afterwards. Doing
+# it in a fixture instead looks like it works and does not: reloading the config
+# module makes a second Settings object, and every module that already did
+# "from .config import settings" keeps the first one. That is how a kill-switch
+# test can write a halt file nobody reads.
+_SCRATCH = Path(tempfile.mkdtemp(prefix="cloudserve-tests-"))
+os.environ.setdefault("PROVIDER", "offline")
+os.environ["STORAGE_PATH"] = str(_SCRATCH)
+os.environ["DATABASE_URL"] = f"sqlite:///{_SCRATCH}/decisions.db"
+os.environ["KILL_SWITCH_PATH"] = str(_SCRATCH / "HALT")
+os.environ.setdefault("ADMIN_TOKEN", "test-admin-token")
 
 from src.classify import Classifier  # noqa: E402
 from src.ingest import load_tickets  # noqa: E402
