@@ -2,145 +2,39 @@
   {
     "source": "cloudserve-triage/docs/images/raw/console-answered.png",
     "output": "cloudserve-triage/docs/images/console-answered.png",
-    "scale": 0.74,
+    "scale": 0.78,
     "callouts": [
-      {
-        "n": 1,
-        "box": [
-          88,
-          188,
-          1412,
-          300
-        ],
-        "text": "Headline figures, read from the harness output rather than typed in. Nothing on this page is a hardcoded number."
-      },
-      {
-        "n": 2,
-        "box": [
-          88,
-          352,
-          838,
-          408
-        ],
-        "text": "The kill switch. Halting writes a file; the next ticket routes on R-00 and goes to a person with its draft attached. No deployment, nothing in flight lost."
-      },
-      {
-        "n": 3,
-        "box": [
-          88,
-          444,
-          446,
-          1000
-        ],
-        "text": "Eight real tickets, each chosen because it takes a different route through the rules. The chip shows which rule will fire."
-      },
-      {
-        "n": 4,
-        "box": [
-          466,
-          660,
-          1414,
-          830
-        ],
-        "text": "The routing decision, with the rule that made it and a reason written for a support manager rather than an engineer."
-      },
-      {
-        "n": 5,
-        "box": [
-          466,
-          866,
-          952,
-          1266
-        ],
-        "text": "Intent with a calibrated confidence, meaning the probability this prediction is correct, and the runners-up it considered."
-      },
-      {
-        "n": 6,
-        "box": [
-          962,
-          866,
-          1414,
-          1272
-        ],
-        "text": "The passages retrieved, with their BM25 scores. Open a row to read the article the citation actually points at."
-      },
-      {
-        "n": 7,
-        "box": [
-          466,
-          1278,
-          952,
-          1726
-        ],
-        "text": "The reply as it would be sent. The [1] marker resolves to a passage above, and the closing paragraph tells the customer a machine drafted it."
-      }
+      {"n": 1, "box": [28, 186, 1412, 312],
+       "text": "The two figures the client actually watches, with the change against today's baseline. Read from the harness output; nothing on this page is a number somebody typed in."},
+      {"n": 2, "box": [28, 468, 1412, 556],
+       "text": "The kill switch. Halting writes a file, and the next ticket routes on R-00 and goes to a person with its draft attached. No deployment, and nothing in flight is lost."},
+      {"n": 3, "box": [28, 700, 358, 1240],
+       "text": "Eight real tickets, each chosen because it takes a different route through the rules. The chip on each says which rule will fire before you click it."},
+      {"n": 4, "box": [382, 798, 1412, 1002],
+       "text": "The routing decision. The rule that made it, and the reason in the words a support manager would use rather than an engineer."},
+      {"n": 5, "box": [382, 1026, 886, 1272],
+       "text": "Intent, with a calibrated confidence: the probability this prediction is correct, not the softmax mass on the winning class. The bar is marked at the routing threshold."},
+      {"n": 6, "box": [906, 1026, 1412, 1700],
+       "text": "The retrieved passages with their BM25 scores. The cited one is open, showing the actual article text the citation resolves to. That is acceptance criterion A6, checked by eye."},
+      {"n": 7, "box": [382, 1414, 886, 1838],
+       "text": "The reply as it would be sent. The [1] marker lights up the passage it came from, and the closing paragraph tells the customer a machine drafted it."}
     ]
   },
   {
     "source": "cloudserve-triage/docs/images/raw/console-escalated.png",
     "output": "cloudserve-triage/docs/images/console-escalated.png",
-    "scale": 0.74,
+    "scale": 0.78,
     "callouts": [
-      {
-        "n": 1,
-        "box": [
-          466,
-          668,
-          1414,
-          852
-        ],
-        "text": "A security incident, recognised with 100% confidence, and escalated anyway. R-01 is a policy rule: no confidence is high enough for this class."
-      },
-      {
-        "n": 2,
-        "box": [
-          1240,
-          680,
-          1410,
-          845
-        ],
-        "text": "Latency, the threshold that was applied, and which generator produced the text. All three go into the decision log."
-      },
-      {
-        "n": 3,
-        "box": [
-          466,
-          872,
-          952,
-          1240
-        ],
-        "text": "The classification is confident and correct. It is not what decided the outcome, which is the point of putting policy ahead of confidence."
-      },
-      {
-        "n": 4,
-        "box": [
-          466,
-          1258,
-          952,
-          1650
-        ],
-        "text": "The handover note. Daniel, the tier two engineer, asked for exactly this: what the customer is asking, what documentation looked relevant, and what the system was unsure about."
-      },
-      {
-        "n": 5,
-        "box": [
-          966,
-          872,
-          1414,
-          1285
-        ],
-        "text": "The articles were retrieved and deliberately not sent. They travel with the escalation so the engineer does not start from a blank page."
-      },
-      {
-        "n": 6,
-        "box": [
-          466,
-          1676,
-          1414,
-          1778
-        ],
-        "text": "Guardrails, recorded on every ticket. Grounding and the confidence floor read not applicable here because an internal note carries no citations and was never going to pass them."
-      }
+      {"n": 1, "box": [382, 798, 1224, 1002],
+       "text": "A security incident, recognised with 100% confidence, and escalated anyway. R-01 is a policy rule: no confidence is high enough for this class. That is the whole design in one line."},
+      {"n": 2, "box": [1228, 812, 1410, 988],
+       "text": "Latency, the threshold that was applied, and which generator produced the text. All three are written to the decision log."},
+      {"n": 3, "box": [382, 1026, 886, 1272],
+       "text": "The classification is confident and correct. It is not what decided the outcome, which is the point of putting policy ahead of confidence."},
+      {"n": 4, "box": [382, 1414, 886, 1612],
+       "text": "The handover note. Daniel, the tier two engineer, asked for exactly this: what the customer wants, what documentation looked relevant, and what the system was unsure about."},
+      {"n": 5, "box": [906, 1026, 1412, 1412],
+       "text": "The articles were retrieved and deliberately not sent. They travel with the escalation so the engineer does not start from a blank page."}
     ]
   }
 ]

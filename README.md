@@ -12,7 +12,7 @@ This fixes the delivery problem, not the answer problem.
 <br>
 
 ![Python](https://img.shields.io/badge/python-3.10%2B-1f6f5c?style=flat-square)
-![Tests](https://img.shields.io/badge/tests-218%20passing-2f7a41?style=flat-square)
+![Tests](https://img.shields.io/badge/tests-235%20passing-2f7a41?style=flat-square)
 ![Acceptance](https://img.shields.io/badge/acceptance%20criteria-12%2F12-2f7a41?style=flat-square)
 ![Runs offline](https://img.shields.io/badge/API%20key-not%20required-2f7a41?style=flat-square)
 ![Unattended run](https://img.shields.io/badge/80%20tickets-0.08s-1f6f5c?style=flat-square)
@@ -96,6 +96,32 @@ flowchart LR
 ```
 
 <div align="center"><sub><b>Every stage writes to the log, whatever the outcome.</b> 2,500 records across 500 tickets, reconciling exactly.</sub></div>
+
+---
+
+## Seeing one decision
+
+The console is the demonstration surface. It puts a single ticket on screen with
+everything the pipeline concluded about it, because a routing decision that a
+support manager can read is worth more than one that has to be explained.
+
+```bash
+uvicorn src.api:app --port 8000     # then http://127.0.0.1:8000
+```
+
+### A ticket answered from the knowledge base
+
+![The operator console answering a rollback request, with numbered callouts](docs/images/console-answered.png)
+
+### The same console on a security incident
+
+Recognised with 100% confidence, and escalated anyway. This is the part of the
+design worth arguing about, so it is the part the console makes easiest to see.
+
+![The operator console escalating a security incident, with numbered callouts](docs/images/console-escalated.png)
+
+Any decision is a link: `?ticket=VAL-0043` opens straight onto that one, so a
+routing call somebody disagrees with can be sent to them rather than described.
 
 ---
 
