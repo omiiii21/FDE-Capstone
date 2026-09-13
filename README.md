@@ -12,7 +12,7 @@ This fixes the delivery problem, not the answer problem.
 <br>
 
 ![Python](https://img.shields.io/badge/python-3.10%2B-1f6f5c?style=flat-square)
-![Tests](https://img.shields.io/badge/tests-235%20passing-2f7a41?style=flat-square)
+![Tests](https://img.shields.io/badge/tests-298%20passing-2f7a41?style=flat-square)
 ![Acceptance](https://img.shields.io/badge/acceptance%20criteria-12%2F12-2f7a41?style=flat-square)
 ![Runs offline](https://img.shields.io/badge/API%20key-not%20required-2f7a41?style=flat-square)
 ![Unattended run](https://img.shields.io/badge/80%20tickets-0.08s-1f6f5c?style=flat-square)
@@ -157,17 +157,24 @@ somebody to find.
 | Measure | Baseline | Target | Achieved | |
 | --- | ---: | ---: | ---: | :--- |
 | First contact resolution | 43.8% | 60% | **81.4%** | **met** |
-| Verified resolution <sub>answered *and* citing the right article</sub> | — | — | **90.3%** | |
+| Verified resolution <sub>answered *and* citing an article the labels agree with</sub> | — | — | **71.3%** | |
 | Escalation rate | 56.2% | ≤ 30% | **18.6%** | **met** |
 | Median time to first reply | 214 min | < 5 min | **< 1 s** | **met** |
 | Intent precision <sub>body-disjoint split</sub> | — | 85% | **92.2%** | **met** |
 | Retrieval recall@5 | — | — | **96.4%** | |
-| Citation accuracy | — | 95% | **90.3%** | **missed** |
+| Citation accuracy | — | 95% | **71.3%** | **missed** |
 | Calibration error (ECE) | — | < 5 pts | **0.009** | **met** |
 | Private data in outbound text | — | 0 | **0** | **met** |
 | Never-auto-respond breaches | — | 0 | **0 of 87** | **met** |
 | Decision log reconciliation | — | exact | **2,500 / 500** | **met** |
 | Cross-group variation <sub>by region</sub> | — | < 5 pts | **9.7 pts** | **missed** |
+
+> **Verified resolution and citation accuracy are measured over every automatic
+> answer, including the ones the documentation cannot cover.** Measured only over
+> the tickets the corpus does cover, both read 90.3%. That is the same system and
+> the flattering denominator: it drops the 86 replies that went out with no article
+> they could have been right from, which is precisely where the system is weakest.
+> The 95% citation target is missed by 24 points, not by 5.
 
 > **The classifier scores 99.2% on a random split and 92.2% on a body-disjoint one.**
 > The development set has 500 tickets but only 215 distinct ticket bodies, so a
@@ -421,8 +428,10 @@ and 0.85. The threshold sits at 0.62 because that is where observed accuracy
 collapses on held-out data, not because the sweep chose it. What actually
 decides routing here is the policy classes and the grounding guardrail.
 
-**Citation accuracy misses its target**, at 90.3% against 95%. It was kept as
-the target rather than quietly lowered to flatter the result.
+**Citation accuracy misses its target**, at 71.3% against 95%. The target was
+kept rather than quietly lowered to flatter the result, and the denominator was
+widened for the same reason: an earlier version measured only the tickets the
+documentation covers and reported 90.3%.
 
 **Satisfaction is a proxy.** There are no live customers. The hallucination rate
 was not established the way the evaluation framework asks, by two independent

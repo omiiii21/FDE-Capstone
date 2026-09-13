@@ -101,3 +101,56 @@ def test_a_query_of_nothing_but_stopwords_retrieves_nothing(retriever):
     # tokenise() drops these entirely, and an empty query must not be treated as
     # a match-everything query.
     assert retriever.search("of the and to it") == []
+
+
+# --- the length normalisation guard ------------------------------------
+# `self._len[i] / self._avg_len or 1.0` binds as `(x / avg) or 1.0`, so the
+# fallback fired when the division came out at zero and never when the average
+# length did, which is the case it was written for. Through the public API that
+# combination cannot arise - an index with an average length of zero holds no
+# terms, so the division is never reached - but the guard was still testing the
+# wrong thing, and an empty corpus is the shape of input it was meant to survive.
+def test_an_empty_index_scores_nothing_rather_than_dividing_by_zero():
+    from src.retrieve import LexicalIndex
+
+    index = LexicalIndex([])
+
+    assert index._avg_len == 0.0
+    assert index.score(["deployment", "failure"]) == []
+
+
+def test_an_index_of_empty_chunks_scores_zero_rather_than_dividing_by_zero():
+    from src.retrieve import Chunk, LexicalIndex
+
+    index = LexicalIndex([Chunk("DOC-X", "DOC-X#0", "", "", "overview", "", [], [], [])])
+
+    assert index._avg_len == 0.0
+    assert index.score(["deployment"]) == [0.0]
+
+
+def test_a_zero_average_length_falls_back_to_one_instead_of_raising():
+    # The state the guard exists for, reached directly because the constructor
+    # cannot produce it. Before the fix this raised ZeroDivisionError.
+    from src.retrieve import Chunk, LexicalIndex
+
+    index = LexicalIndex([Chunk("DOC-X", "DOC-X#0", "t", "c", "overview", "body", ["timeout"], [], [])])
+    index._avg_len = 0.0
+
+    scores = index.score(["timeout"])
+
+    assert len(scores) == 1
+    assert scores[0] > 0.0
+
+
+def test_a_retriever_over_an_empty_corpus_returns_nothing(tmp_path):
+    import json
+
+    from src.retrieve import Retriever
+
+    corpus = tmp_path / "empty.json"
+    corpus.write_text(json.dumps([]), encoding="utf-8")
+
+    empty = Retriever(corpus)
+
+    assert empty.stats["documents"] == 0
+    assert empty.search("my deployment keeps dying") == []

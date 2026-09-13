@@ -203,6 +203,39 @@ def run(
     return report, exit_code
 
 
+# The targets in the summary table are the ones in section 8 of
+# submission/03_Workbooks/Stage_2_PRD_v2.0.md, with the two technical ones from
+# section 5. They were wrong here for a while: the table claimed 60% first
+# contact resolution against a target of 65%, 30% escalation against 35%, five
+# minutes to first reply against one, and three seconds at the 95th percentile
+# against a budget written as ten on chat and sixty elsewhere. A generated
+# report that restates the requirement incorrectly is worse than one that omits
+# it, because it is the artefact somebody checks the requirement against.
+def _rate(value: float, basis: int) -> str:
+    """A percentage and what it was taken over, or a note that it was over nothing.
+
+    A rate with a denominator of zero is not zero per cent, and printing it as
+    0.0% is how a run over an unlabelled file reads as a failing one.
+    """
+    if not basis:
+        return NOT_SCORED
+    return f"{value:.1%} (n={basis})"
+
+
+TARGETS = {
+    "first_contact_resolution": "65%",
+    "escalation_rate": "35%",
+    "automated_reply": "under 1 min",
+    "weighted_precision": "85%",
+    "retrieval_recall": "90%",
+    "citation_accuracy": "95%",
+    "latency_p95": "10 s chat, 60 s other",
+    "calibration_band_gap": "5 pts",
+}
+
+NOT_SCORED = "not scored: the input file carried no labels"
+
+
 def render_summary(report: dict[str, Any]) -> str:
     """A readable version of metrics.json.
 
@@ -218,6 +251,38 @@ def render_summary(report: dict[str, Any]) -> str:
     latency = report["technical"]["latency"]
     calibration = report["technical"]["calibration"]
     governance = report["governance"]
+
+    # A file with no labels is a normal thing to point the harness at: it is how
+    # a real queue arrives. Rendering the unscorable measures as 0.0% read as a
+    # system that got everything wrong, which is a worse lie than saying nothing.
+    scored = "note" not in classification
+    _accuracy = f"{classification['accuracy']:.1%}" if scored else NOT_SCORED
+    _weighted_precision = f"{classification['weighted_precision']:.1%}" if scored else NOT_SCORED
+    _macro_precision = f"{classification['macro_precision']:.1%}" if scored else NOT_SCORED
+    _ece = f"{calibration['expected_calibration_error']:.4f}" if calibration["bands"] else NOT_SCORED
+    _band_gap = (
+        f"{calibration['worst_band_gap_points']:.1f} pts (over {calibration['bands_counted']} bands "
+        f"holding {calibration['predictions_in_counted_bands']} predictions)"
+        if calibration["bands"]
+        else NOT_SCORED
+    )
+    _verified_all = _rate(
+        business["verified_fcr_over_all_labelled_auto_answers"],
+        business["verified_fcr_over_all_labelled_auto_answers_basis"],
+    )
+    _verified_answerable = _rate(
+        business["verified_fcr_over_answerable_auto_answers_only"],
+        business["verified_fcr_over_answerable_auto_answers_only_basis"],
+    )
+    _citation_all = _rate(
+        retrieval["citation_accuracy_over_all_labelled_replies"],
+        retrieval["citation_accuracy_over_all_labelled_replies_basis"],
+    )
+    _citation_answerable = _rate(
+        retrieval["citation_accuracy_over_answerable_replies_only"],
+        retrieval["citation_accuracy_over_answerable_replies_only_basis"],
+    )
+    _routing_agreement = _rate(business["routing_agreement_with_labels"], business["routing_agreement_basis"])
 
     lines = [
         f"# Evaluation run {run['run_id']}",
@@ -244,18 +309,23 @@ def render_summary(report: dict[str, Any]) -> str:
         "",
         "| Measure | Baseline | Target | This run |",
         "| --- | --- | --- | --- |",
-        f"| First contact resolution | {business['baseline_first_contact_resolution']:.1%} | 60% | "
-        f"{business['first_contact_resolution']:.1%} |",
-        f"| First contact resolution, verified | - | - | "
-        f"{business['first_contact_resolution_verified']:.1%} "
-        f"(n={business['first_contact_resolution_verified_basis']}) |",
-        f"| Escalation rate | {business['baseline_escalation_rate']:.1%} | 30% | "
-        f"{business['escalation_rate']:.1%} |",
-        f"| Median reply, automated | {business['baseline_median_reply_minutes']:.0f} min | 5 min | "
-        f"{business['automated_reply_seconds_median']:.3f} s |",
-        f"| Median reply, blended | {business['baseline_median_reply_minutes']:.0f} min | 5 min | "
+        f"| First contact resolution | {business['baseline_first_contact_resolution']:.1%} | "
+        f"{TARGETS['first_contact_resolution']} | {business['first_contact_resolution']:.1%} |",
+        f"| Verified resolution, every labelled automatic answer | - | - | " f"{_verified_all} |",
+        f"| Verified resolution, answerable tickets only | - | - | {_verified_answerable} |",
+        f"| Escalation rate | {business['baseline_escalation_rate']:.1%} | "
+        f"{TARGETS['escalation_rate']} | {business['escalation_rate']:.1%} |",
+        f"| Median reply, automated | {business['baseline_median_reply_minutes']:.0f} min | "
+        f"{TARGETS['automated_reply']} | {business['automated_reply_seconds_median']:.3f} s |",
+        f"| Median reply, blended | {business['baseline_median_reply_minutes']:.0f} min | - | "
         f"{business['blended_reply_minutes_median']:.1f} min |",
-        f"| Routing agreement with labels | - | - | {business['routing_agreement_with_labels']:.1%} |",
+        f"| Routing agreement with labels | - | - | {_routing_agreement} |",
+        "",
+        "The two verified figures differ only in what they divide by. The first counts every "
+        "automatic answer the input file carries a coverage label for, including the "
+        f"{business['auto_answers_on_tickets_the_corpus_does_not_cover']} answered on tickets no "
+        "article covers, which can never cite a document the labels agree with. The second leaves "
+        "those out and measures retrieval and citation alone. The first is the one to quote.",
         "",
         f"Blended figure assumption: {business['blended_reply_assumption']}.",
         "",
@@ -263,17 +333,16 @@ def render_summary(report: dict[str, Any]) -> str:
         "",
         "| Measure | Target | This run |",
         "| --- | --- | --- |",
-        f"| Intent accuracy | - | {classification.get('accuracy', 0):.1%} |",
-        f"| Weighted precision | 85% | {classification.get('weighted_precision', 0):.1%} |",
-        f"| Macro precision | - | {classification.get('macro_precision', 0):.1%} |",
-        f"| Retrieval recall@k | - | {retrieval['recall_at_k']:.1%} |",
-        f"| Citation accuracy | 95% | {retrieval['citation_accuracy']:.1%} "
-        f"(n={retrieval['citation_accuracy_basis']}) |",
-        f"| Latency p95 | 3 s | {latency['p95_seconds']:.3f} s |",
-        f"| Calibration error (ECE) | - | {calibration['expected_calibration_error']:.4f} |",
-        f"| Calibration, worst band gap | 5 pts | {calibration['worst_band_gap_points']:.1f} pts "
-        f"(over {calibration['bands_counted']} bands holding "
-        f"{calibration['predictions_in_counted_bands']} predictions) |",
+        f"| Intent accuracy | - | {_accuracy} |",
+        f"| Weighted precision | {TARGETS['weighted_precision']} | {_weighted_precision} |",
+        f"| Macro precision | - | {_macro_precision} |",
+        f"| Retrieval recall@k | {TARGETS['retrieval_recall']} | {retrieval['recall_at_k']:.1%} |",
+        f"| Citation accuracy, every labelled reply | {TARGETS['citation_accuracy']} | " f"{_citation_all} |",
+        f"| Citation accuracy, answerable tickets only | {TARGETS['citation_accuracy']} | "
+        f"{_citation_answerable} |",
+        f"| Latency p95 | {TARGETS['latency_p95']} | {latency['p95_seconds']:.3f} s |",
+        f"| Calibration error (ECE) | - | {_ece} |",
+        f"| Calibration, worst band gap | {TARGETS['calibration_band_gap']} | {_band_gap} |",
         "",
         "## Governance",
         "",

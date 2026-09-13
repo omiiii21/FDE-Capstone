@@ -111,7 +111,7 @@ system reverses that and widens it in enterprise's favour.
 | Europe | 151 | 102 | 81.5% | 85.3% | 96.5% |
 
 Spread of 9.71 points, the widest in the audit, and the one I understand least.
-Europe is 11.5 points below Latin America on verified resolution while sitting
+Europe is 9.7 points below Latin America on verified resolution while sitting
 mid-table on retrieval recall, so the right article is being found and the wrong
 one is being cited. My working hypothesis is composition: Europe carries a
 heavier share of `data_residency` and `compliance_request` traffic, where
@@ -156,12 +156,24 @@ this audit where a below-average segment is still an improvement.
 | Short | 110 | 65 | 68.2% | 87.7% | 94.7% |
 
 Spread of 3.33 points on resolution, which passes, and 17 points on automation,
-which is the number that actually matters. A short ticket gives BM25 fewer terms
-to match, retrieval returns less or nothing, and `R-02-no-grounding` escalates.
-The system is not answering short tickets badly. It is declining to answer them,
-which is the correct behaviour and still a difference in service: a customer who
-writes two lines waits for a human, and a customer who writes two paragraphs
-gets a reply in under a millisecond.
+which is the number that actually matters. My first explanation for it was that
+a short ticket gives BM25 fewer terms to match, so retrieval returns less or
+nothing and `R-02-no-grounding` escalates. The decision log says otherwise.
+`R-02-no-grounding` did not fire once on the 500-ticket run. Of the 35
+escalations among short tickets, 34 are `R-01-policy-class` and one is
+`R-04-below-threshold`, and 15 of those 34 are `unclear_request`. Seven short
+tickets did retrieve nothing at all, and all seven were unclear requests that
+R-01 had already removed before the no-grounding rule was reached.
+
+The real mechanism is composition rather than retrieval. A ticket short enough
+to fall under 120 characters is disproportionately a ticket that does not say
+what it wants, and that is a class the policy rule takes out of automation on
+sight. So the system is not answering short tickets badly, and it is not
+declining them for want of a passage either. It is declining them because they
+are the kind of ticket a person has to read. That is the correct behaviour and
+still a difference in service: a customer who writes two lines waits for a
+human, and a customer who writes two paragraphs gets a reply in under a
+millisecond.
 
 I expected the opposite result before measuring, on the reasoning that a long
 ticket contains more to be confused by. For a lexical retriever, more text is

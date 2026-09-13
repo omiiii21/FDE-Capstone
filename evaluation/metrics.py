@@ -78,6 +78,17 @@ def business_metrics(rows: Sequence[dict[str, Any]]) -> dict[str, Any]:
     confidently wrong answer closes a ticket operationally and reopens it as a
     complaint. Reporting only the first would be the kind of number the brief
     warns about.
+
+    The verified figure is itself reported twice, and only because reporting it
+    once was wrong. It used to divide by the automatic answers on tickets the
+    labels name a document for, which quietly dropped the 86 tickets in the
+    development set that the system answered anyway and the corpus does not
+    cover. Those are not unmeasurable, they are the worst cases: an answer went
+    out and there is no document it could have been right from. They belong in
+    the denominator, so the figure over every labelled automatic answer is the
+    one to quote. The narrower figure is kept because it separates a retrieval
+    or citation failure from a coverage failure, and both keys say in their name
+    which population they are over so neither can be quoted as the other.
     """
     total = len(rows)
     auto = [r for r in rows if r["action"] == "auto_respond"]
@@ -88,7 +99,11 @@ def business_metrics(rows: Sequence[dict[str, Any]]) -> dict[str, Any]:
         for r in auto
         if r.get("expected_doc_ids") and set(r.get("cited_doc_ids") or []) & set(r["expected_doc_ids"])
     ]
+    # Every automatic answer the input file carries a coverage label for,
+    # including the ones labelled as covered by nothing.
+    auto_labelled = [r for r in auto if r.get("expected_doc_ids") is not None]
     auto_with_labels = [r for r in auto if r.get("expected_doc_ids")]
+    auto_uncovered = [r for r in auto if r.get("expected_doc_ids") == []]
 
     # Automated replies go out in the time the pipeline took. Escalated tickets
     # still wait for the human queue, so the blended figure below uses
@@ -96,10 +111,17 @@ def business_metrics(rows: Sequence[dict[str, Any]]) -> dict[str, Any]:
     automated_minutes = [r["latency_seconds"] / 60.0 for r in auto]
     blended = automated_minutes + [HUMAN_QUEUE_MINUTES] * (total - len(auto))
 
+    routed = [r for r in labelled if r.get("expected_route")]
+
     return {
         "first_contact_resolution": round(_safe_div(len(auto), total), 4),
-        "first_contact_resolution_verified": round(_safe_div(len(verified), len(auto_with_labels)), 4),
-        "first_contact_resolution_verified_basis": len(auto_with_labels),
+        "verified_fcr_over_all_labelled_auto_answers": round(_safe_div(len(verified), len(auto_labelled)), 4),
+        "verified_fcr_over_all_labelled_auto_answers_basis": len(auto_labelled),
+        "verified_fcr_over_answerable_auto_answers_only": round(
+            _safe_div(len(verified), len(auto_with_labels)), 4
+        ),
+        "verified_fcr_over_answerable_auto_answers_only_basis": len(auto_with_labels),
+        "auto_answers_on_tickets_the_corpus_does_not_cover": len(auto_uncovered),
         "escalation_rate": round(_safe_div(total - len(auto), total), 4),
         "automated_reply_seconds_mean": round(
             statistics.mean([r["latency_seconds"] for r in auto]) if auto else 0.0, 4
@@ -120,14 +142,16 @@ def business_metrics(rows: Sequence[dict[str, Any]]) -> dict[str, Any]:
             _safe_div(
                 sum(
                     1
-                    for r in labelled
-                    if r.get("expected_route")
-                    and ((r["action"] == "auto_respond") == (r["expected_route"] == "auto_respond"))
+                    for r in routed
+                    if (r["action"] == "auto_respond") == (r["expected_route"] == "auto_respond")
                 ),
-                sum(1 for r in labelled if r.get("expected_route")),
+                len(routed),
             ),
             4,
         ),
+        # Reported so that a run over an unlabelled file can say it was not
+        # scored rather than printing an agreement of nought per cent.
+        "routing_agreement_basis": len(routed),
     }
 
 
@@ -188,13 +212,27 @@ def retrieval_metrics(rows: Sequence[dict[str, Any]]) -> dict[str, Any]:
     cited_correct = [
         r for r in cited if r.get("expected_doc_ids") and set(r["cited_doc_ids"]) & set(r["expected_doc_ids"])
     ]
+    # Same shape of problem as verified resolution, and the same answer. A reply
+    # that cites something on a ticket the labels say no article covers has
+    # cited the wrong thing by definition, so it counts against the accuracy
+    # rather than dropping out of it. Both denominators are reported and both
+    # keys name the population they are over.
+    cited_labelled = [r for r in cited if r.get("expected_doc_ids") is not None]
     cited_with_labels = [r for r in cited if r.get("expected_doc_ids")]
+    cited_uncovered = [r for r in cited if r.get("expected_doc_ids") == []]
 
     return {
         "recall_at_k": round(_safe_div(len(hits), len(answerable)), 4),
         "precision_at_1": round(_safe_div(len(top1), len(answerable)), 4),
-        "citation_accuracy": round(_safe_div(len(cited_correct), len(cited_with_labels)), 4),
-        "citation_accuracy_basis": len(cited_with_labels),
+        "citation_accuracy_over_all_labelled_replies": round(
+            _safe_div(len(cited_correct), len(cited_labelled)), 4
+        ),
+        "citation_accuracy_over_all_labelled_replies_basis": len(cited_labelled),
+        "citation_accuracy_over_answerable_replies_only": round(
+            _safe_div(len(cited_correct), len(cited_with_labels)), 4
+        ),
+        "citation_accuracy_over_answerable_replies_only_basis": len(cited_with_labels),
+        "cited_replies_on_tickets_the_corpus_does_not_cover": len(cited_uncovered),
         "responses_with_citations": len(cited),
         "citations_all_resolve": all(r.get("citations_resolve", True) for r in rows),
         "returned_nothing_when_unanswerable": round(

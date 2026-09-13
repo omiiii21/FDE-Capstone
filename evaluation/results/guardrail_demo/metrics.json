@@ -1,10 +1,10 @@
 {
   "run": {
-    "run_id": "run-20260917T190130Z-9692d7",
-    "started_at": "2026-09-17T19:01:30Z",
-    "finished_at": "2026-09-17T19:01:30Z",
-    "duration_seconds": 0.02,
-    "tickets_per_second": 446.19,
+    "run_id": "run-20260918T015904Z-f673a0",
+    "started_at": "2026-09-18T01:59:04Z",
+    "finished_at": "2026-09-18T01:59:04Z",
+    "duration_seconds": 0.03,
+    "tickets_per_second": 277.86,
     "input_path": "data/guardrail_probe_tickets.json",
     "output_dir": "evaluation/results/guardrail_demo",
     "system_version": "2.1.0",
@@ -47,8 +47,11 @@
   },
   "business": {
     "first_contact_resolution": 0.0,
-    "first_contact_resolution_verified": 0.0,
-    "first_contact_resolution_verified_basis": 0,
+    "verified_fcr_over_all_labelled_auto_answers": 0.0,
+    "verified_fcr_over_all_labelled_auto_answers_basis": 0,
+    "verified_fcr_over_answerable_auto_answers_only": 0.0,
+    "verified_fcr_over_answerable_auto_answers_only_basis": 0,
+    "auto_answers_on_tickets_the_corpus_does_not_cover": 0,
     "escalation_rate": 1.0,
     "automated_reply_seconds_mean": 0.0,
     "automated_reply_seconds_median": 0.0,
@@ -58,7 +61,8 @@
     "baseline_first_contact_resolution": 0.438,
     "baseline_escalation_rate": 0.562,
     "baseline_median_reply_minutes": 214.0,
-    "routing_agreement_with_labels": 0.0
+    "routing_agreement_with_labels": 0.0,
+    "routing_agreement_basis": 0
   },
   "technical": {
     "classification": {
@@ -67,24 +71,27 @@
     "retrieval": {
       "recall_at_k": 0.0,
       "precision_at_1": 0.0,
-      "citation_accuracy": 0.0,
-      "citation_accuracy_basis": 0,
+      "citation_accuracy_over_all_labelled_replies": 0.0,
+      "citation_accuracy_over_all_labelled_replies_basis": 0,
+      "citation_accuracy_over_answerable_replies_only": 0.0,
+      "citation_accuracy_over_answerable_replies_only_basis": 0,
+      "cited_replies_on_tickets_the_corpus_does_not_cover": 0,
       "responses_with_citations": 0,
       "citations_all_resolve": true,
       "returned_nothing_when_unanswerable": 0.0,
       "mean_passages_returned": 3.778
     },
     "latency": {
-      "mean_seconds": 0.0008,
-      "median_seconds": 0.0005,
-      "p95_seconds": 0.0042,
-      "p99_seconds": 0.0042,
-      "max_seconds": 0.0042,
+      "mean_seconds": 0.0014,
+      "median_seconds": 0.0007,
+      "p95_seconds": 0.007,
+      "p99_seconds": 0.007,
+      "max_seconds": 0.007,
       "p95_by_channel": {
-        "email": 0.0042,
-        "chat": 0.0005,
-        "docs_comment": 0.0005,
-        "forum": 0.0005
+        "email": 0.007,
+        "chat": 0.0007,
+        "docs_comment": 0.0007,
+        "forum": 0.0007
       }
     },
     "calibration": {

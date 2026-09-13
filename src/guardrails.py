@@ -47,10 +47,28 @@ PII_PATTERNS: tuple[tuple[str, re.Pattern[str]], ...] = (
 # Straight from Daniel: "Billing disputes, because those become contractual
 # quickly and nothing automated should be making commitments about money."
 COMMITMENT_PATTERNS: tuple[tuple[str, re.Pattern[str]], ...] = (
+    # Two patterns rather than one, and both of them need CloudServe to be the
+    # party doing something. The version this replaces fired on the bare phrase
+    # "a refund" or "a credit", which is the topic rather than a commitment:
+    # DOC-BILL-002 says "where a refund rather than a credit is required, an
+    # account owner should raise the request within thirty days", and a reply
+    # that correctly quotes the refund policy was blocked for explaining it.
+    # What matters is the system saying the money has already moved.
     (
-        "refund",
+        "refund_issued",
         re.compile(
-            r"\b(?:we (?:have |'ve )?(?:issued|processed|approved)|a)\s+(?:a\s+)?(?:refund|credit|rebate)\b",
+            r"\b(?:i|we)(?:\s+have|\s+had|'ve)?\s+(?:already\s+|now\s+|just\s+)?"
+            r"(?:issued|processed|approved|applied|arranged|actioned|authorised|authorized)\b"
+            r"[^.\n]{0,40}\b(?:refund|credit|rebate|reimbursement)\b",
+            re.I,
+        ),
+    ),
+    (
+        "refund_confirmed",
+        re.compile(
+            r"\b(?:a|an|the|your|this)\s+(?:\w+\s+){0,2}?(?:refund|credit|rebate|reimbursement)\b"
+            r"[^.\n]{0,30}\b(?:has|have)\s+been\s+"
+            r"(?:issued|processed|approved|applied|arranged|actioned|authorised|authorized)\b",
             re.I,
         ),
     ),
@@ -125,24 +143,67 @@ INJECTION_PATTERNS: tuple[tuple[str, re.Pattern[str]], ...] = (
     ),
 )
 
-# Words in a response that assert a fact. A sentence containing one of these and
-# carrying no citation is what the grounding check is looking for.
-_FACTUAL = re.compile(
-    r"\b(?:is|are|was|were|will|must|should|cannot|can't|does|do|has|have|returns?|"
-    r"expires?|requires?|supports?|limits?|applies|resets?|takes|lasts?|contains?)\b",
+# Whether a sentence asserts something about the product.
+#
+# This used to be a list of about twenty verbs, and the list was the bug. English
+# has an open verb class, so "Deleting the pod triggers a fresh rollout" and
+# "Rotating the key invalidates every existing session" both went out uncited:
+# neither uses a verb anyone thought to enumerate, and no enumeration ever
+# closes. The test therefore runs the other way round now. A sentence is a claim
+# unless it is conversation.
+#
+# Standing in for "has a finite verb" without a parser takes two tests. The first
+# is the closed class of auxiliaries, modals and the copula, which genuinely is
+# closed and can be written out. The second is inflection: a third person
+# singular present ends in -s and a regular past in -ed. Plural nouns end in -s
+# as well, so the second test over-fires, and over-firing is the side to be on
+# here. This check only ever reads a paragraph that cites nothing at all, so a
+# false positive costs an escalation and a false negative puts an uncited claim
+# in a customer's inbox.
+_FINITE_AUXILIARY = re.compile(
+    r"\b(?:is|are|was|were|am|be|been|being|has|have|had|do|does|did|will|would|shall|should|"
+    r"can|could|may|might|must|ought|cannot|isn't|aren't|wasn't|weren't|hasn't|haven't|hadn't|"
+    r"doesn't|don't|didn't|won't|wouldn't|shouldn't|can't|couldn't|mustn't)\b",
     re.I,
 )
+_INFLECTED_VERB = re.compile(r"\b[a-z]{2,}(?:ed|es|s)\b", re.I)
 _SENTENCE_SPLIT = re.compile(r"(?<=[.!?])\s+")
 
 # Sentences that are conversation rather than claims. Without this the opening
-# and closing lines of every reply are flagged as ungrounded.
+# and closing lines of every reply are flagged as ungrounded. Everything the
+# delivery layer adds around an answer belongs here, and nothing about
+# CloudServe's behaviour does.
 _BOILERPLATE = re.compile(
     r"^(?:thanks|thank you|hello|hi\b|i do not have documentation|"
     r"if (?:that|it) does not (?:resolve|answer)|"
     r"reply to this message|a support engineer|apologies|sorry|"
+    r"let (?:me|us) know|feel free|do not hesitate|"
     r"this reply was drafted automatically)",
     re.I,
 )
+
+# Line breaks inside a ticket are wrapping, not punctuation. An injection
+# pattern that forbids a newline inside the match is defeated by a mail client
+# folding the line, which is how "Ignore all previous\ninstructions" walked past
+# the check. Runs of blank lines are left alone so that two unrelated paragraphs
+# are not joined into a phrase neither of them contains.
+_SOFT_WRAP = re.compile(r"[ \t]*\n(?![ \t]*\n)[ \t]*")
+
+
+def _unwrap(text: str) -> str:
+    """Join soft-wrapped lines, keeping paragraph breaks as boundaries."""
+    return _SOFT_WRAP.sub(" ", text)
+
+
+def _is_claim(sentence: str) -> bool:
+    """Whether this sentence asserts something that would need a source."""
+    if _BOILERPLATE.match(sentence):
+        return False
+    # A question asks for a fact rather than stating one, so it has nothing to
+    # cite. The generators do not write them; a model draft might.
+    if sentence.rstrip().endswith("?"):
+        return False
+    return bool(_FINITE_AUXILIARY.search(sentence) or _INFLECTED_VERB.search(sentence))
 
 
 def _find(patterns: Sequence[tuple[str, re.Pattern[str]]], text: str) -> list[str]:
@@ -214,9 +275,11 @@ def check_grounding(response: str, passages: Sequence[Passage], citations: Seque
             continue
         for sentence in _SENTENCE_SPLIT.split(paragraph):
             sentence = sentence.strip()
-            if len(sentence) < 30 or _BOILERPLATE.match(sentence):
+            # Below about thirty characters there is not room for a claim worth
+            # sourcing, and the greeting is the case that keeps proving it.
+            if len(sentence) < 30:
                 continue
-            if _FACTUAL.search(sentence):
+            if _is_claim(sentence):
                 uncited.append(sentence)
 
     if uncited:
@@ -247,7 +310,7 @@ def check_injection(ticket: Ticket) -> GuardrailResult:
     block and the prompt says it is information rather than instruction. This is
     the detection layer on top: it does not assume the delimiters held.
     """
-    found = _find(INJECTION_PATTERNS, f"{ticket.subject}\n{ticket.body}")
+    found = _find(INJECTION_PATTERNS, _unwrap(f"{ticket.subject}\n\n{ticket.body}"))
     if found:
         return GuardrailResult("injection", False, f"ticket text matched: {', '.join(sorted(set(found)))}")
     return GuardrailResult("injection", True, "no instruction-like content in the ticket")

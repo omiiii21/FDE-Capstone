@@ -94,8 +94,46 @@ def test_verified_resolution_only_counts_answers_citing_an_expected_document():
     result = business_metrics(rows)
 
     assert result["first_contact_resolution"] == 0.75
-    assert result["first_contact_resolution_verified"] == 0.5
-    assert result["first_contact_resolution_verified_basis"] == 2
+    assert result["verified_fcr_over_answerable_auto_answers_only"] == 0.5
+    assert result["verified_fcr_over_answerable_auto_answers_only_basis"] == 2
+
+
+def test_an_answer_on_a_ticket_no_article_covers_counts_against_verified_resolution():
+    # The defect this holds shut: expected_doc_ids == [] means the labels say
+    # nothing in the corpus answers this ticket, so an automatic answer there
+    # can never cite a document they agree with. Dividing by the answerable ones
+    # only dropped those tickets out of the measurement entirely and moved the
+    # development figure from 71.3% to 90.3% without anything improving.
+    rows = [
+        answered(expected_doc_ids=["DOC-A"], cited_doc_ids=["DOC-A"]),
+        answered(expected_doc_ids=["DOC-B"], cited_doc_ids=["DOC-Z"]),
+        answered(expected_doc_ids=[], cited_doc_ids=["DOC-C"]),
+        answered(expected_doc_ids=[], cited_doc_ids=["DOC-D"]),
+    ]
+
+    result = business_metrics(rows)
+
+    assert result["verified_fcr_over_all_labelled_auto_answers"] == 0.25
+    assert result["verified_fcr_over_all_labelled_auto_answers_basis"] == 4
+    assert result["verified_fcr_over_answerable_auto_answers_only"] == 0.5
+    assert result["verified_fcr_over_answerable_auto_answers_only_basis"] == 2
+    assert result["auto_answers_on_tickets_the_corpus_does_not_cover"] == 2
+
+
+def test_the_two_verified_denominators_agree_when_every_ticket_is_covered():
+    rows = [
+        answered(expected_doc_ids=["DOC-A"], cited_doc_ids=["DOC-A"]),
+        answered(expected_doc_ids=["DOC-B"], cited_doc_ids=["DOC-Z"]),
+    ]
+
+    result = business_metrics(rows)
+
+    assert (
+        result["verified_fcr_over_all_labelled_auto_answers"]
+        == result["verified_fcr_over_answerable_auto_answers_only"]
+        == 0.5
+    )
+    assert result["auto_answers_on_tickets_the_corpus_does_not_cover"] == 0
 
 
 def test_routing_agreement_compares_against_the_expected_route():
@@ -166,10 +204,29 @@ def test_retrieval_recall_and_citation_accuracy():
 
     assert result["recall_at_k"] == 0.6667  # two of the three answerable tickets, rounded
     assert result["precision_at_1"] == 0.6667
-    assert result["citation_accuracy"] == 0.5
-    assert result["citation_accuracy_basis"] == 2
+    assert result["citation_accuracy_over_answerable_replies_only"] == 0.5
+    assert result["citation_accuracy_over_answerable_replies_only_basis"] == 2
     # The unanswerable row retrieved nothing, which is the correct answer.
     assert result["returned_nothing_when_unanswerable"] == 1.0
+
+
+def test_a_citation_on_an_uncovered_ticket_counts_against_citation_accuracy():
+    # Same defect as verified resolution, same shape, same fix. A reply that
+    # cites an article on a ticket the labels say no article covers has cited
+    # the wrong thing, and it used to disappear from the denominator instead.
+    rows = [
+        answered(expected_doc_ids=["DOC-A"], retrieved_doc_ids=["DOC-A"], cited_doc_ids=["DOC-A"]),
+        answered(expected_doc_ids=[], retrieved_doc_ids=["DOC-Z"], cited_doc_ids=["DOC-Z"]),
+        answered(expected_doc_ids=[], retrieved_doc_ids=["DOC-Y"], cited_doc_ids=["DOC-Y"]),
+    ]
+
+    result = retrieval_metrics(rows)
+
+    assert result["citation_accuracy_over_all_labelled_replies"] == 0.3333
+    assert result["citation_accuracy_over_all_labelled_replies_basis"] == 3
+    assert result["citation_accuracy_over_answerable_replies_only"] == 1.0
+    assert result["citation_accuracy_over_answerable_replies_only_basis"] == 1
+    assert result["cited_replies_on_tickets_the_corpus_does_not_cover"] == 2
 
 
 # percentile() is nearest-rank rather than interpolated, so it always returns a

@@ -1,0 +1,2822 @@
+{
+  "input": "data/development_tickets.json",
+  "tickets_considered": 357,
+  "misses_only": false,
+  "minimum_tickets_per_candidate": 3,
+  "candidates": 164,
+  "candidates_already_curated": 6,
+  "rows": [
+    {
+      "customer_word": "causing",
+      "tickets": 12,
+      "expected_articles": [
+        "DOC-DEPLOY-002"
+      ],
+      "suggested_terms": [
+        "rolling",
+        "back",
+        "release",
+        "failed",
+        "deployment",
+        "catch"
+      ],
+      "already_in_expansions": false,
+      "current_expansion": []
+    },
+    {
+      "customer_word": "forward",
+      "tickets": 12,
+      "expected_articles": [
+        "DOC-DEPLOY-002"
+      ],
+      "suggested_terms": [
+        "rolling",
+        "back",
+        "release",
+        "failed",
+        "deployment",
+        "catch"
+      ],
+      "already_in_expansions": false,
+      "current_expansion": []
+    },
+    {
+      "customer_word": "put",
+      "tickets": 12,
+      "expected_articles": [
+        "DOC-DEPLOY-002"
+      ],
+      "suggested_terms": [
+        "rolling",
+        "back",
+        "release",
+        "failed",
+        "deployment",
+        "catch"
+      ],
+      "already_in_expansions": false,
+      "current_expansion": []
+    },
+    {
+      "customer_word": "eu",
+      "tickets": 11,
+      "expected_articles": [
+        "DOC-DATA-003"
+      ],
+      "suggested_terms": [
+        "regional",
+        "residency",
+        "storage",
+        "data",
+        "additional",
+        "asked"
+      ],
+      "already_in_expansions": false,
+      "current_expansion": []
+    },
+    {
+      "customer_word": "generate",
+      "tickets": 11,
+      "expected_articles": [
+        "DOC-DATA-001"
+      ],
+      "suggested_terms": [
+        "exporting",
+        "extract",
+        "scheduled",
+        "data",
+        "began",
+        "captured"
+      ],
+      "already_in_expansions": false,
+      "current_expansion": []
+    },
+    {
+      "customer_word": "receiving",
+      "tickets": 11,
+      "expected_articles": [
+        "DOC-API-003"
+      ],
+      "suggested_terms": [
+        "retry",
+        "signature",
+        "webhook",
+        "delivery",
+        "verification",
+        "api"
+      ],
+      "already_in_expansions": false,
+      "current_expansion": []
+    },
+    {
+      "customer_word": "broken",
+      "tickets": 9,
+      "expected_articles": [
+        "DOC-DEPLOY-002"
+      ],
+      "suggested_terms": [
+        "rolling",
+        "back",
+        "release",
+        "failed",
+        "deployment",
+        "catch"
+      ],
+      "already_in_expansions": true,
+      "current_expansion": [
+        "failure",
+        "error"
+      ]
+    },
+    {
+      "customer_word": "checkout",
+      "tickets": 9,
+      "expected_articles": [
+        "DOC-DEPLOY-002"
+      ],
+      "suggested_terms": [
+        "rolling",
+        "back",
+        "release",
+        "failed",
+        "deployment",
+        "catch"
+      ],
+      "already_in_expansions": false,
+      "current_expansion": []
+    },
+    {
+      "customer_word": "confirmation",
+      "tickets": 9,
+      "expected_articles": [
+        "DOC-DATA-003"
+      ],
+      "suggested_terms": [
+        "regional",
+        "residency",
+        "storage",
+        "data",
+        "additional",
+        "asked"
+      ],
+      "already_in_expansions": false,
+      "current_expansion": []
+    },
+    {
+      "customer_word": "definitely",
+      "tickets": 9,
+      "expected_articles": [
+        "DOC-DATA-001"
+      ],
+      "suggested_terms": [
+        "exporting",
+        "extract",
+        "scheduled",
+        "data",
+        "began",
+        "captured"
+      ],
+      "already_in_expansions": false,
+      "current_expansion": []
+    },
+    {
+      "customer_word": "engineering",
+      "tickets": 9,
+      "expected_articles": [
+        "DOC-AUTH-003"
+      ],
+      "suggested_terms": [
+        "saml",
+        "sign-on",
+        "single",
+        "provider",
+        "authentication",
+        "assertion"
+      ],
+      "already_in_expansions": false,
+      "current_expansion": []
+    },
+    {
+      "customer_word": "finance",
+      "tickets": 9,
+      "expected_articles": [
+        "DOC-AUTH-003"
+      ],
+      "suggested_terms": [
+        "saml",
+        "sign-on",
+        "single",
+        "provider",
+        "authentication",
+        "assertion"
+      ],
+      "already_in_expansions": false,
+      "current_expansion": []
+    },
+    {
+      "customer_word": "identically",
+      "tickets": 9,
+      "expected_articles": [
+        "DOC-AUTH-003"
+      ],
+      "suggested_terms": [
+        "saml",
+        "sign-on",
+        "single",
+        "provider",
+        "authentication",
+        "assertion"
+      ],
+      "already_in_expansions": false,
+      "current_expansion": []
+    },
+    {
+      "customer_word": "misunderstanding",
+      "tickets": 9,
+      "expected_articles": [
+        "DOC-DATA-001"
+      ],
+      "suggested_terms": [
+        "exporting",
+        "extract",
+        "scheduled",
+        "data",
+        "began",
+        "captured"
+      ],
+      "already_in_expansions": false,
+      "current_expansion": []
+    },
+    {
+      "customer_word": "physically",
+      "tickets": 9,
+      "expected_articles": [
+        "DOC-DATA-003"
+      ],
+      "suggested_terms": [
+        "regional",
+        "residency",
+        "storage",
+        "data",
+        "additional",
+        "asked"
+      ],
+      "already_in_expansions": false,
+      "current_expansion": []
+    },
+    {
+      "customer_word": "portion",
+      "tickets": 9,
+      "expected_articles": [
+        "DOC-DEPLOY-002"
+      ],
+      "suggested_terms": [
+        "rolling",
+        "back",
+        "release",
+        "failed",
+        "deployment",
+        "catch"
+      ],
+      "already_in_expansions": false,
+      "current_expansion": []
+    },
+    {
+      "customer_word": "shipped",
+      "tickets": 9,
+      "expected_articles": [
+        "DOC-DEPLOY-002"
+      ],
+      "suggested_terms": [
+        "rolling",
+        "back",
+        "release",
+        "failed",
+        "deployment",
+        "catch"
+      ],
+      "already_in_expansions": false,
+      "current_expansion": []
+    },
+    {
+      "customer_word": "developer",
+      "tickets": 8,
+      "expected_articles": [
+        "DOC-ACCT-001"
+      ],
+      "suggested_terms": [
+        "managing",
+        "role",
+        "member",
+        "permission",
+        "team",
+        "accepted"
+      ],
+      "already_in_expansions": false,
+      "current_expansion": []
+    },
+    {
+      "customer_word": "given",
+      "tickets": 8,
+      "expected_articles": [
+        "DOC-SEC-003"
+      ],
+      "suggested_terms": [
+        "evidence",
+        "logging",
+        "compliance",
+        "audit",
+        "security",
+        "actor"
+      ],
+      "already_in_expansions": false,
+      "current_expansion": []
+    },
+    {
+      "customer_word": "option",
+      "tickets": 8,
+      "expected_articles": [
+        "DOC-SEC-003"
+      ],
+      "suggested_terms": [
+        "evidence",
+        "logging",
+        "compliance",
+        "audit",
+        "security",
+        "actor"
+      ],
+      "already_in_expansions": false,
+      "current_expansion": []
+    },
+    {
+      "customer_word": "authenticating",
+      "tickets": 7,
+      "expected_articles": [
+        "DOC-AUTH-003"
+      ],
+      "suggested_terms": [
+        "saml",
+        "sign-on",
+        "single",
+        "provider",
+        "authentication",
+        "assertion"
+      ],
+      "already_in_expansions": false,
+      "current_expansion": []
+    },
+    {
+      "customer_word": "bounced",
+      "tickets": 7,
+      "expected_articles": [
+        "DOC-AUTH-003"
+      ],
+      "suggested_terms": [
+        "saml",
+        "sign-on",
+        "single",
+        "provider",
+        "authentication",
+        "assertion"
+      ],
+      "already_in_expansions": false,
+      "current_expansion": []
+    },
+    {
+      "customer_word": "idea",
+      "tickets": 7,
+      "expected_articles": [
+        "DOC-AUTH-003"
+      ],
+      "suggested_terms": [
+        "saml",
+        "sign-on",
+        "single",
+        "provider",
+        "authentication",
+        "assertion"
+      ],
+      "already_in_expansions": false,
+      "current_expansion": []
+    },
+    {
+      "customer_word": "six",
+      "tickets": 7,
+      "expected_articles": [
+        "DOC-SEC-003"
+      ],
+      "suggested_terms": [
+        "evidence",
+        "logging",
+        "compliance",
+        "audit",
+        "security",
+        "actor"
+      ],
+      "already_in_expansions": false,
+      "current_expansion": []
+    },
+    {
+      "customer_word": "successfully",
+      "tickets": 7,
+      "expected_articles": [
+        "DOC-AUTH-003"
+      ],
+      "suggested_terms": [
+        "saml",
+        "sign-on",
+        "single",
+        "provider",
+        "authentication",
+        "assertion"
+      ],
+      "already_in_expansions": false,
+      "current_expansion": []
+    },
+    {
+      "customer_word": "contract",
+      "tickets": 6,
+      "expected_articles": [
+        "DOC-DATA-003"
+      ],
+      "suggested_terms": [
+        "regional",
+        "residency",
+        "storage",
+        "data",
+        "additional",
+        "asked"
+      ],
+      "already_in_expansions": false,
+      "current_expansion": []
+    },
+    {
+      "customer_word": "definite",
+      "tickets": 6,
+      "expected_articles": [
+        "DOC-DATA-003"
+      ],
+      "suggested_terms": [
+        "regional",
+        "residency",
+        "storage",
+        "data",
+        "additional",
+        "asked"
+      ],
+      "already_in_expansions": false,
+      "current_expansion": []
+    },
+    {
+      "customer_word": "fastest",
+      "tickets": 6,
+      "expected_articles": [
+        "DOC-DEPLOY-002"
+      ],
+      "suggested_terms": [
+        "rolling",
+        "back",
+        "release",
+        "failed",
+        "deployment",
+        "catch"
+      ],
+      "already_in_expansions": false,
+      "current_expansion": []
+    },
+    {
+      "customer_word": "outside",
+      "tickets": 6,
+      "expected_articles": [
+        "DOC-DATA-003"
+      ],
+      "suggested_terms": [
+        "regional",
+        "residency",
+        "storage",
+        "data",
+        "additional",
+        "asked"
+      ],
+      "already_in_expansions": false,
+      "current_expansion": []
+    },
+    {
+      "customer_word": "route",
+      "tickets": 6,
+      "expected_articles": [
+        "DOC-DEPLOY-002"
+      ],
+      "suggested_terms": [
+        "rolling",
+        "back",
+        "release",
+        "failed",
+        "deployment",
+        "catch"
+      ],
+      "already_in_expansions": false,
+      "current_expansion": []
+    },
+    {
+      "customer_word": "safe",
+      "tickets": 6,
+      "expected_articles": [
+        "DOC-DEPLOY-002"
+      ],
+      "suggested_terms": [
+        "rolling",
+        "back",
+        "release",
+        "failed",
+        "deployment",
+        "catch"
+      ],
+      "already_in_expansions": false,
+      "current_expansion": []
+    },
+    {
+      "customer_word": "signing",
+      "tickets": 6,
+      "expected_articles": [
+        "DOC-DATA-003"
+      ],
+      "suggested_terms": [
+        "regional",
+        "residency",
+        "storage",
+        "data",
+        "additional",
+        "asked"
+      ],
+      "already_in_expansions": false,
+      "current_expansion": []
+    },
+    {
+      "customer_word": "starter",
+      "tickets": 6,
+      "expected_articles": [
+        "DOC-AUTH-003"
+      ],
+      "suggested_terms": [
+        "saml",
+        "sign-on",
+        "single",
+        "provider",
+        "authentication",
+        "assertion"
+      ],
+      "already_in_expansions": false,
+      "current_expansion": []
+    },
+    {
+      "customer_word": "cancel",
+      "tickets": 5,
+      "expected_articles": [
+        "DOC-DATA-001"
+      ],
+      "suggested_terms": [
+        "exporting",
+        "extract",
+        "scheduled",
+        "data",
+        "began",
+        "captured"
+      ],
+      "already_in_expansions": false,
+      "current_expansion": []
+    },
+    {
+      "customer_word": "stay",
+      "tickets": 5,
+      "expected_articles": [
+        "DOC-DATA-003"
+      ],
+      "suggested_terms": [
+        "regional",
+        "residency",
+        "storage",
+        "data",
+        "additional",
+        "asked"
+      ],
+      "already_in_expansions": false,
+      "current_expansion": []
+    },
+    {
+      "customer_word": "stuck",
+      "tickets": 5,
+      "expected_articles": [
+        "DOC-DATA-001"
+      ],
+      "suggested_terms": [
+        "exporting",
+        "extract",
+        "scheduled",
+        "data",
+        "began",
+        "captured"
+      ],
+      "already_in_expansions": true,
+      "current_expansion": [
+        "timeout",
+        "pending",
+        "failure"
+      ]
+    },
+    {
+      "customer_word": "computing",
+      "tickets": 4,
+      "expected_articles": [
+        "DOC-API-003"
+      ],
+      "suggested_terms": [
+        "retry",
+        "signature",
+        "webhook",
+        "delivery",
+        "verification",
+        "api"
+      ],
+      "already_in_expansions": false,
+      "current_expansion": []
+    },
+    {
+      "customer_word": "describe",
+      "tickets": 4,
+      "expected_articles": [
+        "DOC-API-003"
+      ],
+      "suggested_terms": [
+        "retry",
+        "signature",
+        "webhook",
+        "delivery",
+        "verification",
+        "api"
+      ],
+      "already_in_expansions": false,
+      "current_expansion": []
+    },
+    {
+      "customer_word": "documentation",
+      "tickets": 4,
+      "expected_articles": [
+        "DOC-API-003"
+      ],
+      "suggested_terms": [
+        "retry",
+        "signature",
+        "webhook",
+        "delivery",
+        "verification",
+        "api"
+      ],
+      "already_in_expansions": false,
+      "current_expansion": []
+    },
+    {
+      "customer_word": "latest",
+      "tickets": 4,
+      "expected_articles": [
+        "DOC-DEPLOY-002"
+      ],
+      "suggested_terms": [
+        "rolling",
+        "back",
+        "release",
+        "failed",
+        "deployment",
+        "catch"
+      ],
+      "already_in_expansions": false,
+      "current_expansion": []
+    },
+    {
+      "customer_word": "missed",
+      "tickets": 4,
+      "expected_articles": [
+        "DOC-AUTH-003"
+      ],
+      "suggested_terms": [
+        "saml",
+        "sign-on",
+        "single",
+        "provider",
+        "authentication",
+        "assertion"
+      ],
+      "already_in_expansions": false,
+      "current_expansion": []
+    },
+    {
+      "customer_word": "assumed",
+      "tickets": 3,
+      "expected_articles": [
+        "DOC-API-001"
+      ],
+      "suggested_terms": [
+        "quota",
+        "tier",
+        "understanding",
+        "rate",
+        "limit",
+        "api"
+      ],
+      "already_in_expansions": false,
+      "current_expansion": []
+    },
+    {
+      "customer_word": "company",
+      "tickets": 3,
+      "expected_articles": [
+        "DOC-ACCT-001"
+      ],
+      "suggested_terms": [
+        "managing",
+        "role",
+        "member",
+        "permission",
+        "team",
+        "accepted"
+      ],
+      "already_in_expansions": false,
+      "current_expansion": []
+    },
+    {
+      "customer_word": "exhausting",
+      "tickets": 3,
+      "expected_articles": [
+        "DOC-PERF-003"
+      ],
+      "suggested_terms": [
+        "exhaustion",
+        "pool",
+        "connection",
+        "performance",
+        "database",
+        "calculate"
+      ],
+      "already_in_expansions": false,
+      "current_expansion": []
+    },
+    {
+      "customer_word": "moderate",
+      "tickets": 3,
+      "expected_articles": [
+        "DOC-PERF-003"
+      ],
+      "suggested_terms": [
+        "exhaustion",
+        "pool",
+        "connection",
+        "performance",
+        "database",
+        "calculate"
+      ],
+      "already_in_expansions": false,
+      "current_expansion": []
+    },
+    {
+      "customer_word": "operation",
+      "tickets": 3,
+      "expected_articles": [
+        "DOC-AUTH-004"
+      ],
+      "suggested_terms": [
+        "management",
+        "rotation",
+        "scope",
+        "authentication",
+        "key",
+        "api"
+      ],
+      "already_in_expansions": false,
+      "current_expansion": []
+    },
+    {
+      "customer_word": "order",
+      "tickets": 3,
+      "expected_articles": [
+        "DOC-AUTH-004"
+      ],
+      "suggested_terms": [
+        "management",
+        "rotation",
+        "scope",
+        "authentication",
+        "key",
+        "api"
+      ],
+      "already_in_expansions": false,
+      "current_expansion": []
+    },
+    {
+      "customer_word": "thing",
+      "tickets": 3,
+      "expected_articles": [
+        "DOC-PERF-003"
+      ],
+      "suggested_terms": [
+        "exhaustion",
+        "pool",
+        "connection",
+        "performance",
+        "database",
+        "calculate"
+      ],
+      "already_in_expansions": false,
+      "current_expansion": []
+    },
+    {
+      "customer_word": "worked",
+      "tickets": 3,
+      "expected_articles": [
+        "DOC-DEPLOY-001"
+      ],
+      "suggested_terms": [
+        "health",
+        "phase",
+        "failing",
+        "container",
+        "during",
+        "deployment"
+      ],
+      "already_in_expansions": false,
+      "current_expansion": []
+    },
+    {
+      "customer_word": "try",
+      "tickets": 17,
+      "expected_articles": [
+        "DOC-DATA-001",
+        "DOC-DEPLOY-002"
+      ],
+      "suggested_terms": [
+        "included",
+        "fresh",
+        "data",
+        "record",
+        "take"
+      ],
+      "already_in_expansions": false,
+      "current_expansion": []
+    },
+    {
+      "customer_word": "find",
+      "tickets": 13,
+      "expected_articles": [
+        "DOC-DATA-001",
+        "DOC-SEC-003"
+      ],
+      "suggested_terms": [
+        "field",
+        "logged",
+        "configure",
+        "object",
+        "audit",
+        "storage"
+      ],
+      "already_in_expansions": false,
+      "current_expansion": []
+    },
+    {
+      "customer_word": "ci",
+      "tickets": 11,
+      "expected_articles": [
+        "DOC-INT-001",
+        "DOC-INT-002"
+      ],
+      "suggested_terms": [
+        "integration",
+        "manually",
+        "separately",
+        "credential",
+        "failure"
+      ],
+      "already_in_expansions": false,
+      "current_expansion": []
+    },
+    {
+      "customer_word": "system",
+      "tickets": 11,
+      "expected_articles": [
+        "DOC-INT-001",
+        "DOC-INT-002"
+      ],
+      "suggested_terms": [
+        "integration",
+        "manually",
+        "separately",
+        "credential",
+        "failure"
+      ],
+      "already_in_expansions": false,
+      "current_expansion": []
+    },
+    {
+      "customer_word": "big",
+      "tickets": 10,
+      "expected_articles": [
+        "DOC-API-002",
+        "DOC-API-003"
+      ],
+      "suggested_terms": [
+        "api",
+        "duplicate",
+        "asynchronously",
+        "hour",
+        "response",
+        "endpoint"
+      ],
+      "already_in_expansions": false,
+      "current_expansion": []
+    },
+    {
+      "customer_word": "climbing",
+      "tickets": 10,
+      "expected_articles": [
+        "DOC-PERF-001",
+        "DOC-PERF-002"
+      ],
+      "suggested_terms": [
+        "performance",
+        "above",
+        "autoscaling",
+        "cold",
+        "processor",
+        "utilisation"
+      ],
+      "already_in_expansions": false,
+      "current_expansion": []
+    },
+    {
+      "customer_word": "gradually",
+      "tickets": 10,
+      "expected_articles": [
+        "DOC-PERF-001",
+        "DOC-PERF-002"
+      ],
+      "suggested_terms": [
+        "performance",
+        "above",
+        "autoscaling",
+        "cold",
+        "processor",
+        "utilisation"
+      ],
+      "already_in_expansions": false,
+      "current_expansion": []
+    },
+    {
+      "customer_word": "nothing",
+      "tickets": 10,
+      "expected_articles": [
+        "DOC-PERF-001",
+        "DOC-PERF-002"
+      ],
+      "suggested_terms": [
+        "performance",
+        "above",
+        "autoscaling",
+        "cold",
+        "processor",
+        "utilisation"
+      ],
+      "already_in_expansions": false,
+      "current_expansion": []
+    },
+    {
+      "customer_word": "partway",
+      "tickets": 10,
+      "expected_articles": [
+        "DOC-API-002",
+        "DOC-API-003"
+      ],
+      "suggested_terms": [
+        "api",
+        "duplicate",
+        "asynchronously",
+        "hour",
+        "response",
+        "endpoint"
+      ],
+      "already_in_expansions": false,
+      "current_expansion": []
+    },
+    {
+      "customer_word": "past",
+      "tickets": 10,
+      "expected_articles": [
+        "DOC-PERF-001",
+        "DOC-PERF-002"
+      ],
+      "suggested_terms": [
+        "performance",
+        "above",
+        "autoscaling",
+        "cold",
+        "processor",
+        "utilisation"
+      ],
+      "already_in_expansions": false,
+      "current_expansion": []
+    },
+    {
+      "customer_word": "doubled",
+      "tickets": 9,
+      "expected_articles": [
+        "DOC-PERF-001",
+        "DOC-PERF-002"
+      ],
+      "suggested_terms": [
+        "performance",
+        "above",
+        "autoscaling",
+        "cold",
+        "processor",
+        "utilisation"
+      ],
+      "already_in_expansions": false,
+      "current_expansion": []
+    },
+    {
+      "customer_word": "pull",
+      "tickets": 9,
+      "expected_articles": [
+        "DOC-API-002",
+        "DOC-API-003"
+      ],
+      "suggested_terms": [
+        "api",
+        "duplicate",
+        "asynchronously",
+        "hour",
+        "response",
+        "endpoint"
+      ],
+      "already_in_expansions": false,
+      "current_expansion": []
+    },
+    {
+      "customer_word": "reconsider",
+      "tickets": 9,
+      "expected_articles": [
+        "DOC-API-001",
+        "DOC-BILL-003"
+      ],
+      "suggested_terms": [
+        "limit",
+        "consumed",
+        "allowance",
+        "rate",
+        "increase",
+        "per"
+      ],
+      "already_in_expansions": false,
+      "current_expansion": []
+    },
+    {
+      "customer_word": "difference",
+      "tickets": 8,
+      "expected_articles": [
+        "DOC-DEPLOY-001",
+        "DOC-DEPLOY-003"
+      ],
+      "suggested_terms": [
+        "deployment",
+        "cache",
+        "declared",
+        "different",
+        "local",
+        "locally"
+      ],
+      "already_in_expansions": false,
+      "current_expansion": []
+    },
+    {
+      "customer_word": "stage",
+      "tickets": 8,
+      "expected_articles": [
+        "DOC-DEPLOY-001",
+        "DOC-DEPLOY-003"
+      ],
+      "suggested_terms": [
+        "deployment",
+        "cache",
+        "declared",
+        "different",
+        "local",
+        "locally"
+      ],
+      "already_in_expansions": false,
+      "current_expansion": []
+    },
+    {
+      "customer_word": "driven",
+      "tickets": 7,
+      "expected_articles": [
+        "DOC-BILL-001",
+        "DOC-BILL-002"
+      ],
+      "suggested_terms": [
+        "billing",
+        "adjustment",
+        "invoice",
+        "subscription",
+        "charge",
+        "end"
+      ],
+      "already_in_expansions": false,
+      "current_expansion": []
+    },
+    {
+      "customer_word": "going",
+      "tickets": 7,
+      "expected_articles": [
+        "DOC-SEC-001",
+        "DOC-SEC-002"
+      ],
+      "suggested_terms": [
+        "security",
+        "committed",
+        "audit",
+        "exposed",
+        "repository",
+        "revoke"
+      ],
+      "already_in_expansions": false,
+      "current_expansion": []
+    },
+    {
+      "customer_word": "migrate",
+      "tickets": 7,
+      "expected_articles": [
+        "DOC-ONB-001",
+        "DOC-ONB-002"
+      ],
+      "suggested_terms": [
+        "onboarding",
+        "variable",
+        "application",
+        "deployment",
+        "environment"
+      ],
+      "already_in_expansions": false,
+      "current_expansion": []
+    },
+    {
+      "customer_word": "none",
+      "tickets": 7,
+      "expected_articles": [
+        "DOC-SEC-001",
+        "DOC-SEC-002"
+      ],
+      "suggested_terms": [
+        "security",
+        "committed",
+        "audit",
+        "exposed",
+        "repository",
+        "revoke"
+      ],
+      "already_in_expansions": false,
+      "current_expansion": []
+    },
+    {
+      "customer_word": "planning",
+      "tickets": 7,
+      "expected_articles": [
+        "DOC-ONB-001",
+        "DOC-ONB-002"
+      ],
+      "suggested_terms": [
+        "onboarding",
+        "variable",
+        "application",
+        "deployment",
+        "environment"
+      ],
+      "already_in_expansions": false,
+      "current_expansion": []
+    },
+    {
+      "customer_word": "recognise",
+      "tickets": 7,
+      "expected_articles": [
+        "DOC-SEC-001",
+        "DOC-SEC-002"
+      ],
+      "suggested_terms": [
+        "security",
+        "committed",
+        "audit",
+        "exposed",
+        "repository",
+        "revoke"
+      ],
+      "already_in_expansions": false,
+      "current_expansion": []
+    },
+    {
+      "customer_word": "saying",
+      "tickets": 7,
+      "expected_articles": [
+        "DOC-DATA-002",
+        "DOC-PERF-003"
+      ],
+      "suggested_terms": [
+        "managed",
+        "size",
+        "instance",
+        "available",
+        "database",
+        "per"
+      ],
+      "already_in_expansions": false,
+      "current_expansion": []
+    },
+    {
+      "customer_word": "summary",
+      "tickets": 7,
+      "expected_articles": [
+        "DOC-BILL-001",
+        "DOC-BILL-002"
+      ],
+      "suggested_terms": [
+        "billing",
+        "adjustment",
+        "invoice",
+        "subscription",
+        "charge",
+        "end"
+      ],
+      "already_in_expansions": false,
+      "current_expansion": []
+    },
+    {
+      "customer_word": "week",
+      "tickets": 7,
+      "expected_articles": [
+        "DOC-DEPLOY-001",
+        "DOC-SEC-001"
+      ],
+      "suggested_terms": [
+        "during",
+        "log"
+      ],
+      "already_in_expansions": false,
+      "current_expansion": []
+    },
+    {
+      "customer_word": "colleague",
+      "tickets": 6,
+      "expected_articles": [
+        "DOC-AUTH-001",
+        "DOC-AUTH-002"
+      ],
+      "suggested_terms": [
+        "authentication",
+        "invalid",
+        "administrator",
+        "member",
+        "team",
+        "security"
+      ],
+      "already_in_expansions": false,
+      "current_expansion": []
+    },
+    {
+      "customer_word": "containerised",
+      "tickets": 6,
+      "expected_articles": [
+        "DOC-ONB-001",
+        "DOC-ONB-002"
+      ],
+      "suggested_terms": [
+        "onboarding",
+        "variable",
+        "application",
+        "deployment",
+        "environment"
+      ],
+      "already_in_expansions": false,
+      "current_expansion": []
+    },
+    {
+      "customer_word": "mention",
+      "tickets": 6,
+      "expected_articles": [
+        "DOC-DEPLOY-001",
+        "DOC-DEPLOY-003"
+      ],
+      "suggested_terms": [
+        "deployment",
+        "cache",
+        "declared",
+        "different",
+        "local",
+        "locally"
+      ],
+      "already_in_expansions": false,
+      "current_expansion": []
+    },
+    {
+      "customer_word": "month'",
+      "tickets": 6,
+      "expected_articles": [
+        "DOC-BILL-001",
+        "DOC-BILL-002"
+      ],
+      "suggested_terms": [
+        "billing",
+        "adjustment",
+        "invoice",
+        "subscription",
+        "charge",
+        "end"
+      ],
+      "already_in_expansions": false,
+      "current_expansion": []
+    },
+    {
+      "customer_word": "outage",
+      "tickets": 6,
+      "expected_articles": [
+        "DOC-AUTH-001",
+        "DOC-AUTH-002"
+      ],
+      "suggested_terms": [
+        "authentication",
+        "invalid",
+        "administrator",
+        "member",
+        "team",
+        "security"
+      ],
+      "already_in_expansions": false,
+      "current_expansion": []
+    },
+    {
+      "customer_word": "part",
+      "tickets": 6,
+      "expected_articles": [
+        "DOC-API-001",
+        "DOC-BILL-003"
+      ],
+      "suggested_terms": [
+        "limit",
+        "consumed",
+        "allowance",
+        "rate",
+        "increase",
+        "per"
+      ],
+      "already_in_expansions": false,
+      "current_expansion": []
+    },
+    {
+      "customer_word": "pay",
+      "tickets": 6,
+      "expected_articles": [
+        "DOC-API-001",
+        "DOC-BILL-003"
+      ],
+      "suggested_terms": [
+        "limit",
+        "consumed",
+        "allowance",
+        "rate",
+        "increase",
+        "per"
+      ],
+      "already_in_expansions": false,
+      "current_expansion": []
+    },
+    {
+      "customer_word": "peak",
+      "tickets": 6,
+      "expected_articles": [
+        "DOC-PERF-001",
+        "DOC-PERF-002"
+      ],
+      "suggested_terms": [
+        "performance",
+        "above",
+        "autoscaling",
+        "cold",
+        "processor",
+        "utilisation"
+      ],
+      "already_in_expansions": false,
+      "current_expansion": []
+    },
+    {
+      "customer_word": "perfectly",
+      "tickets": 6,
+      "expected_articles": [
+        "DOC-DEPLOY-001",
+        "DOC-DEPLOY-003"
+      ],
+      "suggested_terms": [
+        "deployment",
+        "cache",
+        "declared",
+        "different",
+        "local",
+        "locally"
+      ],
+      "already_in_expansions": false,
+      "current_expansion": []
+    },
+    {
+      "customer_word": "product",
+      "tickets": 6,
+      "expected_articles": [
+        "DOC-API-001",
+        "DOC-BILL-003"
+      ],
+      "suggested_terms": [
+        "limit",
+        "consumed",
+        "allowance",
+        "rate",
+        "increase",
+        "per"
+      ],
+      "already_in_expansions": false,
+      "current_expansion": []
+    },
+    {
+      "customer_word": "relate",
+      "tickets": 6,
+      "expected_articles": [
+        "DOC-BILL-001",
+        "DOC-BILL-002"
+      ],
+      "suggested_terms": [
+        "billing",
+        "adjustment",
+        "invoice",
+        "subscription",
+        "charge",
+        "end"
+      ],
+      "already_in_expansions": false,
+      "current_expansion": []
+    },
+    {
+      "customer_word": "signed",
+      "tickets": 6,
+      "expected_articles": [
+        "DOC-ONB-001",
+        "DOC-ONB-002"
+      ],
+      "suggested_terms": [
+        "onboarding",
+        "variable",
+        "application",
+        "deployment",
+        "environment"
+      ],
+      "already_in_expansions": false,
+      "current_expansion": []
+    },
+    {
+      "customer_word": "specifically",
+      "tickets": 6,
+      "expected_articles": [
+        "DOC-AUTH-001",
+        "DOC-AUTH-002"
+      ],
+      "suggested_terms": [
+        "authentication",
+        "invalid",
+        "administrator",
+        "member",
+        "team",
+        "security"
+      ],
+      "already_in_expansions": false,
+      "current_expansion": []
+    },
+    {
+      "customer_word": "took",
+      "tickets": 6,
+      "expected_articles": [
+        "DOC-API-001",
+        "DOC-BILL-003"
+      ],
+      "suggested_terms": [
+        "limit",
+        "consumed",
+        "allowance",
+        "rate",
+        "increase",
+        "per"
+      ],
+      "already_in_expansions": false,
+      "current_expansion": []
+    },
+    {
+      "customer_word": "trouble",
+      "tickets": 6,
+      "expected_articles": [
+        "DOC-AUTH-001",
+        "DOC-AUTH-002"
+      ],
+      "suggested_terms": [
+        "authentication",
+        "invalid",
+        "administrator",
+        "member",
+        "team",
+        "security"
+      ],
+      "already_in_expansions": false,
+      "current_expansion": []
+    },
+    {
+      "customer_word": "well",
+      "tickets": 6,
+      "expected_articles": [
+        "DOC-API-001",
+        "DOC-BILL-003"
+      ],
+      "suggested_terms": [
+        "limit",
+        "consumed",
+        "allowance",
+        "rate",
+        "increase",
+        "per"
+      ],
+      "already_in_expansions": false,
+      "current_expansion": []
+    },
+    {
+      "customer_word": "accept",
+      "tickets": 5,
+      "expected_articles": [
+        "DOC-AUTH-001",
+        "DOC-AUTH-002"
+      ],
+      "suggested_terms": [
+        "authentication",
+        "invalid",
+        "administrator",
+        "member",
+        "team",
+        "security"
+      ],
+      "already_in_expansions": false,
+      "current_expansion": []
+    },
+    {
+      "customer_word": "approach",
+      "tickets": 5,
+      "expected_articles": [
+        "DOC-INT-001",
+        "DOC-INT-002"
+      ],
+      "suggested_terms": [
+        "integration",
+        "manually",
+        "separately",
+        "credential",
+        "failure"
+      ],
+      "already_in_expansions": false,
+      "current_expansion": []
+    },
+    {
+      "customer_word": "automation",
+      "tickets": 5,
+      "expected_articles": [
+        "DOC-INT-001",
+        "DOC-INT-002"
+      ],
+      "suggested_terms": [
+        "integration",
+        "manually",
+        "separately",
+        "credential",
+        "failure"
+      ],
+      "already_in_expansions": false,
+      "current_expansion": []
+    },
+    {
+      "customer_word": "comfortable",
+      "tickets": 5,
+      "expected_articles": [
+        "DOC-ACCT-002",
+        "DOC-DEPLOY-004"
+      ],
+      "suggested_terms": [
+        "override",
+        "creation",
+        "between",
+        "value",
+        "scope",
+        "project"
+      ],
+      "already_in_expansions": false,
+      "current_expansion": []
+    },
+    {
+      "customer_word": "else",
+      "tickets": 5,
+      "expected_articles": [
+        "DOC-INT-001",
+        "DOC-INT-002"
+      ],
+      "suggested_terms": [
+        "integration",
+        "manually",
+        "separately",
+        "credential",
+        "failure"
+      ],
+      "already_in_expansions": false,
+      "current_expansion": []
+    },
+    {
+      "customer_word": "expecting",
+      "tickets": 5,
+      "expected_articles": [
+        "DOC-API-001",
+        "DOC-BILL-003"
+      ],
+      "suggested_terms": [
+        "limit",
+        "consumed",
+        "allowance",
+        "rate",
+        "increase",
+        "per"
+      ],
+      "already_in_expansions": false,
+      "current_expansion": []
+    },
+    {
+      "customer_word": "inside",
+      "tickets": 5,
+      "expected_articles": [
+        "DOC-API-001",
+        "DOC-BILL-003"
+      ],
+      "suggested_terms": [
+        "limit",
+        "consumed",
+        "allowance",
+        "rate",
+        "increase",
+        "per"
+      ],
+      "already_in_expansions": false,
+      "current_expansion": []
+    },
+    {
+      "customer_word": "making",
+      "tickets": 5,
+      "expected_articles": [
+        "DOC-BILL-001",
+        "DOC-BILL-002"
+      ],
+      "suggested_terms": [
+        "billing",
+        "adjustment",
+        "invoice",
+        "subscription",
+        "charge",
+        "end"
+      ],
+      "already_in_expansions": false,
+      "current_expansion": []
+    },
+    {
+      "customer_word": "mistake",
+      "tickets": 5,
+      "expected_articles": [
+        "DOC-AUTH-004",
+        "DOC-SEC-002"
+      ],
+      "suggested_terms": [
+        "rotation",
+        "exposure",
+        "replacement",
+        "exposed",
+        "revoke",
+        "scope"
+      ],
+      "already_in_expansions": false,
+      "current_expansion": []
+    },
+    {
+      "customer_word": "pushed",
+      "tickets": 5,
+      "expected_articles": [
+        "DOC-AUTH-004",
+        "DOC-SEC-002"
+      ],
+      "suggested_terms": [
+        "rotation",
+        "exposure",
+        "replacement",
+        "exposed",
+        "revoke",
+        "scope"
+      ],
+      "already_in_expansions": false,
+      "current_expansion": []
+    },
+    {
+      "customer_word": "recommended",
+      "tickets": 5,
+      "expected_articles": [
+        "DOC-INT-001",
+        "DOC-INT-002"
+      ],
+      "suggested_terms": [
+        "integration",
+        "manually",
+        "separately",
+        "credential",
+        "failure"
+      ],
+      "already_in_expansions": false,
+      "current_expansion": []
+    },
+    {
+      "customer_word": "reconciliation",
+      "tickets": 5,
+      "expected_articles": [
+        "DOC-BILL-001",
+        "DOC-BILL-002"
+      ],
+      "suggested_terms": [
+        "billing",
+        "adjustment",
+        "invoice",
+        "subscription",
+        "charge",
+        "end"
+      ],
+      "already_in_expansions": false,
+      "current_expansion": []
+    },
+    {
+      "customer_word": "tried",
+      "tickets": 5,
+      "expected_articles": [
+        "DOC-AUTH-001",
+        "DOC-AUTH-002"
+      ],
+      "suggested_terms": [
+        "authentication",
+        "invalid",
+        "administrator",
+        "member",
+        "team",
+        "security"
+      ],
+      "already_in_expansions": false,
+      "current_expansion": []
+    },
+    {
+      "customer_word": "urgently",
+      "tickets": 5,
+      "expected_articles": [
+        "DOC-SEC-001",
+        "DOC-SEC-002"
+      ],
+      "suggested_terms": [
+        "security",
+        "committed",
+        "audit",
+        "exposed",
+        "repository",
+        "revoke"
+      ],
+      "already_in_expansions": false,
+      "current_expansion": []
+    },
+    {
+      "customer_word": "acceptable",
+      "tickets": 4,
+      "expected_articles": [
+        "DOC-PERF-001",
+        "DOC-PERF-002"
+      ],
+      "suggested_terms": [
+        "performance",
+        "above",
+        "autoscaling",
+        "cold",
+        "processor",
+        "utilisation"
+      ],
+      "already_in_expansions": false,
+      "current_expansion": []
+    },
+    {
+      "customer_word": "behind",
+      "tickets": 4,
+      "expected_articles": [
+        "DOC-INT-001",
+        "DOC-INT-002"
+      ],
+      "suggested_terms": [
+        "integration",
+        "manually",
+        "separately",
+        "credential",
+        "failure"
+      ],
+      "already_in_expansions": false,
+      "current_expansion": []
+    },
+    {
+      "customer_word": "blocking",
+      "tickets": 4,
+      "expected_articles": [
+        "DOC-AUTH-001",
+        "DOC-DEPLOY-001"
+      ],
+      "suggested_terms": [
+        "repeated",
+        "failed",
+        "failing",
+        "using",
+        "confirm",
+        "fail"
+      ],
+      "already_in_expansions": false,
+      "current_expansion": []
+    },
+    {
+      "customer_word": "four",
+      "tickets": 4,
+      "expected_articles": [
+        "DOC-DATA-002",
+        "DOC-PERF-003"
+      ],
+      "suggested_terms": [
+        "managed",
+        "size",
+        "instance",
+        "available",
+        "database",
+        "per"
+      ],
+      "already_in_expansions": false,
+      "current_expansion": []
+    },
+    {
+      "customer_word": "lag",
+      "tickets": 4,
+      "expected_articles": [
+        "DOC-INT-001",
+        "DOC-INT-002"
+      ],
+      "suggested_terms": [
+        "integration",
+        "manually",
+        "separately",
+        "credential",
+        "failure"
+      ],
+      "already_in_expansions": true,
+      "current_expansion": [
+        "latency",
+        "delay"
+      ]
+    },
+    {
+      "customer_word": "p95",
+      "tickets": 4,
+      "expected_articles": [
+        "DOC-PERF-001",
+        "DOC-PERF-002"
+      ],
+      "suggested_terms": [
+        "performance",
+        "above",
+        "autoscaling",
+        "cold",
+        "processor",
+        "utilisation"
+      ],
+      "already_in_expansions": true,
+      "current_expansion": [
+        "percentile",
+        "latency"
+      ]
+    },
+    {
+      "customer_word": "returning",
+      "tickets": 4,
+      "expected_articles": [
+        "DOC-AUTH-004",
+        "DOC-SEC-002"
+      ],
+      "suggested_terms": [
+        "rotation",
+        "exposure",
+        "replacement",
+        "exposed",
+        "revoke",
+        "scope"
+      ],
+      "already_in_expansions": false,
+      "current_expansion": []
+    },
+    {
+      "customer_word": "suspicious",
+      "tickets": 4,
+      "expected_articles": [
+        "DOC-SEC-001",
+        "DOC-SEC-002"
+      ],
+      "suggested_terms": [
+        "security",
+        "committed",
+        "audit",
+        "exposed",
+        "repository",
+        "revoke"
+      ],
+      "already_in_expansions": false,
+      "current_expansion": []
+    },
+    {
+      "customer_word": "afternoon",
+      "tickets": 3,
+      "expected_articles": [
+        "DOC-PERF-001",
+        "DOC-PERF-002"
+      ],
+      "suggested_terms": [
+        "performance",
+        "above",
+        "autoscaling",
+        "cold",
+        "processor",
+        "utilisation"
+      ],
+      "already_in_expansions": false,
+      "current_expansion": []
+    },
+    {
+      "customer_word": "cope",
+      "tickets": 3,
+      "expected_articles": [
+        "DOC-PERF-001",
+        "DOC-PERF-002"
+      ],
+      "suggested_terms": [
+        "performance",
+        "above",
+        "autoscaling",
+        "cold",
+        "processor",
+        "utilisation"
+      ],
+      "already_in_expansions": false,
+      "current_expansion": []
+    },
+    {
+      "customer_word": "gave",
+      "tickets": 3,
+      "expected_articles": [
+        "DOC-AUTH-004",
+        "DOC-SEC-002"
+      ],
+      "suggested_terms": [
+        "rotation",
+        "exposure",
+        "replacement",
+        "exposed",
+        "revoke",
+        "scope"
+      ],
+      "already_in_expansions": false,
+      "current_expansion": []
+    },
+    {
+      "customer_word": "myself",
+      "tickets": 3,
+      "expected_articles": [
+        "DOC-AUTH-004",
+        "DOC-SEC-002"
+      ],
+      "suggested_terms": [
+        "rotation",
+        "exposure",
+        "replacement",
+        "exposed",
+        "revoke",
+        "scope"
+      ],
+      "already_in_expansions": false,
+      "current_expansion": []
+    },
+    {
+      "customer_word": "picking",
+      "tickets": 3,
+      "expected_articles": [
+        "DOC-ACCT-002",
+        "DOC-DEPLOY-004"
+      ],
+      "suggested_terms": [
+        "override",
+        "creation",
+        "between",
+        "value",
+        "scope",
+        "project"
+      ],
+      "already_in_expansions": false,
+      "current_expansion": []
+    },
+    {
+      "customer_word": "seeing",
+      "tickets": 3,
+      "expected_articles": [
+        "DOC-API-002",
+        "DOC-API-003"
+      ],
+      "suggested_terms": [
+        "api",
+        "duplicate",
+        "asynchronously",
+        "hour",
+        "response",
+        "endpoint"
+      ],
+      "already_in_expansions": false,
+      "current_expansion": []
+    },
+    {
+      "customer_word": "way",
+      "tickets": 23,
+      "expected_articles": [
+        "DOC-API-002",
+        "DOC-API-003",
+        "DOC-DATA-001"
+      ],
+      "suggested_terms": [
+        "asynchronously",
+        "hour",
+        "record",
+        "request"
+      ],
+      "already_in_expansions": false,
+      "current_expansion": []
+    },
+    {
+      "customer_word": "explain",
+      "tickets": 12,
+      "expected_articles": [
+        "DOC-API-001",
+        "DOC-BILL-001",
+        "DOC-BILL-002"
+      ],
+      "suggested_terms": [
+        "appear"
+      ],
+      "already_in_expansions": false,
+      "current_expansion": []
+    },
+    {
+      "customer_word": "overnight",
+      "tickets": 11,
+      "expected_articles": [
+        "DOC-API-001",
+        "DOC-AUTH-004",
+        "DOC-BILL-003"
+      ],
+      "suggested_terms": [
+        "immediately"
+      ],
+      "already_in_expansions": false,
+      "current_expansion": []
+    },
+    {
+      "customer_word": "engineer",
+      "tickets": 10,
+      "expected_articles": [
+        "DOC-AUTH-004",
+        "DOC-SEC-001",
+        "DOC-SEC-002"
+      ],
+      "suggested_terms": [
+        "exposed",
+        "revoke",
+        "key"
+      ],
+      "already_in_expansions": false,
+      "current_expansion": []
+    },
+    {
+      "customer_word": "few",
+      "tickets": 10,
+      "expected_articles": [
+        "DOC-API-001",
+        "DOC-DATA-002",
+        "DOC-PERF-003"
+      ],
+      "suggested_terms": [
+        "available",
+        "per"
+      ],
+      "already_in_expansions": false,
+      "current_expansion": []
+    },
+    {
+      "customer_word": "showing",
+      "tickets": 10,
+      "expected_articles": [
+        "DOC-BILL-001",
+        "DOC-BILL-002",
+        "DOC-DATA-001"
+      ],
+      "suggested_terms": [],
+      "already_in_expansions": false,
+      "current_expansion": []
+    },
+    {
+      "customer_word": "understand",
+      "tickets": 9,
+      "expected_articles": [
+        "DOC-ACCT-001",
+        "DOC-BILL-001",
+        "DOC-BILL-002"
+      ],
+      "suggested_terms": [
+        "appear"
+      ],
+      "already_in_expansions": false,
+      "current_expansion": []
+    },
+    {
+      "customer_word": "made",
+      "tickets": 8,
+      "expected_articles": [
+        "DOC-ACCT-001",
+        "DOC-PERF-003",
+        "DOC-SEC-001"
+      ],
+      "suggested_terms": [],
+      "already_in_expansions": false,
+      "current_expansion": []
+    },
+    {
+      "customer_word": "worse",
+      "tickets": 7,
+      "expected_articles": [
+        "DOC-PERF-001",
+        "DOC-PERF-002",
+        "DOC-PERF-003"
+      ],
+      "suggested_terms": [
+        "performance",
+        "count",
+        "another",
+        "instance",
+        "limit"
+      ],
+      "already_in_expansions": false,
+      "current_expansion": []
+    },
+    {
+      "customer_word": "want",
+      "tickets": 6,
+      "expected_articles": [
+        "DOC-ACCT-001",
+        "DOC-ONB-001",
+        "DOC-ONB-002"
+      ],
+      "suggested_terms": [],
+      "already_in_expansions": false,
+      "current_expansion": []
+    },
+    {
+      "customer_word": "normal",
+      "tickets": 5,
+      "expected_articles": [
+        "DOC-API-003",
+        "DOC-DATA-002",
+        "DOC-PERF-003"
+      ],
+      "suggested_terms": [],
+      "already_in_expansions": false,
+      "current_expansion": []
+    },
+    {
+      "customer_word": "noticeably",
+      "tickets": 5,
+      "expected_articles": [
+        "DOC-API-001",
+        "DOC-PERF-001",
+        "DOC-PERF-002"
+      ],
+      "suggested_terms": [
+        "whether",
+        "limit",
+        "request",
+        "time"
+      ],
+      "already_in_expansions": false,
+      "current_expansion": []
+    },
+    {
+      "customer_word": "long",
+      "tickets": 12,
+      "expected_articles": [
+        "DOC-API-002",
+        "DOC-API-003",
+        "DOC-DATA-002",
+        "DOC-PERF-003"
+      ],
+      "suggested_terms": [],
+      "already_in_expansions": false,
+      "current_expansion": []
+    },
+    {
+      "customer_word": "believe",
+      "tickets": 11,
+      "expected_articles": [
+        "DOC-BILL-001",
+        "DOC-BILL-002",
+        "DOC-SEC-001",
+        "DOC-SEC-002"
+      ],
+      "suggested_terms": [
+        "appear"
+      ],
+      "already_in_expansions": false,
+      "current_expansion": []
+    },
+    {
+      "customer_word": "app",
+      "tickets": 9,
+      "expected_articles": [
+        "DOC-AUTH-001",
+        "DOC-AUTH-002",
+        "DOC-ONB-001",
+        "DOC-ONB-002"
+      ],
+      "suggested_terms": [],
+      "already_in_expansions": false,
+      "current_expansion": []
+    },
+    {
+      "customer_word": "thought",
+      "tickets": 8,
+      "expected_articles": [
+        "DOC-API-001",
+        "DOC-AUTH-004",
+        "DOC-BILL-003",
+        "DOC-SEC-002"
+      ],
+      "suggested_terms": [],
+      "already_in_expansions": false,
+      "current_expansion": []
+    },
+    {
+      "customer_word": "slow",
+      "tickets": 7,
+      "expected_articles": [
+        "DOC-API-002",
+        "DOC-API-003",
+        "DOC-PERF-001",
+        "DOC-PERF-002"
+      ],
+      "suggested_terms": [
+        "request",
+        "time"
+      ],
+      "already_in_expansions": true,
+      "current_expansion": [
+        "latency",
+        "degradation",
+        "performance",
+        "response"
+      ]
+    },
+    {
+      "customer_word": "fast",
+      "tickets": 5,
+      "expected_articles": [
+        "DOC-AUTH-001",
+        "DOC-AUTH-003",
+        "DOC-BILL-003",
+        "DOC-DATA-003"
+      ],
+      "suggested_terms": [],
+      "already_in_expansions": false,
+      "current_expansion": []
+    },
+    {
+      "customer_word": "seem",
+      "tickets": 23,
+      "expected_articles": [
+        "DOC-ACCT-001",
+        "DOC-API-002",
+        "DOC-API-003",
+        "DOC-BILL-001",
+        "DOC-BILL-002"
+      ],
+      "suggested_terms": [],
+      "already_in_expansions": false,
+      "current_expansion": []
+    },
+    {
+      "customer_word": "twice",
+      "tickets": 19,
+      "expected_articles": [
+        "DOC-ACCT-001",
+        "DOC-API-002",
+        "DOC-API-003",
+        "DOC-DEPLOY-001",
+        "DOC-DEPLOY-003"
+      ],
+      "suggested_terms": [],
+      "already_in_expansions": false,
+      "current_expansion": []
+    },
+    {
+      "customer_word": "side",
+      "tickets": 15,
+      "expected_articles": [
+        "DOC-AUTH-003",
+        "DOC-AUTH-004",
+        "DOC-PERF-001",
+        "DOC-PERF-002",
+        "DOC-SEC-002"
+      ],
+      "suggested_terms": [],
+      "already_in_expansions": false,
+      "current_expansion": []
+    },
+    {
+      "customer_word": "couple",
+      "tickets": 9,
+      "expected_articles": [
+        "DOC-API-001",
+        "DOC-INT-001",
+        "DOC-INT-002",
+        "DOC-PERF-001",
+        "DOC-PERF-002"
+      ],
+      "suggested_terms": [],
+      "already_in_expansions": false,
+      "current_expansion": []
+    },
+    {
+      "customer_word": "urgent",
+      "tickets": 7,
+      "expected_articles": [
+        "DOC-API-003",
+        "DOC-DEPLOY-002",
+        "DOC-DEPLOY-004",
+        "DOC-ONB-001",
+        "DOC-SEC-001"
+      ],
+      "suggested_terms": [],
+      "already_in_expansions": false,
+      "current_expansion": []
+    },
+    {
+      "customer_word": "coming",
+      "tickets": 6,
+      "expected_articles": [
+        "DOC-ACCT-002",
+        "DOC-API-003",
+        "DOC-DATA-002",
+        "DOC-DEPLOY-004",
+        "DOC-PERF-003"
+      ],
+      "suggested_terms": [],
+      "already_in_expansions": false,
+      "current_expansion": []
+    },
+    {
+      "customer_word": "english",
+      "tickets": 5,
+      "expected_articles": [
+        "DOC-AUTH-003",
+        "DOC-DATA-001",
+        "DOC-PERF-001",
+        "DOC-SEC-001",
+        "DOC-SEC-002"
+      ],
+      "suggested_terms": [],
+      "already_in_expansions": false,
+      "current_expansion": []
+    },
+    {
+      "customer_word": "monday",
+      "tickets": 5,
+      "expected_articles": [
+        "DOC-API-003",
+        "DOC-AUTH-001",
+        "DOC-AUTH-002",
+        "DOC-AUTH-004",
+        "DOC-BILL-003"
+      ],
+      "suggested_terms": [],
+      "already_in_expansions": false,
+      "current_expansion": []
+    },
+    {
+      "customer_word": "sorry",
+      "tickets": 5,
+      "expected_articles": [
+        "DOC-AUTH-003",
+        "DOC-DATA-001",
+        "DOC-PERF-001",
+        "DOC-SEC-001",
+        "DOC-SEC-002"
+      ],
+      "suggested_terms": [],
+      "already_in_expansions": false,
+      "current_expansion": []
+    },
+    {
+      "customer_word": "weekend",
+      "tickets": 5,
+      "expected_articles": [
+        "DOC-API-001",
+        "DOC-BILL-003",
+        "DOC-DATA-001",
+        "DOC-DEPLOY-002",
+        "DOC-PERF-001"
+      ],
+      "suggested_terms": [],
+      "already_in_expansions": false,
+      "current_expansion": []
+    },
+    {
+      "customer_word": "right",
+      "tickets": 21,
+      "expected_articles": [
+        "DOC-API-002",
+        "DOC-API-003",
+        "DOC-ONB-001",
+        "DOC-ONB-002",
+        "DOC-SEC-001",
+        "DOC-SEC-002"
+      ],
+      "suggested_terms": [],
+      "already_in_expansions": false,
+      "current_expansion": []
+    },
+    {
+      "customer_word": "fine",
+      "tickets": 11,
+      "expected_articles": [
+        "DOC-API-001",
+        "DOC-AUTH-001",
+        "DOC-AUTH-004",
+        "DOC-PERF-001",
+        "DOC-PERF-002",
+        "DOC-SEC-002"
+      ],
+      "suggested_terms": [],
+      "already_in_expansions": false,
+      "current_expansion": []
+    },
+    {
+      "customer_word": "sure",
+      "tickets": 20,
+      "expected_articles": [
+        "DOC-ACCT-001",
+        "DOC-AUTH-001",
+        "DOC-DATA-003",
+        "DOC-INT-001",
+        "DOC-INT-002",
+        "DOC-ONB-001",
+        "DOC-ONB-002"
+      ],
+      "suggested_terms": [],
+      "already_in_expansions": false,
+      "current_expansion": []
+    },
+    {
+      "customer_word": "friday",
+      "tickets": 6,
+      "expected_articles": [
+        "DOC-API-001",
+        "DOC-API-003",
+        "DOC-INT-001",
+        "DOC-INT-002",
+        "DOC-PERF-001",
+        "DOC-PERF-002",
+        "DOC-PERF-003"
+      ],
+      "suggested_terms": [],
+      "already_in_expansions": false,
+      "current_expansion": []
+    },
+    {
+      "customer_word": "kindly",
+      "tickets": 5,
+      "expected_articles": [
+        "DOC-AUTH-003",
+        "DOC-DATA-001",
+        "DOC-INT-001",
+        "DOC-INT-002",
+        "DOC-ONB-001",
+        "DOC-ONB-002",
+        "DOC-PERF-001"
+      ],
+      "suggested_terms": [],
+      "already_in_expansions": false,
+      "current_expansion": []
+    },
+    {
+      "customer_word": "revert",
+      "tickets": 19,
+      "expected_articles": [
+        "DOC-AUTH-003",
+        "DOC-DATA-001",
+        "DOC-DEPLOY-002",
+        "DOC-INT-001",
+        "DOC-INT-002",
+        "DOC-ONB-001",
+        "DOC-ONB-002",
+        "DOC-PERF-001"
+      ],
+      "suggested_terms": [],
+      "already_in_expansions": true,
+      "current_expansion": [
+        "revision",
+        "rollback",
+        "previous"
+      ]
+    },
+    {
+      "customer_word": "ago",
+      "tickets": 16,
+      "expected_articles": [
+        "DOC-API-001",
+        "DOC-API-003",
+        "DOC-AUTH-004",
+        "DOC-DATA-001",
+        "DOC-DATA-003",
+        "DOC-DEPLOY-002",
+        "DOC-SEC-001",
+        "DOC-SEC-002"
+      ],
+      "suggested_terms": [],
+      "already_in_expansions": false,
+      "current_expansion": []
+    },
+    {
+      "customer_word": "late",
+      "tickets": 12,
+      "expected_articles": [
+        "DOC-API-003",
+        "DOC-DATA-001",
+        "DOC-DEPLOY-001",
+        "DOC-DEPLOY-002",
+        "DOC-INT-001",
+        "DOC-INT-002",
+        "DOC-SEC-001",
+        "DOC-SEC-002"
+      ],
+      "suggested_terms": [],
+      "already_in_expansions": false,
+      "current_expansion": []
+    },
+    {
+      "customer_word": "night",
+      "tickets": 12,
+      "expected_articles": [
+        "DOC-API-003",
+        "DOC-DATA-001",
+        "DOC-DEPLOY-001",
+        "DOC-DEPLOY-002",
+        "DOC-INT-001",
+        "DOC-INT-002",
+        "DOC-SEC-001",
+        "DOC-SEC-002"
+      ],
+      "suggested_terms": [],
+      "already_in_expansions": false,
+      "current_expansion": []
+    },
+    {
+      "customer_word": "something",
+      "tickets": 34,
+      "expected_articles": [
+        "DOC-API-003",
+        "DOC-AUTH-001",
+        "DOC-AUTH-002",
+        "DOC-DATA-001",
+        "DOC-DATA-002",
+        "DOC-DATA-003",
+        "DOC-INT-001",
+        "DOC-INT-002",
+        "DOC-PERF-003"
+      ],
+      "suggested_terms": [],
+      "already_in_expansions": false,
+      "current_expansion": []
+    },
+    {
+      "customer_word": "needful",
+      "tickets": 9,
+      "expected_articles": [
+        "DOC-AUTH-003",
+        "DOC-BILL-001",
+        "DOC-BILL-002",
+        "DOC-BILL-003",
+        "DOC-DATA-003",
+        "DOC-ONB-001",
+        "DOC-ONB-002",
+        "DOC-PERF-001",
+        "DOC-PERF-003"
+      ],
+      "suggested_terms": [],
+      "already_in_expansions": false,
+      "current_expansion": []
+    },
+    {
+      "customer_word": "earlier",
+      "tickets": 22,
+      "expected_articles": [
+        "DOC-ACCT-001",
+        "DOC-API-001",
+        "DOC-API-003",
+        "DOC-AUTH-001",
+        "DOC-BILL-003",
+        "DOC-DEPLOY-002",
+        "DOC-INT-001",
+        "DOC-PERF-003",
+        "DOC-SEC-001",
+        "DOC-SEC-002"
+      ],
+      "suggested_terms": [],
+      "already_in_expansions": false,
+      "current_expansion": []
+    },
+    {
+      "customer_word": "today",
+      "tickets": 10,
+      "expected_articles": [
+        "DOC-ACCT-001",
+        "DOC-API-001",
+        "DOC-API-003",
+        "DOC-AUTH-001",
+        "DOC-BILL-003",
+        "DOC-DEPLOY-002",
+        "DOC-INT-001",
+        "DOC-PERF-003",
+        "DOC-SEC-001",
+        "DOC-SEC-002"
+      ],
+      "suggested_terms": [],
+      "already_in_expansions": false,
+      "current_expansion": []
+    },
+    {
+      "customer_word": "reply",
+      "tickets": 7,
+      "expected_articles": [
+        "DOC-ACCT-002",
+        "DOC-AUTH-003",
+        "DOC-AUTH-004",
+        "DOC-DEPLOY-004",
+        "DOC-INT-001",
+        "DOC-INT-002",
+        "DOC-ONB-001",
+        "DOC-ONB-002",
+        "DOC-PERF-003",
+        "DOC-SEC-002"
+      ],
+      "suggested_terms": [],
+      "already_in_expansions": false,
+      "current_expansion": []
+    },
+    {
+      "customer_word": "morning",
+      "tickets": 26,
+      "expected_articles": [
+        "DOC-API-003",
+        "DOC-AUTH-001",
+        "DOC-AUTH-002",
+        "DOC-DATA-002",
+        "DOC-DEPLOY-001",
+        "DOC-DEPLOY-002",
+        "DOC-INT-001",
+        "DOC-INT-002",
+        "DOC-PERF-001",
+        "DOC-PERF-002",
+        "DOC-PERF-003",
+        "DOC-SEC-001"
+      ],
+      "suggested_terms": [],
+      "already_in_expansions": false,
+      "current_expansion": []
+    },
+    {
+      "customer_word": "00",
+      "tickets": 13,
+      "expected_articles": [
+        "DOC-API-001",
+        "DOC-AUTH-001",
+        "DOC-AUTH-004",
+        "DOC-BILL-003",
+        "DOC-DATA-001",
+        "DOC-DEPLOY-001",
+        "DOC-DEPLOY-002",
+        "DOC-INT-001",
+        "DOC-INT-002",
+        "DOC-PERF-001",
+        "DOC-PERF-002",
+        "DOC-SEC-001",
+        "DOC-SEC-002"
+      ],
+      "suggested_terms": [],
+      "already_in_expansions": false,
+      "current_expansion": []
+    },
+    {
+      "customer_word": "14",
+      "tickets": 13,
+      "expected_articles": [
+        "DOC-API-001",
+        "DOC-AUTH-001",
+        "DOC-AUTH-004",
+        "DOC-BILL-003",
+        "DOC-DATA-001",
+        "DOC-DEPLOY-001",
+        "DOC-DEPLOY-002",
+        "DOC-INT-001",
+        "DOC-INT-002",
+        "DOC-PERF-001",
+        "DOC-PERF-002",
+        "DOC-SEC-001",
+        "DOC-SEC-002"
+      ],
+      "suggested_terms": [],
+      "already_in_expansions": false,
+      "current_expansion": []
+    },
+    {
+      "customer_word": "tell",
+      "tickets": 25,
+      "expected_articles": [
+        "DOC-API-001",
+        "DOC-AUTH-003",
+        "DOC-BILL-001",
+        "DOC-BILL-002",
+        "DOC-BILL-003",
+        "DOC-DATA-001",
+        "DOC-DEPLOY-002",
+        "DOC-INT-001",
+        "DOC-INT-002",
+        "DOC-ONB-001",
+        "DOC-ONB-002",
+        "DOC-PERF-001",
+        "DOC-PERF-002",
+        "DOC-SEC-001",
+        "DOC-SEC-002"
+      ],
+      "suggested_terms": [],
+      "already_in_expansions": false,
+      "current_expansion": []
+    },
+    {
+      "customer_word": "yesterday",
+      "tickets": 25,
+      "expected_articles": [
+        "DOC-API-001",
+        "DOC-API-003",
+        "DOC-AUTH-001",
+        "DOC-AUTH-002",
+        "DOC-AUTH-004",
+        "DOC-BILL-003",
+        "DOC-DATA-001",
+        "DOC-DATA-002",
+        "DOC-DEPLOY-001",
+        "DOC-DEPLOY-002",
+        "DOC-INT-001",
+        "DOC-INT-002",
+        "DOC-PERF-001",
+        "DOC-PERF-002",
+        "DOC-PERF-003",
+        "DOC-SEC-001",
+        "DOC-SEC-002"
+      ],
+      "suggested_terms": [],
+      "already_in_expansions": false,
+      "current_expansion": []
+    }
+  ]
+}

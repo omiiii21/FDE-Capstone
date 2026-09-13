@@ -172,6 +172,11 @@ class OpenRouterProvider(Provider):
     # moment the ticket gets a human.
     RETRYABLE = frozenset({408, 409, 425, 429, 500, 502, 503, 504})
 
+    # How long the breaker stays open. Long enough that a run of a few hundred
+    # tickets stops asking, short enough that a brief outage does not cost the
+    # rest of the run its model path.
+    CIRCUIT_SECONDS = 60.0
+
     def __init__(
         self,
         api_key: str | None = None,
@@ -206,6 +211,19 @@ class OpenRouterProvider(Provider):
     def reset_circuit(self) -> None:
         self._circuit_open_until = 0.0
 
+    def _open_circuit(self) -> None:
+        """Stop asking for a minute.
+
+        This is reached from two places and it used to be reached from one. A
+        non-retryable status raises straight out of the loop, so it skipped the
+        line at the bottom that opened the breaker, and a provider answering 401
+        to everything was re-asked once per ticket for the whole run. That is
+        the case the breaker was written for: a credential or a payload the
+        provider will reject identically every time is the most persistent
+        failure there is, not the least.
+        """
+        self._circuit_open_until = time.monotonic() + self.CIRCUIT_SECONDS
+
     def complete(self, prompt: str, *, max_tokens: int = 700, temperature: float = 0.0) -> str:
         if not self.api_key:
             raise ProviderUnavailable("OPENROUTER_API_KEY is not set")
@@ -239,13 +257,18 @@ class OpenRouterProvider(Provider):
 
         last_error = "unknown"
         for attempt in range(self.max_retries):
+            # Backing off after the last attempt spends the delay on a call that
+            # is never made. With three retries that was up to sixteen seconds of
+            # waiting per ticket to reach a conclusion already reached.
+            more_attempts_to_come = attempt < self.max_retries - 1
             self.calls += 1
             try:
                 response = requests.post(OPENROUTER_URL, headers=headers, json=payload, timeout=self.timeout)
             except Exception as exc:  # network layer: timeouts, DNS, reset connections
                 last_error = f"{type(exc).__name__}: {exc}"
                 self.failures += 1
-                self._sleep(attempt)
+                if more_attempts_to_come:
+                    self._sleep(attempt)
                 continue
 
             if response.status_code == 200:
@@ -262,14 +285,16 @@ class OpenRouterProvider(Provider):
             last_error = f"HTTP {response.status_code}"
             self.failures += 1
             if response.status_code not in self.RETRYABLE:
+                self._open_circuit()
                 raise ProviderUnavailable(last_error)
             # Honour Retry-After when the provider sends one; free tiers do.
             wait = response.headers.get("Retry-After")
-            self._sleep(attempt, float(wait) if wait and wait.isdigit() else None)
+            if more_attempts_to_come:
+                self._sleep(attempt, float(wait) if wait and wait.isdigit() else None)
 
         # Repeated failure means the provider is having a bad morning. Stop
         # asking for sixty seconds so the rest of the run is not held up.
-        self._circuit_open_until = time.monotonic() + 60.0
+        self._open_circuit()
         raise ProviderUnavailable(f"{self.max_retries} attempts failed, last was {last_error}")
 
     def _sleep(self, attempt: int, override: float | None = None) -> None:

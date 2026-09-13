@@ -167,7 +167,12 @@ class LexicalIndex:
                 freq = counts.get(term, 0.0)
                 if not freq:
                     continue
-                denom = freq + K1 * (1 - B + B * (self._len[i] / self._avg_len or 1.0))
+                # Parenthesised deliberately. Written as `x / avg or 1.0` this
+                # binds as `(x / avg) or 1.0`, so the guard fires when the
+                # division happens to be zero and not when avg_len is, which is
+                # the case it was put there for and the one that divides by it.
+                normalised_length = self._len[i] / self._avg_len if self._avg_len else 1.0
+                denom = freq + K1 * (1 - B + B * normalised_length)
                 scores[i] += q_weight * idf * (freq * (K1 + 1)) / denom
         return scores
 

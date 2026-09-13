@@ -26,6 +26,7 @@ from __future__ import annotations
 import json
 import re
 from dataclasses import dataclass
+from typing import Sequence
 
 from .config import REPO_ROOT
 from .provider import Provider, ProviderUnavailable
@@ -71,9 +72,38 @@ DISCLOSURE = (
     "message and a support engineer will pick it up."
 )
 
+# The same label for a draft that carries no citations. "Listed above" was being
+# written into every reply whether or not anything was listed: the console shows
+# the sources beside the response, but the body a customer receives held bare
+# [1] markers and no key to them. The markers are now spelled out in the body,
+# above the disclosure, so the sentence is true where it is read. Where there is
+# nothing to list the claim is dropped rather than made.
+DISCLOSURE_WITHOUT_SOURCES = (
+    "This reply was drafted automatically from CloudServe's support documentation. If it does "
+    "not answer your question, reply to this message and a support engineer will pick it up."
+)
 
-def finalise(body: str) -> str:
-    """Add the greeting and the disclosure to a drafted answer.
+SOURCES_HEADING = "Sources:"
+
+
+def sources_block(citations: Sequence[dict]) -> str:
+    """The numbered markers in the body, spelled out.
+
+    A marker a customer cannot follow is decoration. Each line repeats the
+    marker so the reference is unambiguous, and names the article rather than
+    only its identifier, because the identifier means nothing outside the system.
+    """
+    lines = [SOURCES_HEADING]
+    for citation in citations:
+        title = str(citation.get("title") or "").strip()
+        doc_id = str(citation.get("doc_id") or "").strip()
+        label = f"{title} ({doc_id})" if title else doc_id
+        lines.append(f"[{citation['marker']}] {label}")
+    return "\n".join(lines)
+
+
+def finalise(body: str, citations: Sequence[dict] | None = None) -> str:
+    """Add the greeting, the source list and the disclosure to a drafted answer.
 
     Both generators route through here so the disclosure cannot be attached to
     one path and forgotten on the other. PR-01 tells the model not to write a
@@ -83,7 +113,13 @@ def finalise(body: str) -> str:
     body = body.strip()
     if not body:
         return body
-    return f"Thanks for getting in touch.\n\n{body}\n\n{DISCLOSURE}"
+    parts = ["Thanks for getting in touch.", body]
+    if citations:
+        parts.append(sources_block(citations))
+        parts.append(DISCLOSURE)
+    else:
+        parts.append(DISCLOSURE_WITHOUT_SOURCES)
+    return "\n\n".join(parts)
 
 
 @dataclass
@@ -117,16 +153,35 @@ def render(template: str, **fields: str) -> str:
     return out
 
 
+# How much prose to quote from a section that is not a numbered procedure, and
+# how long a reply may run before the "why" sentence and the closing note stop
+# earning their place. A procedure is not governed by either: see below.
+MAX_PROSE_SENTENCES = 4
+MAX_SENTENCES = 5
+
+
 def _useful_sentences(passage: Passage, query_terms: set[str]) -> list[str]:
     """Sentences from a passage that bear on the question.
 
     Symptom lists are skipped. They match the customer's own words better than
     anything else in the article and they tell the customer only what they
     already told us, which reads as confident and useless.
+
+    A numbered procedure is quoted whole. Every article in the corpus has a
+    four-step resolution section and twenty-seven of the twenty-nine write those
+    four steps as more than four sentences, so a cap counted in sentences was
+    cutting the procedure in the middle: the reply for DEV-0025 gave steps one
+    and two of DOC-DEPLOY-001 and stopped, dropping "compare the environment
+    variables" and "inspect the logs from the failed revision" with nothing to
+    tell the customer that anything was missing. Half a procedure is worse than
+    a long reply, because the customer follows it and believes they are done.
     """
     section = ""
-    sentences: list[tuple[str, str]] = []
+    # section, sentence, step number (0 for a sentence that is not part of a
+    # numbered step). The step number is what lets a procedure be kept whole.
+    sentences: list[tuple[str, str, int]] = []
     title_line = passage.title.strip().lower()
+    step_number = 0
     for line in passage.text.splitlines():
         if _HEADING_LINE.match(line):
             section = _HEADING_LINE.sub("", line).strip().lower()
@@ -139,28 +194,44 @@ def _useful_sentences(passage: Passage, query_terms: set[str]) -> list[str]:
         # sentence, so it does not belong in the reply.
         if line.lower() == title_line:
             continue
+        step = 0
+        if _STEP.match(line):
+            step_number += 1
+            step = step_number
         line = _BULLET.sub("", line)
         for sentence in _SENTENCE.split(line):
             sentence = sentence.strip()
             if len(sentence) > 25:
-                sentences.append((section, sentence))
+                sentences.append((section, sentence, step))
 
-    resolution = [s for sec, s in sentences if "resolution" in sec or _STEP.match(s)]
-    causes = [s for sec, s in sentences if "cause" in sec]
-    notes = [s for sec, s in sentences if "note" in sec]
+    resolution = [(s, step) for sec, s, step in sentences if "resolution" in sec or step]
+    causes = [s for sec, s, _ in sentences if "cause" in sec]
+    notes = [s for sec, s, _ in sentences if "note" in sec]
     other = [
-        s for sec, s in sentences if not any(k in sec for k in ("symptom", "resolution", "cause", "note"))
+        s for sec, s, _ in sentences if not any(k in sec for k in ("symptom", "resolution", "cause", "note"))
     ]
 
-    chosen = resolution[:4] or other[:3]
+    procedure = [s for s, step in resolution if step]
+    if procedure:
+        # Whole steps, in document order, however many sentences that comes to.
+        chosen = procedure
+        budget = MAX_SENTENCES
+    else:
+        chosen = [s for s, _ in resolution][:MAX_PROSE_SENTENCES] or other[:3]
+        budget = MAX_SENTENCES
+
     # One cause sentence gives the reply a "why", which is what stops it reading
-    # like a list of instructions with no reasoning behind it.
-    if causes and len(chosen) < 5:
+    # like a list of instructions with no reasoning behind it. Both it and the
+    # closing note are extras: they are added while the reply is short enough to
+    # carry them and dropped when the procedure has already filled the space.
+    if causes and len(chosen) < budget:
         best = max(causes, key=lambda s: len(query_terms & set(re.findall(r"[a-z]+", s.lower()))))
         chosen = [best] + chosen
-    if notes and len(chosen) < 5:
+    if notes and len(chosen) < budget:
         chosen = chosen + notes[:1]
-    return chosen[:5]
+    if procedure:
+        return chosen
+    return chosen[:budget]
 
 
 class ExtractiveGenerator:
@@ -246,7 +317,7 @@ class ExtractiveGenerator:
         if not paragraphs:
             return Draft(NO_ANSWER, [], False, "retrieved passages contained no actionable steps", self.name)
 
-        return Draft(finalise("\n\n".join(paragraphs)), citations, True, "", self.name)
+        return Draft(finalise("\n\n".join(paragraphs), citations), citations, True, "", self.name)
 
 
 class ModelGenerator:
@@ -326,7 +397,9 @@ class ModelGenerator:
             for m in markers
             if 1 <= m <= len(passages)
         ]
-        return Draft(finalise(answer), citations, True, str(parsed.get("uncertain_about", "")), "model")
+        return Draft(
+            finalise(answer, citations), citations, True, str(parsed.get("uncertain_about", "")), "model"
+        )
 
     def escalation_note(
         self, ticket: Ticket, passages: list[Passage], *, intent: str, confidence: float, routing_reason: str

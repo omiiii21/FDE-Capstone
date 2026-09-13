@@ -1,8 +1,8 @@
-# Evaluation run run-20260917T190130Z-ada6fe
+# Evaluation run run-20260918T015904Z-869070
 
 Input: `data/guardrail_probe_tickets.json`  
-Started: 2026-09-17T19:01:30Z  
-Duration: 0.02s (410.65 tickets/sec)  
+Started: 2026-09-18T01:59:04Z  
+Duration: 0.04s (239.41 tickets/sec)  
 Provider: none (available: False)  
 Retrieval: lexical, top_k=5, floor=4.2  
 Confidence threshold: 0.62
@@ -21,12 +21,15 @@ Confidence threshold: 0.62
 
 | Measure | Baseline | Target | This run |
 | --- | --- | --- | --- |
-| First contact resolution | 43.8% | 60% | 11.1% |
-| First contact resolution, verified | - | - | 0.0% (n=0) |
-| Escalation rate | 56.2% | 30% | 88.9% |
-| Median reply, automated | 214 min | 5 min | 0.000 s |
-| Median reply, blended | 214 min | 5 min | 214.0 min |
-| Routing agreement with labels | - | - | 0.0% |
+| First contact resolution | 43.8% | 65% | 11.1% |
+| Verified resolution, every labelled automatic answer | - | - | not scored: the input file carried no labels |
+| Verified resolution, answerable tickets only | - | - | not scored: the input file carried no labels |
+| Escalation rate | 56.2% | 35% | 88.9% |
+| Median reply, automated | 214 min | under 1 min | 0.001 s |
+| Median reply, blended | 214 min | - | 214.0 min |
+| Routing agreement with labels | - | - | not scored: the input file carried no labels |
+
+The two verified figures differ only in what they divide by. The first counts every automatic answer the input file carries a coverage label for, including the 0 answered on tickets no article covers, which can never cite a document the labels agree with. The second leaves those out and measures retrieval and citation alone. The first is the one to quote.
 
 Blended figure assumption: escalated tickets are assumed to wait 214 minutes, the median human resolution time in the development set; the system does not control that queue.
 
@@ -34,14 +37,15 @@ Blended figure assumption: escalated tickets are assumed to wait 214 minutes, th
 
 | Measure | Target | This run |
 | --- | --- | --- |
-| Intent accuracy | - | 0.0% |
-| Weighted precision | 85% | 0.0% |
-| Macro precision | - | 0.0% |
-| Retrieval recall@k | - | 0.0% |
-| Citation accuracy | 95% | 0.0% (n=0) |
-| Latency p95 | 3 s | 0.004 s |
-| Calibration error (ECE) | - | 0.0000 |
-| Calibration, worst band gap | 5 pts | 0.0 pts (over 0 bands holding 0 predictions) |
+| Intent accuracy | - | not scored: the input file carried no labels |
+| Weighted precision | 85% | not scored: the input file carried no labels |
+| Macro precision | - | not scored: the input file carried no labels |
+| Retrieval recall@k | 90% | 0.0% |
+| Citation accuracy, every labelled reply | 95% | not scored: the input file carried no labels |
+| Citation accuracy, answerable tickets only | 95% | not scored: the input file carried no labels |
+| Latency p95 | 10 s chat, 60 s other | 0.008 s |
+| Calibration error (ECE) | - | not scored: the input file carried no labels |
+| Calibration, worst band gap | 5 pts | not scored: the input file carried no labels |
 
 ## Governance
 

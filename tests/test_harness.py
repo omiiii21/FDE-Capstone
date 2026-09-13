@@ -100,7 +100,8 @@ def test_the_measures_the_business_case_is_argued_on_are_present(completed_run):
 
     for key in (
         "first_contact_resolution",
-        "first_contact_resolution_verified",
+        "verified_fcr_over_all_labelled_auto_answers",
+        "verified_fcr_over_answerable_auto_answers_only",
         "escalation_rate",
         "baseline_first_contact_resolution",
         "blended_reply_assumption",
@@ -225,3 +226,99 @@ def test_the_command_line_entry_point_runs_the_whole_slice(repo_root, tmp_path):
     assert exit_code == 0
     assert Path(output_dir / "metrics.json").exists()
     assert len((output_dir / "responses.jsonl").read_text().splitlines()) == 5
+
+
+# --- the generated summary must not misstate the requirement ------------
+# summary.md is the artefact somebody checks the PRD against, so a target
+# printed in it that disagrees with section 8 of the PRD is worse than no target
+# at all. It claimed 60% first contact resolution against a target of 65%, 30%
+# escalation against 35%, five minutes to first reply against one, and three
+# seconds at the 95th percentile against a budget of ten on chat and sixty
+# elsewhere.
+@pytest.mark.parametrize(
+    ("measure", "target"),
+    [
+        ("First contact resolution", "65%"),
+        ("Escalation rate", "35%"),
+        ("Median reply, automated", "under 1 min"),
+        ("Weighted precision", "85%"),
+        ("Retrieval recall@k", "90%"),
+        ("Latency p95", "10 s chat, 60 s other"),
+    ],
+)
+def test_the_summary_quotes_the_targets_the_prd_actually_sets(completed_run, measure, target):
+    report, _, output_dir = completed_run
+    summary = (output_dir / "summary.md").read_text(encoding="utf-8")
+
+    line = next(ln for ln in summary.splitlines() if ln.startswith(f"| {measure} |"))
+    assert target in line, line
+
+
+@pytest.mark.parametrize("stale", ["| 60% |", "| 30% |", "| 5 min |", "| 3 s |"])
+def test_the_summary_no_longer_carries_the_targets_it_invented(completed_run, stale):
+    _, _, output_dir = completed_run
+
+    assert stale not in (output_dir / "summary.md").read_text(encoding="utf-8")
+
+
+def test_the_summary_separates_the_two_verified_denominators(completed_run):
+    _, _, output_dir = completed_run
+    summary = (output_dir / "summary.md").read_text(encoding="utf-8")
+
+    assert "Verified resolution, every labelled automatic answer" in summary
+    assert "Verified resolution, answerable tickets only" in summary
+    assert "Citation accuracy, every labelled reply" in summary
+    assert "Citation accuracy, answerable tickets only" in summary
+
+
+# --- a file with no labels is a normal input ----------------------------
+@pytest.fixture(scope="module")
+def unlabelled_run(repo_root, tmp_path_factory):
+    """The same tickets with every label stripped, which is how a real queue
+    arrives. The harness has to score what it can and say so about the rest."""
+    source = json.loads((repo_root / "data" / "validation_tickets.json").read_text(encoding="utf-8"))
+    tickets = source["tickets"] if isinstance(source, dict) else source
+    stripped = [{k: v for k, v in t.items() if k != "labels"} for t in tickets[:SLICE]]
+
+    directory = tmp_path_factory.mktemp("unlabelled")
+    input_path = directory / "unlabelled_tickets.json"
+    input_path.write_text(json.dumps(stripped), encoding="utf-8")
+    report, exit_code = harness.run(
+        input_path, directory / "results", run_id="test-unlabelled-run", progress_every=0
+    )
+    return report, exit_code, directory / "results"
+
+
+def test_an_unlabelled_file_still_runs_to_completion(unlabelled_run):
+    report, exit_code, _ = unlabelled_run
+
+    assert exit_code == 0
+    assert report["volume"]["tickets_processed"] == SLICE
+
+
+def test_an_unlabelled_file_says_so_rather_than_reporting_nought_per_cent(unlabelled_run):
+    # "Intent accuracy 0.0%" reads as a classifier that got all twenty wrong.
+    # It got none of them wrong; there was nothing to mark them against.
+    _, _, output_dir = unlabelled_run
+    summary = (output_dir / "summary.md").read_text(encoding="utf-8")
+
+    accuracy = next(ln for ln in summary.splitlines() if ln.startswith("| Intent accuracy |"))
+    assert "no labels" in accuracy
+    assert "0.0%" not in accuracy
+    for measure in (
+        "Weighted precision",
+        "Macro precision",
+        "Routing agreement with labels",
+        "Citation accuracy, every labelled reply",
+        "Calibration error (ECE)",
+    ):
+        line = next(ln for ln in summary.splitlines() if ln.startswith(f"| {measure} |"))
+        assert "no labels" in line, line
+
+
+def test_the_unlabelled_report_still_carries_the_measures_that_need_no_labels(unlabelled_run):
+    report, _, _ = unlabelled_run
+
+    assert report["business"]["first_contact_resolution"] > 0
+    assert report["volume"]["answered_automatically"] > 0
+    assert report["governance"]["decision_log_reconciles"] is True

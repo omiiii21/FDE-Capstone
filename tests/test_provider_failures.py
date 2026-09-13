@@ -349,3 +349,93 @@ def test_a_decision_log_written_during_an_outage_exports_to_jsonl(make_pipeline,
     assert written == 5
     lines = [json.loads(line) for line in destination.read_text(encoding="utf-8").splitlines()]
     assert {line["ticket_id"] for line in lines} == {"PRV-1"}
+
+
+# A11 again, and the case the circuit breaker was missing. A non-retryable
+# status raises straight out of the loop, so it skipped the line at the bottom
+# that opened the breaker: a provider answering 401 to everything was asked
+# again on every ticket, 120 times over a 120 ticket run.
+@pytest.mark.parametrize("status", [400, 401, 403, 404, 422])
+def test_a_persistent_non_retryable_status_opens_the_circuit(provider_factory, monkeypatch, status):
+    attempts = []
+
+    def post(url, **kwargs):
+        attempts.append(url)
+        return FakeResponse(status)
+
+    monkeypatch.setattr(requests, "post", post)
+    provider = provider_factory(max_retries=3)
+
+    with pytest.raises(ProviderUnavailable):
+        provider.complete("the first ticket")
+
+    assert len(attempts) == 1
+    assert provider.available is False
+
+    # The second ticket of the run must not reach the provider at all.
+    with pytest.raises(ProviderUnavailable, match="circuit open"):
+        provider.complete("the second ticket")
+
+    assert len(attempts) == 1
+    provider.reset_circuit()
+    assert provider.available is True
+
+
+def test_a_run_of_tickets_hits_a_broken_provider_once_not_once_each(provider_factory, monkeypatch):
+    # The behaviour the breaker exists for, stated as the thing that was wrong.
+    attempts = []
+    monkeypatch.setattr(requests, "post", lambda url, **kwargs: attempts.append(url) or FakeResponse(401))
+    provider = provider_factory(max_retries=3)
+
+    for index in range(20):
+        with pytest.raises(ProviderUnavailable):
+            provider.complete(f"ticket {index}")
+
+    assert len(attempts) == 1
+
+
+def test_the_backoff_is_not_spent_after_the_final_attempt(provider_factory, monkeypatch):
+    # Sleeping after the last attempt delays a call that will never be made. With
+    # three retries that was up to sixteen seconds per ticket buying nothing.
+    slept = []
+    monkeypatch.setattr(requests, "post", lambda url, **kwargs: FakeResponse(503))
+    provider = provider_factory(max_retries=3)
+    monkeypatch.setattr(provider, "_sleep", lambda *args, **kwargs: slept.append(args))
+
+    with pytest.raises(ProviderUnavailable):
+        provider.complete("a prompt")
+
+    assert provider.calls == 3
+    assert len(slept) == 2
+
+
+def test_a_single_attempt_configuration_never_sleeps(provider_factory, monkeypatch):
+    slept = []
+    monkeypatch.setattr(
+        requests, "post", lambda url, **kwargs: FakeResponse(429, headers={"Retry-After": "5"})
+    )
+    provider = provider_factory(max_retries=1)
+    monkeypatch.setattr(provider, "_sleep", lambda *args, **kwargs: slept.append(args))
+
+    with pytest.raises(ProviderUnavailable):
+        provider.complete("a prompt")
+
+    assert provider.calls == 1
+    assert slept == []
+
+
+def test_a_network_error_on_the_last_attempt_does_not_sleep_either(provider_factory, monkeypatch):
+    slept = []
+
+    def post(url, **kwargs):
+        raise requests.exceptions.Timeout("timed out")
+
+    monkeypatch.setattr(requests, "post", post)
+    provider = provider_factory(max_retries=2)
+    monkeypatch.setattr(provider, "_sleep", lambda *args, **kwargs: slept.append(args))
+
+    with pytest.raises(ProviderUnavailable):
+        provider.complete("a prompt")
+
+    assert provider.calls == 2
+    assert len(slept) == 1

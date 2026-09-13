@@ -22,7 +22,7 @@ The part that makes this work is not the provider abstraction, it is `Extractive
 
 ## Consequences
 
-The whole evaluation run completes with no key at all. Both `evaluation/results/dev_run/` and `evaluation/results/validation_run/` were produced that way, which is why the 80-ticket validation file finishes in 0.07 seconds, around a thousand tickets a second: on the default path nothing makes a network call. The 500-ticket run reached 81.4% first contact resolution and 90.3% citation accuracy on that path.
+The whole evaluation run completes with no key at all. Both `evaluation/results/dev_run/` and `evaluation/results/validation_run/` were produced that way, which is why the 80-ticket validation file finishes in about a tenth of a second, several hundred tickets a second: on the default path nothing makes a network call. The 500-ticket run reached 81.4% first contact resolution on that path, and 71.3% citation accuracy across every labelled automatic answer.
 
 `/healthz` in `src/api.py` returns 200 even when the provider is unreachable, which is deliberate. Liveness is not readiness, and a health check that failed during an outage would pull the service out of rotation while it was still answering tickets.
 
@@ -30,6 +30,6 @@ What this costs is prose quality. Extractive replies read stiffly — they are s
 
 ## What would change my mind
 
-Run the same 500 tickets twice, once with a key and once without, and compare verified resolution — answered automatically and citing a document the labels agree with — against the 90.3% the extractive path achieves. If the model path is not meaningfully better, `ModelGenerator` is carrying dependency and prompt-maintenance cost for nothing and should be deleted rather than kept as the preferred path.
+Run the same 500 tickets twice, once with a key and once without, and compare verified resolution — answered automatically and citing a document the labels agree with — against the 71.3% the extractive path achieves. If the model path is not meaningfully better, `ModelGenerator` is carrying dependency and prompt-maintenance cost for nothing and should be deleted rather than kept as the preferred path.
 
 The reverse would also move me. The extractive run blocks nothing, because nothing it can write is unsafe, so the comparison to make is how often the model path is blocked on the same tickets. If the model path is clearly better on verified resolution and is blocked on fewer than a few per cent of them, then degrading to the extractive path during an outage is a real quality regression rather than a graceful one, and CloudServe should be told to budget for a paid tier with an uptime commitment instead of relying on it.

@@ -1,8 +1,8 @@
-# Evaluation run run-20260917T190130Z-123e6e
+# Evaluation run run-20260918T015716Z-3b11ee
 
 Input: `data/validation_tickets.json`  
-Started: 2026-09-17T19:01:30Z  
-Duration: 0.08s (978.75 tickets/sec)  
+Started: 2026-09-18T01:57:16Z  
+Duration: 0.11s (727.62 tickets/sec)  
 Provider: none (available: False)  
 Retrieval: lexical, top_k=5, floor=4.2  
 Confidence threshold: 0.62
@@ -21,12 +21,15 @@ Confidence threshold: 0.62
 
 | Measure | Baseline | Target | This run |
 | --- | --- | --- | --- |
-| First contact resolution | 43.8% | 60% | 81.2% |
-| First contact resolution, verified | - | - | 87.8% (n=49) |
-| Escalation rate | 56.2% | 30% | 18.8% |
-| Median reply, automated | 214 min | 5 min | 0.000 s |
-| Median reply, blended | 214 min | 5 min | 0.0 min |
-| Routing agreement with labels | - | - | 78.8% |
+| First contact resolution | 43.8% | 65% | 81.2% |
+| Verified resolution, every labelled automatic answer | - | - | 66.1% (n=65) |
+| Verified resolution, answerable tickets only | - | - | 87.8% (n=49) |
+| Escalation rate | 56.2% | 35% | 18.8% |
+| Median reply, automated | 214 min | under 1 min | 0.001 s |
+| Median reply, blended | 214 min | - | 0.0 min |
+| Routing agreement with labels | - | - | 78.8% (n=80) |
+
+The two verified figures differ only in what they divide by. The first counts every automatic answer the input file carries a coverage label for, including the 16 answered on tickets no article covers, which can never cite a document the labels agree with. The second leaves those out and measures retrieval and citation alone. The first is the one to quote.
 
 Blended figure assumption: escalated tickets are assumed to wait 214 minutes, the median human resolution time in the development set; the system does not control that queue.
 
@@ -37,9 +40,10 @@ Blended figure assumption: escalated tickets are assumed to wait 214 minutes, th
 | Intent accuracy | - | 98.8% |
 | Weighted precision | 85% | 99.2% |
 | Macro precision | - | 98.5% |
-| Retrieval recall@k | - | 98.1% |
-| Citation accuracy | 95% | 87.8% (n=49) |
-| Latency p95 | 3 s | 0.000 s |
+| Retrieval recall@k | 90% | 98.1% |
+| Citation accuracy, every labelled reply | 95% | 66.1% (n=65) |
+| Citation accuracy, answerable tickets only | 95% | 87.8% (n=49) |
+| Latency p95 | 10 s chat, 60 s other | 0.001 s |
 | Calibration error (ECE) | - | 0.0081 |
 | Calibration, worst band gap | 5 pts | 0.1 pts (over 1 bands holding 76 predictions) |
 
