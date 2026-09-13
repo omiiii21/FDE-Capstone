@@ -18,7 +18,7 @@ it is not, the system does not stop and it does not send something unchecked -
 it sends the extractive draft, which is duller and safe. That is what A11 means
 by degrading rather than crashing.
 
-Serves FR-06, FR-07, FR-08, FR-14, FR-15. Acceptance criteria A6, A11.
+Serves FR-06, FR-07, FR-08, FR-09, FR-14, FR-15. Acceptance criteria A6, A11.
 """
 
 from __future__ import annotations
