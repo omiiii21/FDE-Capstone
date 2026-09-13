@@ -36,6 +36,7 @@ from pydantic import BaseModel, ConfigDict, Field
 
 from . import __version__, metrics
 from .config import settings
+from .console import router as console_router
 from .ingest import IngestError, normalise_ticket
 from .logging_store import DecisionLog
 from .pipeline import Pipeline
@@ -106,6 +107,11 @@ app = FastAPI(
     description="Demonstration and integration surface for the triage pipeline.",
     lifespan=lifespan,
 )
+
+# The operator console. It is a page and three read-only routes that drive the
+# endpoints below rather than replacing them, so what it shows is what an
+# integrator would get. See src/console.py.
+app.include_router(console_router)
 
 
 def _require_pipeline() -> Pipeline:
