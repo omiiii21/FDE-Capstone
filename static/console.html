@@ -4,21 +4,29 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Operator console · CloudServe support triage</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%230d6154' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='3' y='3' width='18' height='18'/%3E%3Cpath d='M3 9h18'/%3E%3Cpath d='M9 21V9'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600&family=Fira+Sans:wght@300;400;500;600;700&display=swap">
 <style>
 /* ===========================================================================
    CloudServe operator console
-   Minimalism / Swiss style. Grid, hairlines, strong left alignment, a strict
-   modular type scale, no shadows, no gradients, no rounding. Light only.
+   Grid, hairlines, strong left alignment, a strict modular type scale, light
+   only. The page is an instrument, not a brochure: the measured figures sit in
+   a thin strip because they do not change while the page is open, and the one
+   thing that does change - a ticket resolving into a decision - is the largest
+   and the only animated thing on the screen.
    =========================================================================== */
 
 :root{
+  color-scheme:light;
+  accent-color:#0d6154;
+
   /* --- palette ------------------------------------------------------------
-     --muted is the project's #6b7a74 darkened to #5c6b65: the original scores
-     4.35:1 on --paper and 3.76:1 on --miss-bg, both short of 4.5:1. The value
-     below clears 4.5:1 on every ground this page puts it on. */
+     Measured against the grounds each colour actually lands on. --muted is the
+     project's #6b7a74 darkened to #5c6b65: the original scores 4.35:1 on
+     --paper and 3.76:1 on --miss-bg. The value below clears 4.5:1 everywhere
+     it is used (lowest is 4.68:1, on --miss-bg). */
   --paper:#fbfbf9;
   --surface:#ffffff;
   --surface-2:#f4f6f2;
@@ -27,10 +35,18 @@
   --muted:#5c6b65;
   --rule:#dfe4dc;
   --accent:#0d6154;
+  --accent-wash:#e2edea;
   --on-accent:#ffffff;
   --good:#1f6b32;   --good-bg:#e8f2e9;   --good-edge:#c6ddcb;
   --warn:#9a5410;   --warn-bg:#fbeee0;   --warn-edge:#e9d3b4;
   --miss:#97301f;   --miss-bg:#fbe6e2;   --miss-edge:#eec8c0;
+  /* Inverted surface, used for the definition popovers. Its secondary text is
+     tinted from the same hue rather than dropped to grey: 8.68:1 on --ink. */
+  --invert:#101917;
+  --on-invert:#fbfbf9;
+  --on-invert-2:#a9b8b2;
+  --scrim:rgba(16,25,23,.42);
+  --select:#d6e4e0;
 
   /* --- type scale: 12 / 14 / 16 / 18 / 24 / 32, nothing else -------------- */
   --t-xs:12px; --t-sm:14px; --t-md:16px; --t-lg:18px; --t-xl:24px; --t-2xl:32px;
@@ -40,11 +56,16 @@
 
   --ui:"Fira Sans",-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;
   --mono:"Fira Code",ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
-  --motion:180ms cubic-bezier(.2,0,0,1);
-  --motion-slow:240ms cubic-bezier(.2,0,0,1);
+
+  /* 150-250ms for state, one longer curve reserved for the decision. */
+  --motion:170ms cubic-bezier(.2,0,0,1);
+  --motion-slow:220ms cubic-bezier(.2,0,0,1);
+  --expo:cubic-bezier(.16,1,.3,1);
 }
 
-*{box-sizing:border-box}
+*{box-sizing:border-box;-webkit-tap-highlight-color:rgba(13,97,84,.14)}
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%;scrollbar-color:var(--muted) var(--surface-2);
+  scrollbar-width:thin}
 html,body{margin:0}
 body{
   background:var(--paper);
@@ -53,13 +74,30 @@ body{
   font-size:var(--t-sm);
   font-weight:400;
   line-height:1.5;
+  font-variant-numeric:tabular-nums;
   -webkit-font-smoothing:antialiased;
   text-rendering:optimizeLegibility;
 }
-h1,h2,h3,p,figure{margin:0}
+h1,h2,h3,p,dl,dd,figure{margin:0}
 button{font:inherit;color:inherit;background:none;border:0}
-a{color:var(--accent);text-underline-offset:2px}
 code{font-family:var(--mono);font-size:var(--t-xs)}
+strong,b{font-weight:600}
+
+/* --- browser surfaces, all themed from the palette ---------------------- */
+::selection{background:var(--select);color:var(--ink)}
+input,textarea,select{caret-color:var(--accent)}
+::placeholder{color:var(--muted);opacity:1}
+::-webkit-scrollbar{width:10px;height:10px}
+::-webkit-scrollbar-track{background:var(--surface-2)}
+::-webkit-scrollbar-thumb{background:var(--muted);border:2px solid var(--surface-2)}
+::-webkit-scrollbar-thumb:hover{background:var(--ink-2)}
+::-webkit-scrollbar-corner{background:var(--surface-2)}
+::marker{color:var(--muted)}
+a{color:var(--accent);text-decoration-thickness:1px;text-underline-offset:3px}
+a:hover{text-decoration-thickness:2px}
+a:active{color:var(--ink)}
+:target{scroll-margin-top:var(--s-6)}
+
 svg.i{width:16px;height:16px;flex:none;display:block}
 svg.i-sm{width:12px;height:12px}
 svg.i-lg{width:20px;height:20px}
@@ -68,6 +106,17 @@ svg.i-lg{width:20px;height:20px}
 :focus{outline:none}
 :focus-visible{outline:2px solid var(--accent);outline-offset:2px}
 .inset-focus:focus-visible{outline-offset:-2px}
+
+.sr-only{
+  position:absolute;width:1px;height:1px;margin:-1px;padding:0;overflow:hidden;
+  clip:rect(0 0 0 0);clip-path:inset(50%);white-space:nowrap;border:0;
+}
+.skip-link{
+  position:absolute;left:var(--s-3);top:-64px;z-index:120;background:var(--ink);color:var(--on-invert);
+  font-family:var(--mono);font-size:var(--t-xs);letter-spacing:.06em;padding:14px var(--s-3);
+  transition:top var(--motion);
+}
+.skip-link:focus-visible{top:var(--s-1);outline-offset:2px}
 
 @media (prefers-reduced-motion: reduce){
   *,*::before,*::after{
@@ -85,118 +134,155 @@ svg.i-lg{width:20px;height:20px}
 .masthead{border-bottom:1px solid var(--rule)}
 .masthead-row{
   display:flex;flex-wrap:wrap;justify-content:space-between;align-items:flex-start;
-  gap:var(--s-3) var(--s-6);padding-block:var(--s-5) var(--s-4);
+  gap:var(--s-3) var(--s-6);padding-top:var(--s-5);padding-bottom:var(--s-4);
 }
 .brand{display:flex;gap:var(--s-2);align-items:flex-start;min-width:0}
-.brand-mark{color:var(--accent);margin-top:2px}
-.eyebrow{
-  font-family:var(--mono);font-size:var(--t-xs);font-weight:500;letter-spacing:.14em;
-  text-transform:uppercase;color:var(--muted);line-height:1.5;
-}
-h1{font-size:var(--t-xl);font-weight:600;letter-spacing:-.02em;line-height:1.2;margin-top:2px}
-.strap{font-size:var(--t-sm);color:var(--ink-2);max-width:64ch;margin-top:var(--s-1)}
+.brand-mark{color:var(--accent);margin-top:3px}
+h1{font-size:var(--t-xl);font-weight:600;letter-spacing:-.02em;line-height:1.2}
+.strap{font-size:var(--t-sm);color:var(--ink-2);max-width:66ch;margin-top:var(--s-1)}
 .byline{text-align:right;flex:none}
 .byline .who{font-size:var(--t-lg);font-weight:600;letter-spacing:-.01em;line-height:1.3;white-space:nowrap}
-.byline .what{
-  font-family:var(--mono);font-size:var(--t-xs);letter-spacing:.06em;text-transform:uppercase;
-  color:var(--muted);margin-top:var(--s-1);line-height:1.5;
-}
+.byline .what{font-family:var(--mono);font-size:var(--t-xs);letter-spacing:.02em;color:var(--muted);
+  margin-top:6px;line-height:1.5}
 
-/* --------------------------------------------------------------- figures - */
-.stats{
-  display:grid;grid-template-columns:repeat(4,minmax(0,1fr));
-  column-gap:var(--s-5);row-gap:var(--s-5);padding-block:var(--s-5) 0;
-}
-.stat{border-top:1px solid var(--rule);padding-top:var(--s-2);min-width:0}
-.stat--lead{grid-column:span 2;border-top:2px solid var(--ink);padding-top:var(--s-2)}
-.stat-k{
-  font-family:var(--mono);font-size:var(--t-xs);font-weight:500;letter-spacing:.1em;
-  text-transform:uppercase;color:var(--muted);line-height:1.5;
-}
-.stat-v{
-  font-family:var(--mono);font-weight:600;font-size:var(--t-lg);line-height:1.2;
-  font-variant-numeric:tabular-nums;letter-spacing:-.01em;margin-top:var(--s-1);
-  overflow-wrap:anywhere;
-}
-.stat--lead .stat-v{font-size:var(--t-2xl)}
-.stat-v small{font-family:var(--ui);font-size:var(--t-sm);font-weight:400;color:var(--muted);letter-spacing:0}
-.stat-s{font-size:var(--t-xs);color:var(--muted);margin-top:var(--s-1);line-height:1.5}
-.stat--lead .stat-s{font-size:var(--t-sm)}
-.delta{
-  display:inline-flex;align-items:center;gap:4px;font-family:var(--mono);font-weight:600;
-  font-variant-numeric:tabular-nums;margin-right:var(--s-1);
-}
+/* --------------------------------------------------- the measured strip -- */
+/* Six figures on one line at 12/14px. They were true before the page loaded
+   and will be true after it closes, so they are reference, not headline. */
+.strip{border-top:1px solid var(--rule);padding-top:var(--s-2);padding-bottom:var(--s-2)}
+.strip-row{display:flex;flex-wrap:wrap;align-items:flex-start;gap:var(--s-2) var(--s-3);
+  justify-content:space-between}
+.ledger{display:flex;flex-wrap:wrap;align-items:stretch;flex:1 1 640px;min-width:0}
+/* No rules between the figures on one line: the label-over-value pairing does
+   the grouping, and a stripe of verticals would be six more marks for nothing.
+   Below 860px they wrap, and there each one takes a hairline of its own. */
+.led{position:relative;padding:4px var(--s-5) 4px 0;min-width:0;min-height:44px}
+.led:last-child{padding-right:0}
+.led dt{font-family:var(--mono);font-size:var(--t-xs);font-weight:500;letter-spacing:.08em;
+  text-transform:uppercase;color:var(--muted);line-height:1.5;white-space:nowrap}
+.led dd{font-family:var(--mono);font-size:var(--t-sm);font-weight:600;line-height:1.5;
+  display:flex;align-items:baseline;gap:6px;flex-wrap:wrap;color:var(--ink)}
+.led dd small{font-family:var(--ui);font-size:var(--t-xs);font-weight:400;color:var(--muted)}
+.delta{display:inline-flex;align-items:center;gap:3px;font-family:var(--mono);font-size:var(--t-xs);
+  font-weight:600}
 .delta.good{color:var(--good)}
 .delta.warn{color:var(--warn)}
+.strip-tools{display:flex;flex-wrap:wrap;gap:var(--s-1);align-items:center;flex:none}
 
-.runline{
-  font-family:var(--mono);font-size:var(--t-xs);color:var(--muted);line-height:1.5;
-  padding-block:var(--s-4);overflow-wrap:anywhere;
-}
+/* the run record, closed by default */
+.runrec{border-top:1px solid var(--rule);margin-top:var(--s-2);padding-top:var(--s-2)}
+.runrec[hidden]{display:none}
+.runrec table{min-width:420px}
+.runrec .hint{margin-bottom:var(--s-2)}
+.runline{font-family:var(--mono);font-size:var(--t-xs);color:var(--muted);line-height:1.6;
+  overflow-wrap:anywhere;margin-top:var(--s-2)}
 
 /* ----------------------------------------------------------- kill switch - */
-.kill{border-top:1px solid var(--rule)}
-.kill-row{
-  display:flex;flex-wrap:wrap;align-items:center;gap:var(--s-2) var(--s-5);
-  padding-block:var(--s-2) var(--s-3);
-}
+.opsbar{border-top:1px solid var(--rule);padding-top:var(--s-2);padding-bottom:var(--s-2)}
+.ops-row{display:flex;flex-wrap:wrap;align-items:center;gap:var(--s-2) var(--s-3)}
 .state-pill{
-  display:inline-flex;align-items:center;gap:var(--s-1);min-height:44px;padding:0 var(--s-3);
-  font-family:var(--mono);font-size:var(--t-xs);font-weight:600;letter-spacing:.1em;
+  display:inline-flex;align-items:center;gap:var(--s-1);min-height:44px;padding:10px var(--s-3);
+  font-family:var(--mono);font-size:var(--t-xs);font-weight:600;letter-spacing:.08em;
   text-transform:uppercase;white-space:nowrap;
   border:1px solid var(--rule);background:var(--surface-2);color:var(--muted);
   transition:color var(--motion),background-color var(--motion),border-color var(--motion);
 }
 .state-pill.live{background:var(--good-bg);border-color:var(--good-edge);color:var(--good)}
 .state-pill.halted{background:var(--miss-bg);border-color:var(--miss-edge);color:var(--miss)}
-.kill-controls{display:flex;align-items:flex-end;gap:var(--s-1);flex-wrap:wrap}
-.kill-note{flex:1 1 300px;min-width:260px;font-size:var(--t-xs);color:var(--muted);line-height:1.5}
-.kill-note.err{color:var(--miss)}
+.ops-controls{display:flex;align-items:flex-end;gap:var(--s-1);flex-wrap:wrap}
+.ops-note{flex:1 1 320px;min-width:260px;font-size:var(--t-xs);color:var(--muted);line-height:1.5}
+.ops-note.err{color:var(--miss)}
 
 /* ------------------------------------------------------------- controls -- */
 .field{display:grid;gap:4px;min-width:0}
 .field > label,.lbl{
-  font-family:var(--mono);font-size:var(--t-xs);font-weight:500;letter-spacing:.1em;
+  font-family:var(--mono);font-size:var(--t-xs);font-weight:500;letter-spacing:.08em;
   text-transform:uppercase;color:var(--muted);line-height:1.5;
 }
 .field input,.field select,.field textarea{
   font-family:var(--ui);font-size:var(--t-sm);line-height:1.5;color:var(--ink);
   background:var(--surface);border:1px solid var(--rule);border-radius:0;
-  padding:var(--s-1) var(--s-2);min-height:44px;width:100%;
-  transition:border-color var(--motion);
+  padding:10px var(--s-2);min-height:44px;width:100%;
+  transition:border-color var(--motion),background-color var(--motion);
 }
 .field input.mono{font-family:var(--mono)}
-.field textarea{min-height:104px;resize:vertical;padding-block:var(--s-1)}
+.field textarea{min-height:104px;resize:vertical}
 .field input:hover,.field select:hover,.field textarea:hover{border-color:var(--muted)}
-.field input::placeholder,.field textarea::placeholder{color:var(--muted);opacity:1}
+.field input:focus-visible,.field select:focus-visible,.field textarea:focus-visible{border-color:var(--accent)}
+.field input[aria-invalid="true"]{border-color:var(--miss);background:var(--miss-bg)}
+.field input:disabled,.field select:disabled,.field textarea:disabled{
+  background:var(--surface-2);color:var(--muted);cursor:not-allowed;border-style:dashed}
 .field-hint{font-size:var(--t-xs);color:var(--muted);line-height:1.5}
 
 .btn{
+  position:relative;overflow:hidden;
   display:inline-flex;align-items:center;justify-content:center;gap:var(--s-1);
-  font-family:var(--mono);font-size:var(--t-xs);font-weight:600;letter-spacing:.08em;
-  text-transform:uppercase;min-height:44px;padding:0 var(--s-3);cursor:pointer;
+  font-family:var(--mono);font-size:var(--t-xs);font-weight:600;letter-spacing:.06em;
+  text-transform:uppercase;min-height:44px;padding:10px var(--s-3);cursor:pointer;
   border:1px solid var(--ink);background:transparent;color:var(--ink);border-radius:0;
-  transition:background-color var(--motion),color var(--motion),border-color var(--motion),opacity var(--motion);
+  transition:background-color var(--motion),color var(--motion),border-color var(--motion),
+    transform var(--motion),opacity var(--motion);
 }
 .btn:hover{background:var(--ink);color:var(--paper)}
-.btn[disabled]{opacity:.38;cursor:not-allowed}
-.btn[disabled]:hover{background:transparent;color:var(--ink)}
+.btn:active{transform:translateY(1px)}
+.btn[disabled]{opacity:.45;cursor:not-allowed;border-style:dashed}
+.btn[disabled]:hover{background:transparent;color:var(--ink);transform:none}
 .btn.danger{border-color:var(--miss);color:var(--miss)}
 .btn.danger:hover{background:var(--miss);color:var(--on-accent)}
 .btn.danger[disabled]:hover{background:transparent;color:var(--miss)}
 .btn.primary{background:var(--accent);border-color:var(--accent);color:var(--on-accent);width:100%}
 .btn.primary:hover{background:var(--ink);border-color:var(--ink);color:var(--paper)}
+.btn.primary[disabled]:hover{background:var(--accent);border-color:var(--accent);color:var(--on-accent)}
+/* Busy says so in words. A looping bar would be the only perpetual motion on
+   the page, for a call that finishes in under a millisecond. */
+.btn[aria-busy="true"]{cursor:progress}
+
+.ghost{
+  display:inline-flex;align-items:center;gap:6px;min-height:44px;padding:10px var(--s-2);cursor:pointer;
+  font-family:var(--mono);font-size:var(--t-xs);font-weight:500;letter-spacing:.04em;
+  color:var(--ink-2);border:1px solid transparent;
+  transition:color var(--motion),border-color var(--motion),background-color var(--motion);
+}
+.ghost:hover{color:var(--accent);border-color:var(--rule);background:var(--surface)}
+.ghost:active{color:var(--ink)}
+.ghost[aria-expanded="true"]{color:var(--accent);border-color:var(--rule);background:var(--surface)}
+.ghost[aria-expanded="true"] .chev-d{transform:rotate(180deg)}
+.ghost .chev-d{transition:transform var(--motion)}
+
 .link-btn{
   display:inline-flex;align-items:center;gap:6px;min-height:44px;cursor:pointer;
-  font-family:var(--mono);font-size:var(--t-xs);font-weight:500;letter-spacing:.06em;
-  text-transform:uppercase;color:var(--accent);
-  border-bottom:1px solid var(--accent);padding-block:0;
+  font-family:var(--mono);font-size:var(--t-xs);font-weight:500;letter-spacing:.04em;
+  color:var(--accent);border-bottom:1px solid var(--accent);
   transition:color var(--motion),border-color var(--motion);
 }
 .link-btn:hover{color:var(--ink);border-color:var(--ink)}
+.link-btn:active{opacity:.7}
+
+/* --------------------------------------------------- definition trigger -- */
+.def{
+  font:inherit;letter-spacing:inherit;text-transform:inherit;color:inherit;padding:0;cursor:help;
+  text-align:inherit;text-decoration:underline dotted;text-decoration-color:currentColor;
+  text-decoration-thickness:1px;text-underline-offset:3px;
+  transition:color var(--motion),text-decoration-color var(--motion);
+}
+.def:hover,.def[data-open="1"]{color:var(--accent);text-decoration-color:var(--accent)}
+.def:active{color:var(--ink)}
+.def:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+/* Standalone labels take the whole cell as their target; inline triggers
+   inside a sentence are exempt from the 44px rule. */
+.led .def::after,.readout .def::after,.rail-name .def::after{content:"";position:absolute;inset:0}
+
+.deftip{
+  position:fixed;z-index:200;display:none;max-width:320px;
+  background:var(--invert);color:var(--on-invert);padding:var(--s-2) var(--s-3);
+  font-size:var(--t-sm);line-height:1.5;
+}
+.deftip.open{display:block}
+.deftip[popover]{margin:0;border:0;inset:auto;overflow:visible}
+.deftip .t{display:block;font-family:var(--mono);font-size:var(--t-xs);font-weight:500;
+  letter-spacing:.02em;color:var(--on-invert-2);margin-bottom:4px;line-height:1.5}
 
 /* ---------------------------------------------------------------- layout - */
-main{padding-block:var(--s-6) var(--s-6)}
+main{padding-top:var(--s-6);padding-bottom:var(--s-6)}
 .shell{display:grid;grid-template-columns:320px minmax(0,1fr);gap:var(--s-6);align-items:start}
 .rail{display:grid;gap:var(--s-6);min-width:0}
 .work{display:grid;gap:var(--s-6);min-width:0}
@@ -215,7 +301,7 @@ main{padding-block:var(--s-6) var(--s-6)}
   overflow-wrap:anywhere;line-height:1.5;
 }
 .panel-body{padding-top:var(--s-3);min-width:0}
-.hint{font-size:var(--t-xs);color:var(--muted);line-height:1.5;max-width:78ch}
+.hint{font-size:var(--t-xs);color:var(--muted);line-height:1.6;max-width:78ch}
 .hint + *{margin-top:var(--s-3)}
 
 /* ----------------------------------------------------------- sample rail - */
@@ -224,24 +310,27 @@ main{padding-block:var(--s-6) var(--s-6)}
   display:grid;gap:4px;width:100%;text-align:left;cursor:pointer;
   border-bottom:1px solid var(--rule);padding:var(--s-2) var(--s-1);
   margin-inline:calc(var(--s-1) * -1);min-height:44px;
-  transition:background-color var(--motion),box-shadow var(--motion);
+  transition:background-color var(--motion);
 }
 .sample:hover{background:var(--surface-2)}
-.sample[aria-pressed="true"]{background:var(--surface-2);box-shadow:inset 3px 0 0 var(--accent)}
+.sample:active{background:var(--accent-wash)}
+.sample[aria-current="true"]{background:var(--surface-2)}
+.sample[aria-current="true"] .sample-id{color:var(--accent)}
+.sample[aria-current="true"] .go{color:var(--accent);opacity:1}
 .sample-top{display:flex;justify-content:space-between;align-items:center;gap:var(--s-1)}
 .sample-id{
   font-family:var(--mono);font-size:var(--t-sm);font-weight:600;letter-spacing:.01em;
-  display:inline-flex;align-items:center;gap:6px;
+  display:inline-flex;align-items:center;gap:6px;transition:color var(--motion);
 }
-.sample .chev-r{color:var(--muted);transition:color var(--motion),transform var(--motion)}
-.sample:hover .chev-r{color:var(--accent);transform:translateX(2px)}
-.sample[aria-pressed="true"] .chev-r{color:var(--accent)}
+.sample .go{color:var(--muted);opacity:0;transition:opacity var(--motion),transform var(--motion),color var(--motion)}
+.sample:hover .go{opacity:1;color:var(--accent);transform:translateX(2px)}
+.sample:focus-visible .go{opacity:1;color:var(--accent)}
 .sample-why{font-size:var(--t-xs);color:var(--ink-2);line-height:1.5}
 .sample-meta{font-family:var(--mono);font-size:var(--t-xs);color:var(--muted);line-height:1.5}
 
 .chip{
   font-family:var(--mono);font-size:var(--t-xs);font-weight:500;letter-spacing:.02em;
-  padding:1px var(--s-1);white-space:nowrap;line-height:1.5;
+  padding:3px var(--s-1);white-space:nowrap;line-height:1.4;
   background:var(--warn-bg);color:var(--warn);border:1px solid var(--warn-edge);
 }
 .chip.answered{background:var(--good-bg);color:var(--good);border-color:var(--good-edge)}
@@ -254,25 +343,26 @@ main{padding-block:var(--s-6) var(--s-6)}
 .empty h2{font-size:var(--t-xl);font-weight:600;letter-spacing:-.02em;line-height:1.3}
 .empty p{color:var(--ink-2);font-size:var(--t-md);margin-top:var(--s-2)}
 .failure{
-  background:var(--miss-bg);border-left:3px solid var(--miss);padding:var(--s-3) var(--s-4);
+  background:var(--miss-bg);border-top:2px solid var(--miss);padding:var(--s-3) var(--s-4);
   color:var(--ink);font-size:var(--t-sm);
 }
 .failure b{
   display:flex;align-items:center;gap:6px;font-family:var(--mono);font-size:var(--t-xs);
-  font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--miss);
+  font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--miss);
   margin-bottom:var(--s-1);
 }
 
 /* ------------------------------------------------- ticket as it arrived -- */
 .facts{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:var(--s-3)}
 .fact{
-  font-family:var(--mono);font-size:var(--t-xs);line-height:1.5;color:var(--ink-2);
-  border:1px solid var(--rule);padding:1px var(--s-1);white-space:nowrap;
+  font-family:var(--mono);font-size:var(--t-xs);line-height:1.4;color:var(--ink-2);
+  border:1px solid var(--rule);padding:3px var(--s-1);white-space:nowrap;
 }
 .fact b{color:var(--muted);font-weight:500}
 .fact.flagged{background:var(--warn-bg);border-color:var(--warn-edge);color:var(--warn)}
 .fact.flagged b{color:var(--warn)}
-.ticket-subject{font-size:var(--t-xl);font-weight:600;letter-spacing:-.02em;line-height:1.3;margin-bottom:var(--s-2)}
+.ticket-subject{font-size:var(--t-xl);font-weight:600;letter-spacing:-.02em;line-height:1.3;
+  margin-bottom:var(--s-2)}
 .ticket-text{
   white-space:pre-wrap;overflow-wrap:anywhere;font-size:var(--t-md);color:var(--ink-2);
   max-width:86ch;border-left:2px solid var(--rule);padding-left:var(--s-3);
@@ -280,73 +370,95 @@ main{padding-block:var(--s-6) var(--s-6)}
 }
 
 /* -------------------------------------------------------------- verdict -- */
-/* The one filled surface on the page. */
+/* The one filled surface, and the one authored motion moment on the page. The
+   coloured wash sweeps in under text that is already at full opacity, so
+   nothing appears from nothing: the decision arrives, it does not fade up. */
 .verdict{
+  position:relative;isolation:isolate;
   display:grid;grid-template-columns:minmax(0,1fr) minmax(0,auto);gap:var(--s-5) var(--s-6);
-  padding:var(--s-5);background:var(--surface-2);border-left:3px solid var(--muted);
-  --edge:var(--rule);
+  padding:var(--s-5);background:var(--surface-2);--edge:var(--rule);--tint:var(--surface-2);
+  --edge-color:var(--muted);
 }
-.verdict.answered{background:var(--good-bg);border-left-color:var(--good);--edge:var(--good-edge)}
-.verdict.escalated{background:var(--warn-bg);border-left-color:var(--warn);--edge:var(--warn-edge)}
-.verdict.stopped{background:var(--miss-bg);border-left-color:var(--miss);--edge:var(--miss-edge)}
-.verdict-kicker{
-  font-family:var(--mono);font-size:var(--t-xs);font-weight:500;letter-spacing:.14em;
-  text-transform:uppercase;color:var(--muted);line-height:1.5;
+/* Secondary text inside the band is tinted from the band's own hue rather than
+   dropped to a neutral grey. Measured on their grounds: 5.26, 5.42 and 5.50:1. */
+.verdict.answered{--tint:var(--good-bg);--edge:var(--good-edge);--edge-color:var(--good);
+  --muted-on:#55675c}
+.verdict.escalated{--tint:var(--warn-bg);--edge:var(--warn-edge);--edge-color:var(--warn);
+  --muted-on:#6d5f4d}
+.verdict.stopped{--tint:var(--miss-bg);--edge:var(--miss-edge);--edge-color:var(--miss);
+  --muted-on:#6f5850}
+.verdict::before{
+  content:"";position:absolute;inset:0;z-index:-1;background:var(--tint);
+  animation:wash 300ms var(--expo) both;
 }
-.verdict-line{display:flex;flex-wrap:wrap;align-items:baseline;gap:var(--s-2);margin-top:var(--s-1)}
-.verdict-line strong{font-size:var(--t-2xl);font-weight:600;letter-spacing:-.025em;line-height:1.2}
-.verdict.answered .verdict-line strong{color:var(--good)}
-.verdict.escalated .verdict-line strong{color:var(--warn)}
-.verdict.stopped .verdict-line strong{color:var(--miss)}
+.verdict::after{
+  content:"";position:absolute;left:0;right:0;top:0;height:2px;background:var(--edge-color);
+  transform-origin:left;animation:draw 340ms var(--expo) both;
+}
+@keyframes wash{from{clip-path:inset(0 100% 0 0)}to{clip-path:inset(0 0 0 0)}}
+@keyframes draw{from{transform:scaleX(0)}to{transform:scaleX(1)}}
+@keyframes settle{from{transform:translateY(6px)}to{transform:translateY(0)}}
+.verdict-line{display:flex;flex-wrap:wrap;align-items:baseline;gap:var(--s-2);
+  animation:settle 260ms 40ms var(--expo) both}
+.verdict-line h2{font-size:var(--t-2xl);font-weight:600;letter-spacing:-.025em;line-height:1.2}
+.verdict.answered .verdict-line h2{color:var(--good)}
+.verdict.escalated .verdict-line h2{color:var(--warn)}
+.verdict.stopped .verdict-line h2{color:var(--miss)}
 .verdict-rule{
   font-family:var(--mono);font-size:var(--t-sm);font-weight:600;letter-spacing:.01em;
-  padding:2px var(--s-1);background:var(--surface);border:1px solid currentColor;white-space:nowrap;
+  padding:4px var(--s-1);background:var(--surface);border:1px solid currentColor;white-space:nowrap;
+  cursor:help;transition:background-color var(--motion),color var(--motion);
 }
+.verdict-rule .def{text-decoration-color:currentColor;color:inherit}
+.verdict-rule:hover{background:currentColor}
+.verdict-rule:hover .def{color:var(--surface)}
 .verdict.answered .verdict-rule{color:var(--good)}
 .verdict.escalated .verdict-rule{color:var(--warn)}
 .verdict.stopped .verdict-rule{color:var(--miss)}
-.verdict-reason{margin-top:var(--s-2);font-size:var(--t-md);color:var(--ink-2);max-width:80ch}
+.verdict-reason{margin-top:var(--s-2);font-size:var(--t-md);color:var(--ink-2);max-width:80ch;
+  animation:settle 260ms 80ms var(--expo) both}
 .readout{
-  display:grid;gap:var(--s-2);align-content:start;min-width:160px;
+  display:grid;gap:var(--s-2);align-content:start;min-width:168px;
   border-left:1px solid var(--edge);padding-left:var(--s-5);
+  animation:settle 260ms 120ms var(--expo) both;
 }
+.readout > div{position:relative}
 .readout .k{
-  font-family:var(--mono);font-size:var(--t-xs);font-weight:500;letter-spacing:.1em;
-  text-transform:uppercase;color:var(--muted);line-height:1.5;
+  font-family:var(--mono);font-size:var(--t-xs);font-weight:500;letter-spacing:.08em;
+  text-transform:uppercase;color:var(--muted-on,var(--muted));line-height:1.5;
 }
 .readout .v{
-  font-family:var(--mono);font-size:var(--t-lg);font-weight:600;font-variant-numeric:tabular-nums;
-  line-height:1.3;overflow-wrap:anywhere;
+  font-family:var(--mono);font-size:var(--t-lg);font-weight:600;line-height:1.3;overflow-wrap:anywhere;
 }
-.readout .v small{font-size:var(--t-xs);font-weight:400;color:var(--muted)}
+.readout .v small{font-size:var(--t-xs);font-weight:400;color:var(--muted-on,var(--muted))}
 .readout .v.text{font-size:var(--t-sm)}
 
 /* ------------------------------------------------------- classification -- */
 .intent-line{display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:var(--s-2)}
 .intent{font-family:var(--mono);font-size:var(--t-xl);font-weight:600;letter-spacing:-.02em;line-height:1.3}
-.conf{font-family:var(--mono);font-size:var(--t-xl);font-weight:600;font-variant-numeric:tabular-nums;line-height:1.3}
+.conf{font-family:var(--mono);font-size:var(--t-xl);font-weight:600;line-height:1.3}
 .conf.low{color:var(--warn)}
 .meter{
   height:10px;background:var(--surface-2);border:1px solid var(--rule);
   margin-top:var(--s-2);position:relative;overflow:hidden;
 }
-.meter i{display:block;height:100%;background:var(--good);transition:width var(--motion-slow)}
+.meter i{display:block;height:100%;background:var(--good);transform-origin:left;
+  animation:draw 420ms 60ms var(--expo) both}
 .meter i.low{background:var(--warn)}
 .meter u{position:absolute;top:-2px;bottom:-2px;width:2px;background:var(--ink)}
 .meter-legend{
   display:flex;justify-content:space-between;gap:var(--s-2);flex-wrap:wrap;
   font-family:var(--mono);font-size:var(--t-xs);color:var(--muted);margin-top:6px;line-height:1.5;
 }
-.sub-note{font-size:var(--t-xs);color:var(--ink-2);margin-top:var(--s-3);max-width:78ch;line-height:1.5}
+.sub-note{font-size:var(--t-xs);color:var(--ink-2);margin-top:var(--s-3);max-width:78ch;line-height:1.6}
 .sub-note b{font-family:var(--mono);font-weight:600;color:var(--ink)}
 .runners{margin-top:var(--s-3);border-top:1px solid var(--rule);padding-top:var(--s-1)}
 .runners-head,.runner{
   display:grid;grid-template-columns:minmax(0,1fr) auto;gap:var(--s-2);
-  font-family:var(--mono);font-size:var(--t-xs);font-variant-numeric:tabular-nums;
-  padding-block:3px;line-height:1.5;
+  font-family:var(--mono);font-size:var(--t-xs);padding-top:3px;padding-bottom:3px;line-height:1.5;
 }
 .runners-head{
-  font-weight:500;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);
+  font-weight:500;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);
   border-bottom:1px solid var(--rule);padding-bottom:6px;margin-bottom:4px;
 }
 .runner{color:var(--ink-2)}
@@ -354,38 +466,36 @@ main{padding-block:var(--s-6) var(--s-6)}
 
 /* ------------------------------------------------------------- passages -- */
 .passages{border-top:1px solid var(--rule);margin-top:var(--s-3)}
-.passage{border-bottom:1px solid var(--rule);transition:background-color var(--motion),box-shadow var(--motion)}
+.passage{border-bottom:1px solid var(--rule);transition:background-color var(--motion)}
 .passage:hover{background:var(--surface-2)}
-.passage.lit{background:var(--surface-2);box-shadow:inset 3px 0 0 var(--accent)}
+.passage.is-current{background:var(--accent-wash)}
 .passage-head{
   display:grid;grid-template-columns:28px minmax(0,1fr) 84px 16px;align-items:center;
   gap:var(--s-2);width:100%;text-align:left;cursor:pointer;min-height:44px;
   padding:var(--s-1);margin-inline:calc(var(--s-1) * -1);
 }
+.passage-head:active{background:var(--accent-wash)}
 .mark{
-  font-family:var(--mono);font-size:var(--t-xs);font-weight:600;line-height:1.5;
+  font-family:var(--mono);font-size:var(--t-xs);font-weight:600;line-height:1;
   text-align:center;width:24px;height:24px;display:grid;place-items:center;
-  background:var(--accent);color:var(--on-accent);
-}
-.mark.none{background:none;color:var(--muted);font-weight:400}
+  background:var(--accent);color:var(--on-accent);transition:background-color var(--motion)}
+/* Not cited: the slot stays empty. A box here reads as an unticked checkbox. */
+.mark.none{background:none;color:transparent}
 .p-cell{min-width:0}
 .p-title{
   display:block;font-size:var(--t-sm);line-height:1.5;color:var(--ink);
   overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
 }
 .p-id{display:block;font-family:var(--mono);font-size:var(--t-xs);color:var(--muted);line-height:1.5}
-.p-score{
-  font-family:var(--mono);font-size:var(--t-sm);font-variant-numeric:tabular-nums;
-  text-align:right;line-height:1.5;
-}
+.p-score{font-family:var(--mono);font-size:var(--t-sm);text-align:right;line-height:1.5}
 .p-bar{display:block;height:2px;background:var(--accent);margin-top:3px;margin-left:auto;opacity:.6}
 .chev-d{color:var(--muted);margin-inline:auto;transition:transform var(--motion),color var(--motion)}
 .passage-head:hover .chev-d{color:var(--accent)}
 .passage.open .chev-d{transform:rotate(180deg);color:var(--accent)}
 .passage-detail{padding:0 0 var(--s-3) 40px}
 .section-name{
-  font-family:var(--mono);font-size:var(--t-xs);font-weight:500;letter-spacing:.08em;
-  text-transform:uppercase;color:var(--muted);margin-bottom:6px;line-height:1.5;overflow-wrap:anywhere;
+  font-family:var(--mono);font-size:var(--t-xs);letter-spacing:.02em;
+  color:var(--muted);margin-bottom:6px;line-height:1.5;overflow-wrap:anywhere;
 }
 .excerpt{
   white-space:pre-wrap;overflow-wrap:anywhere;background:var(--surface-2);
@@ -397,20 +507,23 @@ main{padding-block:var(--s-6) var(--s-6)}
 .reply{font-size:var(--t-md);max-width:76ch;overflow-wrap:anywhere;color:var(--ink)}
 .reply p{margin-bottom:var(--s-2)}
 .reply p:last-child{margin-bottom:0}
-.reply .sig{color:var(--muted);font-size:var(--t-sm);border-top:1px solid var(--rule);padding-top:var(--s-2);margin-top:var(--s-3)}
+.reply .sig{color:var(--muted);font-size:var(--t-sm);border-top:1px solid var(--rule);
+  padding-top:var(--s-2);margin-top:var(--s-3)}
 .cite{
   position:relative;display:inline-block;font-family:var(--mono);font-size:var(--t-xs);
   font-weight:600;color:var(--accent);background:var(--surface);
-  border:1px solid var(--accent);padding:0 4px;cursor:pointer;line-height:1.4;
+  border:1px solid var(--accent);padding:1px 5px;cursor:pointer;line-height:1.4;
   vertical-align:baseline;transition:background-color var(--motion),color var(--motion);
 }
-.cite::after{content:"";position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:44px;height:44px}
+.cite::after{content:"";position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);
+  width:44px;height:44px}
 .cite:hover,.cite.lit,.cite:focus-visible{background:var(--accent);color:var(--on-accent)}
+.cite:active{background:var(--ink);border-color:var(--ink);color:var(--paper)}
 .cite-list{margin-top:var(--s-3);border-top:1px solid var(--rule);padding-top:var(--s-1);display:grid}
 .cite-row{
   display:flex;gap:var(--s-1);flex-wrap:wrap;align-items:baseline;
   font-family:var(--mono);font-size:var(--t-xs);color:var(--ink-2);
-  padding-block:4px;line-height:1.5;
+  padding-top:4px;padding-bottom:4px;line-height:1.5;
 }
 .cite-row b{color:var(--accent)}
 .cite-row .dim{color:var(--muted)}
@@ -421,7 +534,7 @@ main{padding-block:var(--s-6) var(--s-6)}
 
 /* ----------------------------------------------------------- guardrails -- */
 .rails{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:var(--s-3);margin-top:var(--s-3)}
-.rail-cell{border-top:2px solid var(--good);padding:var(--s-1) 0 0;min-width:0}
+.rail-cell{border-top:2px solid var(--good);padding-top:var(--s-1);min-width:0}
 .rail-cell.fail{border-top-color:var(--miss);background:var(--miss-bg);padding:var(--s-1) var(--s-2) var(--s-2)}
 .rail-cell.flag{border-top-color:var(--warn);background:var(--warn-bg);padding:var(--s-1) var(--s-2) var(--s-2)}
 .rail-cell.na{border-top-color:var(--rule)}
@@ -430,11 +543,11 @@ main{padding-block:var(--s-6) var(--s-6)}
 .rail-cell.flag .rail-top{color:var(--warn)}
 .rail-cell.na .rail-top{color:var(--muted)}
 .rail-name{
-  font-family:var(--mono);font-size:var(--t-sm);font-weight:600;color:var(--ink);
-  line-height:1.5;overflow-wrap:anywhere;
+  position:relative;font-family:var(--mono);font-size:var(--t-sm);font-weight:600;color:var(--ink);
+  line-height:1.5;overflow-wrap:anywhere;min-height:24px;display:flex;align-items:center;
 }
 .rail-state{
-  font-family:var(--mono);font-size:var(--t-xs);font-weight:600;letter-spacing:.1em;
+  font-family:var(--mono);font-size:var(--t-xs);font-weight:600;letter-spacing:.08em;
   text-transform:uppercase;margin-top:6px;color:var(--good);line-height:1.5;
 }
 .rail-cell.fail .rail-state{color:var(--miss)}
@@ -448,19 +561,22 @@ table{border-collapse:collapse;width:100%;min-width:760px;font-size:var(--t-sm);
 th,td{padding:var(--s-1) var(--s-2);text-align:left;border-bottom:1px solid var(--rule);
   vertical-align:top;overflow-wrap:break-word}
 thead th{
-  font-family:var(--mono);font-size:var(--t-xs);font-weight:500;letter-spacing:.1em;
+  font-family:var(--mono);font-size:var(--t-xs);font-weight:500;letter-spacing:.08em;
   text-transform:uppercase;color:var(--muted);background:var(--surface-2);white-space:nowrap;
 }
+tbody tr{transition:background-color var(--motion)}
+tbody tr:hover{background:var(--surface-2)}
 tbody tr:last-child td{border-bottom:0}
-td.mono{font-family:var(--mono);font-size:var(--t-xs);font-variant-numeric:tabular-nums}
+td.mono{font-family:var(--mono);font-size:var(--t-xs)}
 td.reason{color:var(--ink-2);font-size:var(--t-xs);line-height:1.5}
 .stage{font-family:var(--mono);font-size:var(--t-xs);font-weight:600;letter-spacing:.02em}
 .stage i{display:block;font-style:normal;font-weight:400;color:var(--muted);margin-top:2px}
 .reqs{display:flex;flex-wrap:wrap;gap:4px;margin-top:6px}
 .req{
   font-family:var(--mono);font-size:var(--t-xs);color:var(--muted);
-  border:1px solid var(--rule);padding:0 4px;white-space:nowrap;line-height:1.5;
+  border:1px solid var(--rule);padding:2px 5px;white-space:nowrap;line-height:1.4;
 }
+.dim{color:var(--muted)}
 col.c-stage{width:11%} col.c-model{width:19%} col.c-pred{width:15%}
 col.c-conf{width:9%} col.c-act{width:13%} col.c-reason{width:33%}
 
@@ -470,6 +586,34 @@ footer{
   font-family:var(--mono);font-size:var(--t-xs);color:var(--muted);
   display:flex;flex-wrap:wrap;gap:var(--s-1) var(--s-5);line-height:1.5;
 }
+
+/* ----------------------------------------------------------- walkthrough - */
+/* Not a modal. The page stays visible and usable behind; only the keyboard is
+   held inside the step, which is what makes the step readable in order. */
+.wt-dim{position:fixed;z-index:57;pointer-events:none;box-shadow:0 0 0 9999px var(--scrim);
+  transition:top var(--motion-slow),left var(--motion-slow),width var(--motion-slow),
+    height var(--motion-slow)}
+.wt-ring{position:fixed;z-index:58;pointer-events:none;outline:2px solid var(--accent);
+  transition:top var(--motion-slow),left var(--motion-slow),width var(--motion-slow),
+    height var(--motion-slow)}
+.wt-card{
+  position:fixed;z-index:60;width:min(392px,calc(100vw - 32px));max-height:calc(100vh - 32px);
+  overflow:auto;background:var(--surface);border:1px solid var(--ink);
+  padding:var(--s-3) var(--s-4) var(--s-4);
+}
+.wt-step{font-family:var(--mono);font-size:var(--t-xs);font-weight:500;letter-spacing:.08em;
+  text-transform:uppercase;color:var(--accent);line-height:1.5}
+.wt-card h2{font-size:var(--t-lg);font-weight:600;letter-spacing:-.01em;line-height:1.3;
+  margin-top:4px}
+/* :focus, not :focus-visible: the card is only ever focused in code, and a
+   keyboard visitor needs to see where the step put them. */
+.wt-card:focus{outline:2px solid var(--accent);outline-offset:3px}
+.wt-card p{font-size:var(--t-sm);color:var(--ink-2);line-height:1.6;margin-top:var(--s-1)}
+.wt-actions{display:flex;flex-wrap:wrap;align-items:center;gap:var(--s-1);margin-top:var(--s-3)}
+.wt-actions .spacer{flex:1 1 auto}
+.wt-dots{display:flex;gap:4px;align-items:center}
+.wt-dots span{width:16px;height:2px;background:var(--rule)}
+.wt-dots span.on{background:var(--accent)}
 
 /* ---------------------------------------------------------- responsive -- */
 @media (max-width:1240px){
@@ -482,7 +626,8 @@ footer{
 }
 @media (max-width:860px){
   .wrap{padding-inline:var(--s-4)}
-  .stats{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .led{flex:1 1 44%;padding:var(--s-1) var(--s-3) 4px 0;border-top:1px solid var(--rule)}
+  .byline{text-align:left;flex:1 1 100%}
   .verdict{grid-template-columns:minmax(0,1fr)}
   .readout{border-left:0;border-top:1px solid var(--edge);padding-left:0;padding-top:var(--s-3);
     grid-template-columns:repeat(3,minmax(0,1fr))}
@@ -490,37 +635,45 @@ footer{
 }
 @media (max-width:560px){
   .wrap{padding-inline:var(--s-3)}
-  .stats{grid-template-columns:minmax(0,1fr)}
-  .stat--lead{grid-column:span 1}
+  /* one line per figure, label left and value right: six rows read as a spec
+     table rather than six stacked blocks taking half the screen. */
+  .led{flex:1 1 100%;display:flex;justify-content:space-between;align-items:baseline;
+    gap:var(--s-2);padding:var(--s-1) 0;border-top:1px solid var(--rule)}
+  .led dt{white-space:normal}
+  .led dd{justify-content:flex-end;text-align:right}
   .rails{grid-template-columns:minmax(0,1fr)}
   .form-grid{grid-template-columns:minmax(0,1fr)}
   .readout{grid-template-columns:minmax(0,1fr)}
   .byline{text-align:left}
   .verdict{padding:var(--s-3)}
-  .verdict-line strong{font-size:var(--t-xl)}
+  .verdict-line h2{font-size:var(--t-xl)}
   .passage-head{grid-template-columns:28px minmax(0,1fr) 64px 16px}
   .passage-detail{padding-left:0}
+  .wt-card{left:var(--s-1) !important;right:var(--s-1);width:auto;bottom:var(--s-1);top:auto !important;
+    max-height:64vh}
+  .deftip{max-width:calc(100vw - 24px)}
 }
 </style>
 </head>
 <body>
+
+<a class="skip-link" href="#work">Skip to the ticket</a>
 
 <header class="masthead">
   <div class="wrap">
     <div class="masthead-row">
       <div class="brand">
         <span class="brand-mark" aria-hidden="true">
-          <svg class="i i-lg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"
-               stroke-linecap="square" stroke-linejoin="miter" aria-hidden="true">
-            <rect x="3" y="3" width="18" height="18"/><path d="M3 9h18M9 21V9"/>
+          <svg class="i i-lg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+               stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <rect x="3" y="3" width="18" height="18"/><path d="M3 9h18"/><path d="M9 21V9"/>
           </svg>
         </span>
         <div>
-          <p class="eyebrow">CloudServe support triage</p>
           <h1>Operator console</h1>
-          <p class="strap">One ticket at a time, with everything the system decided about it: what it
-            thought the ticket was, what it retrieved, which rule routed it, what would be sent, and the
-            five log rows that reconstruct the lot afterwards.</p>
+          <p class="strap">CloudServe support triage, one ticket at a time, with everything the system
+            decided about it: what it thought the ticket was, what it retrieved, which rule routed it,
+            what would be sent, and the five log rows that reconstruct the lot afterwards.</p>
         </div>
       </div>
       <div class="byline">
@@ -528,30 +681,42 @@ footer{
         <p class="what">Forward Deployed AI Engineering capstone</p>
       </div>
     </div>
-
-    <section aria-label="Headline figures">
-      <div class="stats" id="stats"></div>
-      <p class="runline" id="runline">Loading the measured figures.</p>
-    </section>
   </div>
 
-  <div class="kill">
-    <div class="wrap kill-row">
+  <div class="strip">
+    <div class="wrap">
+      <div class="strip-row">
+        <dl class="ledger" id="ledger" aria-label="Measured figures from the recorded runs"></dl>
+        <div class="strip-tools">
+          <button class="ghost" id="runrecBtn" type="button" aria-expanded="false" aria-controls="runrec">
+            <span id="runrecIcon" aria-hidden="true"></span>Measured run
+          </button>
+          <button class="ghost" id="tourBtn" type="button">
+            <span id="tourIcon" aria-hidden="true"></span>Show me around
+          </button>
+        </div>
+      </div>
+      <div class="runrec" id="runrec" hidden></div>
+    </div>
+  </div>
+
+  <div class="opsbar">
+    <div class="wrap ops-row">
       <p class="state-pill" id="killState">
         <span id="killIcon" aria-hidden="true"></span><span id="killLabel">Checking</span>
       </p>
-      <div class="kill-controls">
+      <div class="ops-controls">
         <div class="field">
           <label for="adminToken">Admin token</label>
           <input id="adminToken" class="mono" type="password" autocomplete="off" spellcheck="false"
-                 style="width:200px">
+                 style="width:188px" aria-describedby="opsNote">
         </div>
         <button class="btn danger" id="haltBtn" type="button">Halt automation</button>
         <button class="btn" id="resumeBtn" type="button">Resume</button>
       </div>
-      <p class="kill-note" id="killNote" aria-live="polite">Writes <code>storage/HALT</code> through
-        <code>POST /admin/halt</code>. The next ticket accepted routes on R-00-kill-switch and goes to a
-        person with its draft attached. Nothing in flight is lost.</p>
+      <p class="ops-note" id="opsNote" aria-live="polite">Writes <code>storage/HALT</code> through
+        <code>POST /admin/halt</code>. The next ticket accepted routes on R-00 and goes to a person
+        with its draft attached. Nothing in flight is lost.</p>
     </div>
   </div>
 </header>
@@ -560,7 +725,7 @@ footer{
   <div class="shell">
 
     <div class="rail">
-      <section class="panel">
+      <section class="panel" id="samplesPanel">
         <div class="panel-head">
           <h2>Sample tickets</h2>
           <span class="meta" id="sampleCount"></span>
@@ -630,10 +795,14 @@ footer{
   </footer>
 </main>
 
+<p class="sr-only" id="srStatus" role="status" aria-live="polite"></p>
+<div class="sr-only" id="defSource"></div>
+
 <script>
 "use strict";
 
 const $ = (sel, root) => (root || document).querySelector(sel);
+const $$ = (sel, root) => Array.prototype.slice.call((root || document).querySelectorAll(sel));
 const ESCAPES = {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"};
 const esc = v => String(v === null || v === undefined ? "" : v).replace(/[&<>"']/g, c => ESCAPES[c]);
 const pct = (v, d) => (v === null || v === undefined) ? "&mdash;" : (v * 100).toFixed(d === undefined ? 1 : d) + "%";
@@ -642,24 +811,234 @@ const grouped = v => (v === null || v === undefined) ? "&mdash;" : Number(v).toL
 const words = s => String(s || "").replace(/_/g, " ");
 const REDUCED = !!(window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches);
 
-/* Inline SVG only. No emoji anywhere on this page, and no icon without a text
-   label beside it or an aria-label on its control. */
+/* ===========================================================================
+   Icons. One set, Lucide outline, inlined, every one drawn on the same
+   24-unit grid at stroke-width 2 with round caps and joins. No unicode glyph
+   is ever used as an icon, and no icon carries meaning on its own: each sits
+   beside a text label or inside a control with an accessible name.
+   =========================================================================== */
 const SVG_OPEN = '<svg class="i" viewBox="0 0 24 24" fill="none" stroke="currentColor" ' +
   'stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">';
 const ICON = {
-  chevronRight: SVG_OPEN + '<path d="m9 18 6-6-6-6"/></svg>',
+  arrowRight: SVG_OPEN + '<path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>',
   chevronDown: SVG_OPEN + '<path d="m6 9 6 6 6-6"/></svg>',
-  check: SVG_OPEN + '<circle cx="12" cy="12" r="9"/><path d="m8.5 12.5 2.5 2.5 4.5-5"/></svg>',
-  cross: SVG_OPEN + '<circle cx="12" cy="12" r="9"/><path d="m15 9-6 6M9 9l6 6"/></svg>',
-  alert: SVG_OPEN + '<path d="M12 4 2.7 20h18.6L12 4Z"/><path d="M12 10v4M12 17.2v.1"/></svg>',
-  dash: SVG_OPEN + '<circle cx="12" cy="12" r="9"/><path d="M8.5 12h7"/></svg>',
-  live: SVG_OPEN + '<circle cx="12" cy="12" r="9"/><path d="m8.5 12.5 2.5 2.5 4.5-5"/></svg>',
-  halted: SVG_OPEN + '<circle cx="12" cy="12" r="9"/><path d="m5.6 5.6 12.8 12.8"/></svg>',
-  up: SVG_OPEN + '<path d="M12 19V5M6 11l6-6 6 6"/></svg>',
-  down: SVG_OPEN + '<path d="M12 5v14M6 13l6 6 6-6"/></svg>'
+  circleCheck: SVG_OPEN + '<circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg>',
+  circleX: SVG_OPEN + '<circle cx="12" cy="12" r="10"/><path d="m15 9-6 6"/><path d="m9 9 6 6"/></svg>',
+  triangleAlert: SVG_OPEN + '<path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3"/>' +
+    '<path d="M12 9v4"/><path d="M12 17h.01"/></svg>',
+  circleMinus: SVG_OPEN + '<circle cx="12" cy="12" r="10"/><path d="M8 12h8"/></svg>',
+  ban: SVG_OPEN + '<circle cx="12" cy="12" r="10"/><path d="m4.9 4.9 14.2 14.2"/></svg>',
+  arrowUp: SVG_OPEN + '<path d="m5 12 7-7 7 7"/><path d="M12 19V5"/></svg>',
+  arrowDown: SVG_OPEN + '<path d="M12 5v14"/><path d="m19 12-7 7-7-7"/></svg>',
+  compass: SVG_OPEN + '<circle cx="12" cy="12" r="10"/>' +
+    '<path d="m16.24 7.76-2.12 6.36-6.36 2.12 2.12-6.36z"/></svg>',
+  x: SVG_OPEN + '<path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>',
+  table: SVG_OPEN + '<path d="M12 3v18"/><rect width="18" height="18" x="3" y="3"/><path d="M3 9h18"/>' +
+    '<path d="M3 15h18"/></svg>'
+};
+const sized = (icon, cls) => icon.replace('class="i"', 'class="i ' + cls + '"');
+
+/* ===========================================================================
+   Plain-language definitions. Every jargon term on the page is defined here
+   and nowhere else, so the wording is changed in one file in one place.
+   Written for CloudServe's head of support, who is not an engineer: no term
+   inside a definition needs a definition of its own.
+   =========================================================================== */
+const DEFINITIONS = {
+  "fcr": {
+    t: "First contact resolution",
+    d: "The share of tickets settled by the first reply, with nobody having to come back to them. " +
+       "It is the number CloudServe already tracks, which is why it is the one worth comparing against."
+  },
+  "escalation": {
+    t: "Escalated to a human",
+    d: "The share of tickets handed to a support engineer instead of being answered on the spot. " +
+       "A low number is not automatically good: some tickets should always reach a person."
+  },
+  "citation-accuracy": {
+    t: "Citation accuracy",
+    d: "How often the article a reply points at is the one the answer key says should have been used. " +
+       "The first figure counts every reply sent; the second counts only tickets the help articles " +
+       "actually cover, and the gap between them is the tickets nothing covers."
+  },
+  "calibration": {
+    t: "Calibration error",
+    d: "When the system says it is 90% sure, how often it is actually right. " +
+       "Lower is better, and 0 would be perfect."
+  },
+  "decisions": {
+    t: "Decisions logged",
+    d: "One row written every time the system makes a call about a ticket: what it thought, how sure " +
+       "it was, and what it did. Five rows per ticket, kept so any decision can be reconstructed later."
+  },
+  "kb": {
+    t: "Knowledge base",
+    d: "The set of CloudServe help articles the system is allowed to answer from. It cannot answer " +
+       "from anything else, so a subject missing here is a subject it will always pass to a person."
+  },
+  "bm25": {
+    t: "BM25",
+    d: "The method used to pick help articles for a ticket. It compares the words in the two and " +
+       "rewards rare words over common ones; it has no idea what any of the words mean."
+  },
+  "conf-threshold": {
+    t: "Confidence threshold",
+    d: "How sure the system has to be about what a ticket is asking before it will answer without a " +
+       "person. Anything under the bar goes to a support engineer instead."
+  },
+  "cost-threshold": {
+    t: "High-cost threshold",
+    d: "A stricter bar for subjects where a wrong answer costs more than a slow one, such as billing " +
+       "or where a customer's data is held. The system has to be surer before it answers one of those."
+  },
+  "calibrated-p": {
+    t: "Calibrated P(this prediction is correct)",
+    d: "The system's own estimate of the chance it has read the ticket correctly, corrected so the " +
+       "figure can be taken at face value. 80% should mean right about eight times in ten."
+  },
+  "verified": {
+    t: "Verified resolution",
+    d: "Counted only where the answer key confirms the reply was the right one. Having sent something " +
+       "is not the same as having resolved something, and this is the stricter of the two counts."
+  },
+  "relevance-floor": {
+    t: "Relevance floor",
+    d: "The lowest score an article can have and still be shown at all. Anything weaker is treated as " +
+       "nothing found, which is a result in its own right."
+  },
+  "recall": {
+    t: "Retrieval recall",
+    d: "How often the article that should have been found was somewhere in the handful pulled back. " +
+       "It says nothing about whether the right one came top."
+  },
+  "agreement": {
+    t: "Routing agreement",
+    d: "How often the choice to answer or to escalate matches what the answer key says should have " +
+       "happened. Disagreement is not always an error: some of it is the system being more careful."
+  },
+  "never-auto": {
+    t: "Must never answer automatically",
+    d: "Tickets the answer key marks as needing a person whatever happens, a security incident being " +
+       "the obvious case. One slipping through would be a serious failure, so they are counted apart."
+  },
+  "latency": {
+    t: "Latency",
+    d: "The time from the ticket arriving to the decision being made. It does not include how long a " +
+       "person then takes over it."
+  },
+  "threshold-applied": {
+    t: "Threshold applied",
+    d: "The bar this particular ticket had to clear. Most are held to the ordinary bar; the expensive " +
+       "subjects are held to a higher one."
+  },
+  "generated-by": {
+    t: "Generated by",
+    d: "How the reply text was produced. Extractive means the wording can only be sentences that " +
+       "already exist in a help article, so there is nothing for the system to make up."
+  },
+  "intent": {
+    t: "Intent",
+    d: "What the system decided the ticket is about, picked from 22 categories learnt from past " +
+       "tickets. Everything after it, including whether it may answer at all, follows from this."
+  },
+  "urgency": {
+    t: "Urgency",
+    d: "How quickly the ticket needs attention. It is set by a fixed table rather than a model, " +
+       "because the wording of a ticket turned out not to predict it."
+  },
+  "passage": {
+    t: "Passage",
+    d: "One section of a help article. Articles are split up so a reply can point at the few " +
+       "paragraphs it actually used rather than at a whole page."
+  },
+  "escalation-note": {
+    t: "Handover note",
+    d: "The summary that goes to the support engineer: what the system worked out, what it was unsure " +
+       "about, and which articles looked relevant. The engineer starts from something, not nothing."
+  },
+  "kill-switch": {
+    t: "Kill switch",
+    d: "One control that stops every automatic reply at once. Tickets carry on arriving and carry on " +
+       "being worked out; they simply all go to a person until it is switched back."
+  },
+  "runners-up": {
+    t: "Runners-up",
+    d: "The categories the system considered and rejected, with the score it gave each. A close second " +
+       "is the sign of a ticket that could reasonably have been read two ways."
+  },
+  "decision-log": {
+    t: "Decision log",
+    d: "The permanent record of what happened to a ticket, written as it happened rather than " +
+       "reconstructed afterwards. It is what anyone reads months later to answer why."
+  },
+  "R-00": {
+    t: "R-00 kill switch",
+    d: "An operator has switched automatic replies off, so this ticket goes to a person with its draft " +
+       "and its sources attached. Nothing in flight is lost."
+  },
+  "R-01": {
+    t: "R-01 policy class",
+    d: "Some subjects are never answered automatically however sure the system is, security and " +
+       "compliance among them. Confidence is deliberately irrelevant here."
+  },
+  "R-01b": {
+    t: "R-01b injection",
+    d: "The ticket was written to look like an instruction to the system rather than a question from a " +
+       "customer. It is held back and recorded, whether or not it would have worked."
+  },
+  "R-02": {
+    t: "R-02 no grounding",
+    d: "Nothing in the help articles came close enough to the question, so there is nothing to answer " +
+       "from. Saying nothing is the correct result here."
+  },
+  "R-03": {
+    t: "R-03 high-cost class",
+    d: "The subject is one where being wrong is expensive, so the ticket had to clear a higher bar " +
+       "than usual and did not clear it."
+  },
+  "R-04": {
+    t: "R-04 below threshold",
+    d: "The system was not sure enough that it understood what the ticket was asking, so it passed the " +
+       "ticket on rather than guess."
+  },
+  "R-05": {
+    t: "R-05 auto-respond",
+    d: "Nothing held the ticket back and a help article covered it, so a reply went out with that " +
+       "article cited."
+  },
+  "R-06": {
+    t: "R-06 generator declined",
+    d: "The ticket was clear to answer, but no reply could be written from the articles found. It goes " +
+       "to a person rather than out half-finished."
+  },
+  "g-pii": {
+    t: "Private data check",
+    d: "Looks for a customer's own details in the draft reply: an email address, an account reference, " +
+       "a card number. It stops the reply outright rather than deleting the offending part."
+  },
+  "g-injection": {
+    t: "Injection check",
+    d: "Reads the customer's own words for anything written to steer the system rather than ask it " +
+       "something. Recorded whether or not it had any effect."
+  },
+  "g-grounding": {
+    t: "Grounding check",
+    d: "Checks that every paragraph making a factual claim carries a numbered marker, and that each " +
+       "marker points at an article that really exists."
+  },
+  "g-commitments": {
+    t: "Commitments check",
+    d: "Looks for promises the system has no authority to make: money back, a fix, a date, or " +
+       "something being on the roadmap."
+  },
+  "g-confidence_floor": {
+    t: "Confidence floor check",
+    d: "A last look at whether the system was sure enough to be answering at all, in case something " +
+       "earlier let a weak one through."
+  }
 };
 
-const STATE = {samples: [], current: null, corpus: {}, marks: {}, composed: 0};
+const STATE = {samples: [], current: null, corpus: {}, marks: {}, composed: 0, ready: false};
 
 async function getJSON(url, options) {
   const response = await fetch(url, options);
@@ -672,60 +1051,203 @@ async function getJSON(url, options) {
   return payload;
 }
 
-/* ---------------- headline figures ----------------
-   The two figures the project is judged on lead, at twice the size and above a
-   heavy rule. The other four sit underneath on hairlines. Same data, a reading
-   order. */
+/* ===========================================================================
+   Definitions: the affordance, the popover and the screen reader wiring.
+   Every trigger keeps a permanent aria-describedby pointing at a hidden copy
+   of the text, so a screen reader gets the definition without anything having
+   to open. The visible popover is presentation only and lives in the top
+   layer (or fixed, where the popover API is missing) so it can never be
+   clipped by a scrolling ancestor.
+   =========================================================================== */
+const TIP = document.createElement("div");
+TIP.className = "deftip";
+TIP.setAttribute("role", "presentation");
+TIP.setAttribute("aria-hidden", "true");
+const HAS_POPOVER = typeof TIP.showPopover === "function";
+if (HAS_POPOVER) { TIP.setAttribute("popover", "manual"); }
+document.body.appendChild(TIP);
+
+let tipFor = null;
+let tipTimer = null;
+let tipDismissed = null;
+
+function defHTML(key, label) {
+  const entry = DEFINITIONS[key];
+  const text = label === undefined ? (entry ? entry.t : key) : label;
+  if (!entry) { return esc(text); }
+  return '<button class="def" type="button" data-def="' + esc(key) + '" ' +
+    'aria-describedby="def-' + esc(key) + '">' + esc(text) + '</button>';
+}
+
+function buildHiddenDefinitions() {
+  $("#defSource").innerHTML = Object.keys(DEFINITIONS).map(key =>
+    '<span id="def-' + esc(key) + '">' + esc(DEFINITIONS[key].t + ": " + DEFINITIONS[key].d) + '</span>'
+  ).join("");
+}
+
+function placeTip(trigger) {
+  const rect = trigger.getBoundingClientRect();
+  const box = TIP.getBoundingClientRect();
+  const margin = 12;
+  let top = rect.bottom + 8;
+  if (top + box.height > window.innerHeight - margin) {
+    const above = rect.top - box.height - 8;
+    top = above >= margin ? above : Math.max(margin, window.innerHeight - box.height - margin);
+  }
+  let left = rect.left;
+  if (left + box.width > window.innerWidth - margin) { left = window.innerWidth - box.width - margin; }
+  if (left < margin) { left = margin; }
+  TIP.style.top = Math.round(top) + "px";
+  TIP.style.left = Math.round(left) + "px";
+}
+
+function openTip(trigger) {
+  const key = trigger.dataset.def;
+  const entry = DEFINITIONS[key];
+  if (!entry || tipDismissed === trigger) { return; }
+  window.clearTimeout(tipTimer);
+  if (tipFor && tipFor !== trigger) { tipFor.removeAttribute("data-open"); }
+  tipFor = trigger;
+  trigger.setAttribute("data-open", "1");
+  TIP.innerHTML = '<span class="t">' + esc(entry.t) + '</span>' + esc(entry.d);
+  TIP.classList.add("open");
+  if (HAS_POPOVER) { try { TIP.showPopover(); } catch (err) { /* already open */ } }
+  placeTip(trigger);
+}
+
+function closeTip() {
+  window.clearTimeout(tipTimer);
+  if (tipFor) { tipFor.removeAttribute("data-open"); }
+  tipFor = null;
+  TIP.classList.remove("open");
+  if (HAS_POPOVER) { try { TIP.hidePopover(); } catch (err) { /* already closed */ } }
+}
+
+function closeTipSoon() {
+  window.clearTimeout(tipTimer);
+  tipTimer = window.setTimeout(closeTip, 90);
+}
+
+document.addEventListener("pointerover", event => {
+  const trigger = event.target.closest && event.target.closest(".def");
+  if (!trigger) { return; }
+  if (tipDismissed && tipDismissed !== trigger) { tipDismissed = null; }
+  openTip(trigger);
+});
+document.addEventListener("pointerout", event => {
+  const trigger = event.target.closest && event.target.closest(".def");
+  if (!trigger) { return; }
+  // Leaving the trigger clears the Escape dismissal, so coming back reopens it.
+  if (trigger === tipDismissed) { tipDismissed = null; }
+  if (trigger === tipFor) { closeTipSoon(); }
+});
+document.addEventListener("focusin", event => {
+  const trigger = event.target.closest && event.target.closest(".def");
+  if (trigger) { openTip(trigger); }
+});
+document.addEventListener("focusout", event => {
+  const trigger = event.target.closest && event.target.closest(".def");
+  if (trigger && trigger === tipFor) { closeTipSoon(); }
+});
+document.addEventListener("click", event => {
+  const trigger = event.target.closest && event.target.closest(".def");
+  if (!trigger) { return; }
+  event.preventDefault();
+  if (tipFor === trigger) { tipDismissed = trigger; closeTip(); } else { tipDismissed = null; openTip(trigger); }
+});
+window.addEventListener("scroll", () => { if (tipFor) { placeTip(tipFor); } }, true);
+window.addEventListener("resize", () => { if (tipFor) { placeTip(tipFor); } });
+
+/* ===========================================================================
+   Measured figures. They were true before the page opened and will be true
+   after it closes, so they sit on one 12/14px line rather than in a wall of
+   large numbers. The full run record is one keystroke away and closed by
+   default.
+   =========================================================================== */
 
 function deltaPoints(value, baseline, betterWhen) {
   if (value === null || value === undefined || baseline === null || baseline === undefined) { return ""; }
   const points = (value - baseline) * 100;
   const improved = betterWhen === "down" ? points < 0 : points > 0;
-  const sign = points > 0 ? "+" : (points < 0 ? "-" : "");
-  const icon = points < 0 ? ICON.down : ICON.up;
+  const icon = points < 0 ? ICON.arrowDown : ICON.arrowUp;
   return '<span class="delta ' + (improved ? "good" : "warn") + '">' +
-    icon.replace('class="i"', 'class="i i-sm"') + sign + Math.abs(points).toFixed(1) + ' pts</span>';
+    sized(icon, "i-sm") + Math.abs(points).toFixed(1) + '</span>';
 }
 
-function statMarkup(t) {
-  return '<div class="stat' + (t.lead ? " stat--lead" : "") + '">' +
-    '<div class="stat-k">' + esc(t.k) + '</div>' +
-    '<div class="stat-v">' + t.v + (t.unit ? '<small>' + esc(t.unit) + '</small>' : '') + '</div>' +
-    '<div class="stat-s">' + (t.delta || "") + t.s + '</div></div>';
+function ledgerItem(item) {
+  return '<div class="led"><dt>' + defHTML(item.k, item.label) + '</dt>' +
+    '<dd>' + item.v + (item.unit ? '<small>' + esc(item.unit) + '</small>' : '') +
+    (item.delta || "") + (item.sub ? '<small>' + item.sub + '</small>' : '') + '</dd></div>';
 }
 
 function renderStats(stats) {
   const dev = stats.development || {};
   const val = stats.validation || {};
   const corpus = stats.corpus || {};
-  const tiles = [
-    {lead: true, k: "First contact resolution", v: pct(dev.first_contact_resolution),
-      delta: deltaPoints(dev.first_contact_resolution, dev.baseline_first_contact_resolution, "up"),
-      s: "baseline " + pct(dev.baseline_first_contact_resolution)},
-    {lead: true, k: "Escalated to a human", v: pct(dev.escalation_rate),
-      delta: deltaPoints(dev.escalation_rate, dev.baseline_escalation_rate, "down"),
-      s: "baseline " + pct(dev.baseline_escalation_rate)},
-    {k: "Citation accuracy", v: pct(dev.citation_accuracy),
-      s: grouped(dev.citation_accuracy_basis) + " of " + grouped(dev.responses_with_citations) +
-        " replies checked"},
-    {k: "Calibration error", v: fixed(dev.expected_calibration_error, 4),
-      s: "worst counted band " + fixed(dev.worst_band_gap_points, 1) + " pts"},
-    {k: "Decisions logged", v: grouped(dev.decisions_logged),
-      s: grouped(dev.tickets_with_decisions) + " tickets, " +
-        (dev.decision_log_reconciles ? "reconciles exactly" : "does not reconcile")},
-    {k: "Knowledge base", v: grouped(corpus.documents), unit: " articles",
-      s: grouped(corpus.chunks) + " passages, BM25 floor " + fixed(corpus.floor, 1)}
-  ];
-  $("#stats").innerHTML = tiles.map(statMarkup).join("");
-
   const live = stats.live || {};
-  $("#runline").innerHTML = [
-    "development run " + grouped(dev.tickets_processed) + " tickets in " + fixed(dev.duration_seconds, 2) + " s",
-    "validation run " + grouped(val.tickets_processed) + " tickets in " + fixed(val.duration_seconds, 2) + " s",
-    "model provider " + esc(dev.model_provider || "none"),
-    "confidence threshold " + fixed(live.confidence_threshold, 2),
-    "high-cost threshold " + fixed(live.high_cost_threshold, 2)
-  ].join(" &middot; ");
+  STATE.stats = stats;
+
+  $("#ledger").innerHTML = [
+    {k: "fcr", v: pct(dev.first_contact_resolution),
+      delta: deltaPoints(dev.first_contact_resolution, dev.baseline_first_contact_resolution, "up")},
+    {k: "escalation", v: pct(dev.escalation_rate),
+      delta: deltaPoints(dev.escalation_rate, dev.baseline_escalation_rate, "down")},
+    // Both bases, because the flattering one on its own is not the figure.
+    {k: "citation-accuracy", v: pct(dev.citation_accuracy_over_all_labelled_replies),
+      sub: pct(dev.citation_accuracy_over_answerable_replies_only) + " where covered"},
+    {k: "calibration", v: fixed(dev.expected_calibration_error, 4)},
+    {k: "decisions", v: grouped(dev.decisions_logged)},
+    {k: "kb", v: grouped(corpus.documents), unit: " articles"}
+  ].map(ledgerItem).join("");
+
+  const rows = [
+    ["Tickets processed", grouped(dev.tickets_processed), grouped(val.tickets_processed), null],
+    ["Run time", fixed(dev.duration_seconds, 2) + " s", fixed(val.duration_seconds, 2) + " s", null],
+    ["First contact resolution", pct(dev.first_contact_resolution), pct(val.first_contact_resolution), "fcr"],
+    ["Verified resolution", pct(dev.verified_fcr_over_all_labelled_auto_answers),
+      pct(val.verified_fcr_over_all_labelled_auto_answers), "verified"],
+    ["Verified resolution, where the corpus covers the ticket",
+      pct(dev.verified_fcr_over_answerable_auto_answers_only),
+      pct(val.verified_fcr_over_answerable_auto_answers_only), "verified"],
+    ["Escalated to a human", pct(dev.escalation_rate), pct(val.escalation_rate), "escalation"],
+    ["Citation accuracy", pct(dev.citation_accuracy_over_all_labelled_replies),
+      pct(val.citation_accuracy_over_all_labelled_replies), "citation-accuracy"],
+    ["Citation accuracy, where the corpus covers the ticket",
+      pct(dev.citation_accuracy_over_answerable_replies_only),
+      pct(val.citation_accuracy_over_answerable_replies_only), "citation-accuracy"],
+    ["Retrieval recall", pct(dev.retrieval_recall_at_k), pct(val.retrieval_recall_at_k), "recall"],
+    ["Routing agreement", pct(dev.routing_agreement_with_labels),
+      pct(val.routing_agreement_with_labels), "agreement"],
+    ["Calibration error", fixed(dev.expected_calibration_error, 4),
+      fixed(val.expected_calibration_error, 4), "calibration"],
+    ["Decisions logged", grouped(dev.decisions_logged), grouped(val.decisions_logged), "decisions"],
+    ["Private data found in a reply", grouped(dev.private_data_detections),
+      grouped(val.private_data_detections), "g-pii"],
+    ["Must never answer automatically, breached",
+      grouped(dev.must_not_auto_respond_breaches) + " of " + grouped(dev.must_not_auto_respond_tickets),
+      grouped(val.must_not_auto_respond_breaches) + " of " + grouped(val.must_not_auto_respond_tickets),
+      "never-auto"]
+  ];
+
+  $("#runrec").innerHTML =
+    '<p class="hint">Read straight out of the two metrics reports the evaluation harness wrote. ' +
+    'Nothing on this page computes a figure of its own, so anything here can be traced back to a ' +
+    'file on disk.</p>' +
+    '<div class="scroller" style="border-top:0;margin-top:0"><table style="min-width:420px">' +
+    '<thead><tr><th scope="col">Figure</th><th scope="col">Development, 500</th>' +
+    '<th scope="col">Validation, 80</th></tr></thead><tbody>' +
+    rows.map(row => '<tr><td>' + (row[3] ? defHTML(row[3], row[0]) : esc(row[0])) + '</td>' +
+      '<td class="mono">' + row[1] + '</td><td class="mono">' + row[2] + '</td></tr>').join("") +
+    '</tbody></table></div>' +
+    '<p class="runline">' + [
+      "development input " + esc(dev.input_path || "unknown"),
+      "model provider " + esc(dev.model_provider || "none"),
+      defHTML("conf-threshold", "confidence threshold") + " " + fixed(live.confidence_threshold, 2),
+      defHTML("cost-threshold", "high-cost threshold") + " " + fixed(live.high_cost_threshold, 2),
+      defHTML("relevance-floor", "relevance floor") + " " + fixed(corpus.floor, 1),
+      defHTML("kb", "knowledge base") + " " + grouped(corpus.documents) + " articles in " +
+        grouped(corpus.chunks) + " " + defHTML("passage", "passages")
+    ].join(" &middot; ") + '</p>';
 }
 
 /* ---------------- sample rail ---------------- */
@@ -735,23 +1257,23 @@ function renderSamples(samples) {
   $("#sampleCount").textContent = samples.length + " tickets";
   $("#samples").innerHTML = samples.map(s => {
     const answered = s.expected_rule.indexOf("auto-respond") > -1;
-    return '<button class="sample inset-focus" type="button" aria-pressed="false" ' +
+    return '<button class="sample inset-focus" type="button" aria-current="false" ' +
       'data-id="' + esc(s.ticket_id) + '">' +
-      '<span class="sample-top"><span class="sample-id">' +
-        ICON.chevronRight.replace('class="i"', 'class="i i-sm chev-r"') + esc(s.ticket_id) + '</span>' +
+      '<span class="sample-top"><span class="sample-id">' + esc(s.ticket_id) +
+        sized(ICON.arrowRight, "i-sm go") + '</span>' +
         '<span class="chip' + (answered ? " answered" : "") + '">' + esc(s.expected_rule) + '</span></span>' +
       '<span class="sample-why">' + esc(s.demonstrates) + '</span>' +
       '<span class="sample-meta">' + esc([s.channel, s.customer_tier, words(s.language_fluency), s.source]
         .filter(Boolean).join(" · ")) + '</span></button>';
   }).join("");
-  $("#samples").querySelectorAll(".sample").forEach(node => {
+  $$(".sample", $("#samples")).forEach(node => {
     node.addEventListener("click", () => runSample(node.dataset.id));
   });
 }
 
 function markSample(ticketId) {
-  $("#samples").querySelectorAll(".sample").forEach(node => {
-    node.setAttribute("aria-pressed", node.dataset.id === ticketId ? "true" : "false");
+  $$(".sample", $("#samples")).forEach(node => {
+    node.setAttribute("aria-current", node.dataset.id === ticketId ? "true" : "false");
   });
 }
 
@@ -779,12 +1301,23 @@ async function runComposed() {
     customer_region: "",
     received_at: new Date().toISOString().replace(/\.\d+Z$/, "Z")
   };
+  const button = $("#runBtn");
+  const label = button.textContent;
+  button.setAttribute("aria-busy", "true");
+  button.disabled = true;
+  button.textContent = "Running";
   markSample(null);
-  await submit(ticket, {source: "written in the console", demonstrates: "", labels: null});
+  try { await submit(ticket, {source: "written in the console", demonstrates: "", labels: null}); }
+  finally {
+    button.removeAttribute("aria-busy");
+    button.disabled = false;
+    button.textContent = label;
+  }
 }
 
 async function submit(ticket, meta) {
   const work = $("#work");
+  work.setAttribute("aria-busy", "true");
   work.innerHTML = '<div class="empty"><h2>Running</h2><p>' + esc(ticket.ticket_id) +
     ' is going through ingest, classification, retrieval, routing, generation and validation.</p></div>';
   let response;
@@ -795,16 +1328,20 @@ async function submit(ticket, meta) {
       body: JSON.stringify(ticket)
     });
   } catch (err) {
-    work.innerHTML = '<div class="failure"><b>' +
-      ICON.cross.replace('class="i"', 'class="i i-sm"') + 'The ticket was not processed</b>' +
-      esc(err.message) + '</div>';
+    work.setAttribute("aria-busy", "false");
+    work.innerHTML = '<div class="failure"><b>' + sized(ICON.circleX, "i-sm") +
+      'The ticket was not processed</b>' + esc(err.message) + '</div>';
+    announce("The ticket was not processed. " + err.message);
     return;
   }
   STATE.current = response;
   render(ticket, meta, response);
+  work.setAttribute("aria-busy", "false");
   loadDecisions(ticket.ticket_id);
   refreshHealth();
 }
+
+function announce(text) { $("#srStatus").textContent = text; }
 
 /* ---------------- rendering one response ---------------- */
 
@@ -813,6 +1350,12 @@ const ACTION_WORDS = {
   escalate: ["Escalated to a support engineer", "escalated"],
   blocked: ["Blocked before sending", "stopped"]
 };
+
+/* "R-05-auto-respond" -> the key the definitions are filed under. */
+function ruleKey(rule) {
+  const match = /^(R-\d+b?)/.exec(String(rule || ""));
+  return match ? match[1] : "";
+}
 
 function render(ticket, meta, r) {
   const shape = ACTION_WORDS[r.action] || ["Unrecognised outcome", ""];
@@ -836,11 +1379,13 @@ function render(ticket, meta, r) {
       '<div class="panel-body"><p class="hint">Reading the audit trail back.</p></div></section>'
   ].join("");
   wireUp();
+  announce(ticket.ticket_id + ": " + shape[0] + " on " + (routing.rule || "no rule") + ".");
   const first = (r.citations || [])[0];
   if (first) {
     const node = $('.passage[data-chunk="' + first.chunk_id + '"]');
     if (node) { togglePassage(node); }
   }
+  STATE.ready = true;
 }
 
 function ticketPanel(ticket, meta) {
@@ -852,7 +1397,7 @@ function ticketPanel(ticket, meta) {
     ["received", ticket.received_at]
   ].filter(f => f[1]);
   const flagged = ticket.language_fluency === "non_fluent";
-  return '<section class="panel"><div class="panel-head">' +
+  return '<section class="panel" id="ticketPanel"><div class="panel-head">' +
     '<h2>Ticket as it arrived</h2>' +
     '<span class="meta">' + esc(ticket.ticket_id) +
       (meta && meta.source ? ' &middot; ' + esc(meta.source) : '') + '</span></div>' +
@@ -868,16 +1413,20 @@ function ticketPanel(ticket, meta) {
 function verdictPanel(r, routing, shape) {
   const latency = r.latency_seconds === null || r.latency_seconds === undefined
     ? "&mdash;" : (r.latency_seconds * 1000).toFixed(1);
-  return '<section class="verdict ' + shape[1] + '" aria-label="Routing decision">' +
-    '<div><p class="verdict-kicker">Routing decision</p>' +
-    '<div class="verdict-line"><strong>' + esc(shape[0]) + '</strong>' +
-    '<span class="verdict-rule">' + esc(routing.rule || "none") + '</span></div>' +
+  const key = ruleKey(routing.rule);
+  const badge = DEFINITIONS[key]
+    ? defHTML(key, routing.rule)
+    : esc(routing.rule || "none");
+  return '<section class="verdict ' + shape[1] + '" id="verdict" aria-labelledby="verdictHead">' +
+    '<div><div class="verdict-line"><h2 id="verdictHead">' + esc(shape[0]) + '</h2>' +
+    '<span class="verdict-rule">' + badge + '</span></div>' +
     '<p class="verdict-reason">' + esc(routing.reason || "No routing reason was recorded.") + '</p></div>' +
     '<div class="readout">' +
-    '<div><div class="k">Latency</div><div class="v">' + latency + '<small> ms</small></div></div>' +
-    '<div><div class="k">Threshold applied</div><div class="v">' +
+    '<div><div class="k">' + defHTML("latency", "Latency") + '</div><div class="v">' +
+      latency + '<small> ms</small></div></div>' +
+    '<div><div class="k">' + defHTML("threshold-applied", "Threshold applied") + '</div><div class="v">' +
       fixed(routing.threshold_applied, 2) + '</div></div>' +
-    '<div><div class="k">Generated by</div><div class="v text">' +
+    '<div><div class="k">' + defHTML("generated-by", "Generated by") + '</div><div class="v text">' +
       esc(r.generation_method || "none") + '</div></div></div></section>';
 }
 
@@ -892,19 +1441,21 @@ function classificationCard(c, meta) {
       ', expected route ' + esc(words(meta.labels.expected_route)) +
       '. The pipeline never reads those labels; the evaluation harness does, afterwards.</p>'
     : '';
-  return '<section class="panel"><div class="panel-head"><h2>Classification</h2>' +
+  return '<section class="panel" id="classCard"><div class="panel-head"><h2>Classification</h2>' +
     '<span class="meta">' + esc(c.method || "unavailable") + '</span></div><div class="panel-body">' +
     '<div class="intent-line"><span class="intent">' + esc(words(c.intent)) + '</span>' +
     '<span class="conf' + (low ? " low" : "") + '">' + pct(c.intent_confidence, 1) + '</span></div>' +
     '<div class="meter"><i class="' + (low ? "low" : "") + '" style="width:' +
       (Math.max(0, Math.min(1, c.intent_confidence || 0)) * 100).toFixed(1) + '%"></i>' +
       '<u style="left:' + (threshold * 100).toFixed(1) + '%"></u></div>' +
-    '<div class="meter-legend"><span>calibrated P(this prediction is correct)</span>' +
-      '<span>threshold ' + fixed(threshold, 2) + '</span></div>' +
-    '<p class="sub-note">Urgency <b>' + esc(c.urgency) + '</b> at ' + fixed(c.urgency_confidence, 2) +
-      ', set by the policy table rather than a model. Urgency is not a function of the ticket text.</p>' +
+    '<div class="meter-legend"><span>' + defHTML("calibrated-p") + '</span>' +
+      '<span>' + defHTML("conf-threshold", "threshold") + ' ' + fixed(threshold, 2) + '</span></div>' +
+    '<p class="sub-note">' + defHTML("urgency", "Urgency") + ' <b>' + esc(c.urgency) + '</b> at ' +
+      fixed(c.urgency_confidence, 2) + ', set by the policy table rather than a model. ' +
+      'Urgency is not a function of the ticket text.</p>' +
     labelled +
-    '<div class="runners"><div class="runners-head"><span>Runners-up</span><span>confidence</span></div>' +
+    '<div class="runners"><div class="runners-head"><span>' + defHTML("runners-up", "Runners-up") +
+      '</span><span>confidence</span></div>' +
       (runners || '<div class="runner"><span>none recorded</span><span>&mdash;</span></div>') +
     '</div></div></section>';
 }
@@ -925,7 +1476,7 @@ function replyCard(r, shape) {
   if (r.action === "auto_respond") {
     head = "Reply to the customer";
     body = '<p class="hint">The numbered markers are buttons: hover or focus one to light up the ' +
-      'passage it came from, select it to open that passage.</p>' +
+      defHTML("passage", "passage") + ' it came from, select it to open that passage.</p>' +
       '<div class="reply">' + markup(r.body) + '</div>' +
       (citations.length ? '<div class="cite-list">' + citations.map(c =>
         '<div class="cite-row"><b>[' + esc(c.marker) + ']</b><span class="dim">' + esc(c.doc_id) + '</span>' +
@@ -934,9 +1485,11 @@ function replyCard(r, shape) {
     head = r.action === "blocked"
       ? "Blocked, and the handover note that replaced it"
       : "Handover note for the support engineer";
-    body = '<div class="note-text">' + esc(r.escalation_note || "No note was written.") + '</div>';
+    body = '<p class="hint">' + defHTML("escalation-note", "What the engineer receives") +
+      ', written so that they start from something rather than from nothing.</p>' +
+      '<div class="note-text">' + esc(r.escalation_note || "No note was written.") + '</div>';
   }
-  return '<section class="panel"><div class="panel-head"><h2>' + esc(head) + '</h2>' +
+  return '<section class="panel" id="replyCard"><div class="panel-head"><h2>' + esc(head) + '</h2>' +
     '<span class="meta">' + esc(shape[1]) + '</span></div>' +
     '<div class="panel-body">' + body + '</div></section>';
 }
@@ -952,29 +1505,33 @@ function passagesCard(r) {
     return '<div class="passage" data-chunk="' + esc(p.chunk_id) + '" data-doc="' + esc(p.doc_id) + '">' +
       '<button class="passage-head inset-focus" type="button" aria-expanded="false">' +
       '<span class="mark' + (marker ? "" : " none") + '" aria-hidden="true">' +
-        (marker ? esc(marker) : "&ndash;") + '</span>' +
+        (marker ? esc(marker) : "") + '</span>' +
       '<span class="p-cell"><span class="p-title">' + esc(p.title) + '</span>' +
       '<span class="p-id">' + esc(p.chunk_id) +
         (marker ? ' &middot; cited [' + esc(marker) + ']' : '') + '</span></span>' +
       '<span class="p-score">' + fixed(p.score, 2) +
         '<i class="p-bar" style="width:' + width + 'px"></i></span>' +
-      ICON.chevronDown.replace('class="i"', 'class="i i-sm chev-d"') +
+      sized(ICON.chevronDown, "i-sm chev-d") +
       '</button><div class="passage-detail" hidden></div></div>';
   }).join("");
-  const blank = '<p class="hint">Nothing in the knowledge base scored above the ' +
-    'relevance floor, so nothing was retrieved. That is the R-02 path: returning nothing is a result.</p>';
-  return '<section class="panel"><div class="panel-head"><h2>Retrieved passages</h2>' +
-    '<span class="meta">BM25 &middot; ' + passages.length + ' above floor</span></div>' +
+  const blank = '<p class="hint">Nothing in the ' + defHTML("kb", "knowledge base") +
+    ' scored above the ' + defHTML("relevance-floor", "relevance floor") + ', so nothing was ' +
+    'retrieved. That is the ' + defHTML("R-02", "R-02") + ' path: returning nothing is a result.';
+  return '<section class="panel" id="passagesCard"><div class="panel-head"><h2>Retrieved passages</h2>' +
+    '<span class="meta">' + defHTML("bm25", "BM25") + ' &middot; ' + passages.length +
+    ' above floor</span></div>' +
     '<div class="panel-body">' +
     (passages.length
-      ? '<p class="hint">Scores are BM25, not probabilities. Select a row to read the passage the ' +
-        'citation actually points at. A filled number in the left column means that passage is cited ' +
-        'in the reply.</p><div class="passages">' + rows + '</div>'
+      ? '<p class="hint">Scores are ' + defHTML("bm25", "BM25") + ', not probabilities. Select a row ' +
+        'to read the ' + defHTML("passage", "passage") + ' the citation actually points at. A filled ' +
+        'number in the left column means that passage is cited in the reply.</p>' +
+        '<div class="passages">' + rows + '</div>'
       : blank) +
     '</div></section>';
 }
 
-const RAIL_ICON = {pass: ICON.check, fail: ICON.cross, flag: ICON.alert, na: ICON.dash};
+const RAIL_ICON = {pass: ICON.circleCheck, fail: ICON.circleX, flag: ICON.triangleAlert,
+  na: ICON.circleMinus};
 
 function guardrailsCard(r) {
   const rails = r.guardrails || [];
@@ -986,7 +1543,7 @@ function guardrailsCard(r) {
     else if (!g.passed) { cls = "flag"; state = "recorded, not blocking"; }
     return '<div class="rail-cell ' + cls + '">' +
       '<div class="rail-top">' + RAIL_ICON[cls] +
-        '<span class="rail-name">' + esc(g.name) + '</span></div>' +
+        '<span class="rail-name">' + defHTML("g-" + g.name, g.name) + '</span></div>' +
       '<div class="rail-state">' + esc(state) + '</div>' +
       '<div class="rail-detail">' + esc(g.detail) + '</div></div>';
   }).join("");
@@ -996,7 +1553,7 @@ function guardrailsCard(r) {
     : "Five checks, none of which call the model. Nothing blocks on the escalation path: the note goes to " +
       "a CloudServe engineer who is entitled to see the customer's own details, and three of the checks " +
       "cannot apply to a note that carries no citations.";
-  return '<section class="panel"><div class="panel-head"><h2>Guardrails</h2>' +
+  return '<section class="panel" id="railsCard"><div class="panel-head"><h2>Guardrails</h2>' +
     '<span class="meta">' + (r.blocked_by && r.blocked_by.length
       ? esc(r.blocked_by.join(", ")) + " blocked" : "nothing blocked") + '</span></div>' +
     '<div class="panel-body" style="padding-top:var(--s-2)">' +
@@ -1035,7 +1592,7 @@ async function loadDecisions(ticketId) {
     '</tr></thead><tbody>' + rows.map(row =>
       '<tr><td><span class="stage">' + esc(row.stage) + '<i>' + esc((row.timestamp || "").slice(11)) +
       '</i></span></td>' +
-      '<td class="mono">' + esc(row.model_name) + '<br><span style="color:var(--muted)">' +
+      '<td class="mono">' + esc(row.model_name) + '<br><span class="dim">' +
         esc(row.model_version) + '</span></td>' +
       '<td class="mono">' + esc(row.prediction) + '</td>' +
       '<td class="mono">' + fixed(row.confidence, 4) + '</td>' +
@@ -1051,29 +1608,29 @@ async function loadDecisions(ticketId) {
   card.innerHTML = '<div class="panel-head"><h2>Decision log</h2><span class="meta">GET /decisions/' +
     esc(ticketId) + '</span></div>' +
     '<div class="panel-body" style="padding-top:var(--s-2)"><p class="hint">' + rows.length +
-    ' rows, in the order the decisions were taken, read back out of the SQLite log. This is the ' +
-    'reconstruction path: months later, it is how anyone answers why the system did this.' + esc(extra) +
-    '</p>' + table + '</div>';
+    ' rows, in the order the decisions were taken, read back out of the SQLite ' +
+    defHTML("decision-log", "log") + '. This is the reconstruction path: months later, it is how ' +
+    'anyone answers why the system did this.' + esc(extra) + '</p>' + table + '</div>';
 }
 
 /* ---------------- interaction ---------------- */
 
 function wireUp() {
   const work = $("#work");
-  work.querySelectorAll(".cite").forEach(node => {
+  $$(".cite", work).forEach(node => {
     node.addEventListener("click", () => focusPassage(STATE.marks[node.dataset.marker], true));
     node.addEventListener("mouseenter", () => focusPassage(STATE.marks[node.dataset.marker], false));
     node.addEventListener("focus", () => focusPassage(STATE.marks[node.dataset.marker], false));
     node.addEventListener("mouseleave", clearLit);
     node.addEventListener("blur", clearLit);
   });
-  work.querySelectorAll(".passage-head").forEach(node => {
+  $$(".passage-head", work).forEach(node => {
     node.addEventListener("click", () => togglePassage(node.parentNode));
   });
 }
 
 function clearLit() {
-  $("#work").querySelectorAll(".passage.lit").forEach(n => n.classList.remove("lit"));
+  $$(".passage.is-current", $("#work")).forEach(n => n.classList.remove("is-current"));
 }
 
 function focusPassage(chunkId, scroll) {
@@ -1081,7 +1638,7 @@ function focusPassage(chunkId, scroll) {
   clearLit();
   const target = $('.passage[data-chunk="' + chunkId + '"]');
   if (!target) { return; }
-  target.classList.add("lit");
+  target.classList.add("is-current");
   if (scroll) {
     target.scrollIntoView({behavior: REDUCED ? "auto" : "smooth", block: "center"});
     if (target.getAttribute("data-open") !== "1") { togglePassage(target); }
@@ -1132,6 +1689,9 @@ async function togglePassage(passage) {
 
 /* ---------------- kill switch ---------------- */
 
+const OPS_IDLE = "Writes storage/HALT through POST /admin/halt. The next ticket accepted routes on " +
+  "R-00 and goes to a person with its draft attached. Nothing in flight is lost.";
+
 async function refreshHealth() {
   let health;
   try { health = await getJSON("/healthz"); } catch (err) { return; }
@@ -1139,21 +1699,21 @@ async function refreshHealth() {
   const box = $("#killState");
   box.classList.toggle("halted", halted);
   box.classList.toggle("live", !halted);
-  $("#killIcon").innerHTML = halted ? ICON.halted : ICON.live;
+  $("#killIcon").innerHTML = halted ? ICON.ban : ICON.circleCheck;
   $("#killLabel").textContent = halted ? "Automation halted" : "Automation live";
   $("#haltBtn").disabled = halted;
   $("#resumeBtn").disabled = !halted;
+  $("#adminToken").setAttribute("aria-invalid", "false");
   if (halted) {
-    setNote("Every ticket accepted from now on routes on R-00-kill-switch and goes to a support " +
-      "engineer with its draft and sources attached. Submit one and watch the rule change.", false);
+    setNote("Every ticket accepted from now on routes on R-00 and goes to a support engineer with " +
+      "its draft and sources attached. Submit one and watch the rule change.", false);
   } else {
-    setNote("Writes storage/HALT through POST /admin/halt. The next ticket accepted routes on " +
-      "R-00-kill-switch and goes to a person with its draft attached. Nothing in flight is lost.", false);
+    setNote(OPS_IDLE, false);
   }
 }
 
 function setNote(text, isError) {
-  const note = $("#killNote");
+  const note = $("#opsNote");
   note.textContent = text;
   note.classList.toggle("err", !!isError);
 }
@@ -1163,6 +1723,7 @@ async function admin(path) {
   try {
     await getJSON(path, {method: "POST", headers: {"X-Admin-Token": token}});
   } catch (err) {
+    $("#adminToken").setAttribute("aria-invalid", "true");
     setNote(path + " refused: " + err.message +
       ". The token is whatever ADMIN_TOKEN was set to when the server started; an unset one " +
       "disables the endpoint rather than opening it.", true);
@@ -1171,15 +1732,230 @@ async function admin(path) {
   await refreshHealth();
 }
 
+/* ===========================================================================
+   First-run walkthrough. Five steps, each anchored to something real on the
+   page and each saying why that thing is there rather than what it is called.
+   It is not a modal: the page behind stays visible and clickable, and only
+   the keyboard is held inside the step so that tabbing does not wander off
+   mid-sentence. The last step leaves the visitor on the routing decision.
+   =========================================================================== */
+const TOUR_KEY = "cloudserve.console.tour.v1";
+const TOUR = [
+  {anchor: "#samplesPanel", h: "Start with an awkward one",
+    p: "These are real records from the validation set and the fault-injection file, and each one " +
+       "takes a different route through the rules. The interesting cases are the tickets the system " +
+       "refuses to answer, so pick one of those rather than the easy one."},
+  {anchor: "#ticketPanel", h: "This is everything it was given",
+    p: "No account history, no previous tickets, no human triage. What follows is worked out from " +
+       "this text and the channel it arrived on, which is also all a tier one agent has at nine in " +
+       "the morning."},
+  {anchor: "#classCard", h: "How sure it is, and what that is worth",
+    p: "The mark on the bar is the confidence the system has to reach before it may answer on its " +
+       "own. The figure beside it is not a raw model score: it has been corrected so that 80% means " +
+       "right about eight times in ten."},
+  {anchor: "#passagesCard", h: "It can only answer from what it found",
+    p: "Replies are assembled from sentences that already exist in these passages, so there is " +
+       "nothing to invent. Every numbered marker in a reply opens the exact passage it came from."},
+  {anchor: "#verdict", h: "One named rule decided this",
+    p: "The rules are tried in a fixed order and the first match wins, so there is always exactly one " +
+       "answer to why a ticket went the way it did. That identifier is what goes in the log, and it " +
+       "is what gets quoted in a compliance review."}
+];
+
+const tour = {index: 0, open: false, dim: null, ring: null, card: null, anchor: null, frame: 0,
+  seenInMemory: false, returnTo: null};
+
+function tourSeen() {
+  if (tour.seenInMemory) { return true; }
+  try { return window.localStorage.getItem(TOUR_KEY) === "1"; }
+  catch (err) { return false; }
+}
+
+function markTourSeen() {
+  tour.seenInMemory = true;
+  try { window.localStorage.setItem(TOUR_KEY, "1"); } catch (err) { /* private window */ }
+}
+
+function tourBuild() {
+  tour.dim = document.createElement("div");
+  tour.dim.className = "wt-dim";
+  tour.ring = document.createElement("div");
+  tour.ring.className = "wt-ring";
+  tour.card = document.createElement("div");
+  tour.card.className = "wt-card";
+  tour.card.setAttribute("role", "dialog");
+  tour.card.setAttribute("aria-modal", "false");
+  tour.card.setAttribute("aria-labelledby", "wtHead");
+  tour.card.setAttribute("aria-describedby", "wtBody");
+  tour.card.tabIndex = -1;
+  tour.card.innerHTML =
+    '<p class="wt-step" id="wtStep"></p>' +
+    '<h2 id="wtHead"></h2><p id="wtBody"></p>' +
+    '<div class="wt-actions">' +
+      '<div class="wt-dots" id="wtDots" aria-hidden="true"></div><span class="spacer"></span>' +
+      '<button class="ghost" type="button" id="wtSkip">Skip</button>' +
+      '<button class="btn" type="button" id="wtBack">Back</button>' +
+      '<button class="btn primary" type="button" id="wtNext" style="width:auto">Next</button>' +
+    '</div>';
+  document.body.appendChild(tour.dim);
+  document.body.appendChild(tour.ring);
+  document.body.appendChild(tour.card);
+  $("#wtSkip", tour.card).addEventListener("click", tourEnd);
+  $("#wtBack", tour.card).addEventListener("click", () => tourGo(tour.index - 1));
+  $("#wtNext", tour.card).addEventListener("click", () => {
+    if (tour.index === TOUR.length - 1) { tourEnd(); } else { tourGo(tour.index + 1); }
+  });
+  tour.card.addEventListener("keydown", event => {
+    if (event.key !== "Tab") { return; }
+    const focusable = $$("button", tour.card).filter(b => !b.disabled);
+    if (!focusable.length) { return; }
+    const first = focusable[0];
+    const last = focusable[focusable.length - 1];
+    if (event.shiftKey && (document.activeElement === first || document.activeElement === tour.card)) {
+      event.preventDefault();
+      last.focus();
+    } else if (!event.shiftKey && document.activeElement === last) {
+      event.preventDefault();
+      first.focus();
+    }
+  });
+}
+
+/* The spotlight is clipped to what is actually on screen. A panel three
+   screens tall would otherwise put the ring off both edges and dim nothing,
+   which is the same as having no spotlight at all. */
+function tourPlace() {
+  const anchor = tour.anchor;
+  if (!anchor) { return; }
+  const rect = anchor.getBoundingClientRect();
+  const pad = 8;
+  const narrow = window.innerWidth <= 560;
+  const card = tour.card.getBoundingClientRect();
+  const floor = narrow ? Math.max(160, card.top - 12) : window.innerHeight - 8;
+  const top = Math.min(Math.max(8, rect.top - pad), floor - 72);
+  const bottom = Math.max(top + 72, Math.min(rect.bottom + pad, floor));
+  const left = Math.max(4, rect.left - pad);
+  const width = Math.min(rect.width + pad * 2, window.innerWidth - left - 4);
+  [tour.dim, tour.ring].forEach(node => {
+    node.style.top = Math.round(top) + "px";
+    node.style.left = Math.round(left) + "px";
+    node.style.width = Math.round(width) + "px";
+    node.style.height = Math.round(bottom - top) + "px";
+  });
+  if (narrow) { return; }
+  // Below the spotlight, else above it, else beside it. A panel that fills the
+  // viewport has no room either side of it vertically, and a card dropped over
+  // the middle of it hides the very thing the step is pointing at.
+  const gap = 16;
+  let cardTop;
+  let cardLeft = rect.left;
+  if (card.height + gap <= window.innerHeight - bottom) {
+    cardTop = bottom + gap;
+  } else if (card.height + gap <= top) {
+    cardTop = top - card.height - gap;
+  } else {
+    cardTop = Math.max(gap, (window.innerHeight - card.height) / 2);
+    if (left + width + gap + card.width <= window.innerWidth - gap) { cardLeft = left + width + gap; }
+    else if (left - gap - card.width >= gap) { cardLeft = left - gap - card.width; }
+  }
+  if (cardLeft + card.width > window.innerWidth - gap) { cardLeft = window.innerWidth - card.width - gap; }
+  tour.card.style.top = Math.round(Math.max(gap, cardTop)) + "px";
+  tour.card.style.left = Math.round(Math.max(gap, cardLeft)) + "px";
+}
+
+function tourTrack() {
+  if (!tour.open) { return; }
+  tourPlace();
+  tour.frame = window.requestAnimationFrame(tourTrack);
+}
+
+function tourGo(index) {
+  if (index < 0 || index >= TOUR.length) { return; }
+  const step = TOUR[index];
+  const anchor = $(step.anchor);
+  if (!anchor) { tourEnd(); return; }
+  tour.index = index;
+  tour.anchor = anchor;
+  $("#wtStep", tour.card).textContent = "Step " + (index + 1) + " of " + TOUR.length;
+  $("#wtHead", tour.card).textContent = step.h;
+  $("#wtBody", tour.card).textContent = step.p;
+  $("#wtDots", tour.card).innerHTML = TOUR.map((s, i) =>
+    '<span class="' + (i <= index ? "on" : "") + '"></span>').join("");
+  $("#wtBack", tour.card).disabled = index === 0;
+  $("#wtNext", tour.card).textContent = index === TOUR.length - 1 ? "Done" : "Next";
+  // A panel taller than the viewport is scrolled to its top, not its middle:
+  // centring one puts its heading off screen, which is the part that explains it.
+  const rect = anchor.getBoundingClientRect();
+  const tall = rect.height > window.innerHeight * 0.6;
+  const target = tall
+    ? window.scrollY + rect.top - 24
+    : window.scrollY + rect.top - Math.max(24, (window.innerHeight - rect.height) / 2);
+  window.scrollTo({top: Math.max(0, target), behavior: REDUCED ? "auto" : "smooth"});
+  tourPlace();
+  tour.card.focus();
+}
+
+function tourStart() {
+  if (tour.open) { return; }
+  if (!$(TOUR[0].anchor)) { return; }
+  if (!tour.card) { tourBuild(); }
+  tour.open = true;
+  tour.returnTo = document.activeElement;
+  tour.dim.style.display = tour.ring.style.display = tour.card.style.display = "";
+  document.body.setAttribute("data-tour", "open");
+  tourGo(0);
+  tour.frame = window.requestAnimationFrame(tourTrack);
+}
+
+function tourEnd() {
+  if (!tour.open) { return; }
+  tour.open = false;
+  window.cancelAnimationFrame(tour.frame);
+  tour.dim.style.display = tour.ring.style.display = tour.card.style.display = "none";
+  document.body.removeAttribute("data-tour");
+  markTourSeen();
+  const verdict = $("#verdict");
+  if (verdict) {
+    verdict.scrollIntoView({behavior: REDUCED ? "auto" : "smooth", block: "center"});
+  }
+  const back = tour.returnTo && tour.returnTo.focus ? tour.returnTo : $("#tourBtn");
+  if (back && back.focus) { back.focus(); }
+}
+
+document.addEventListener("keydown", event => {
+  if (event.key !== "Escape") { return; }
+  // A definition on top of a walkthrough step closes first: Escape undoes the
+  // most recent thing, not the biggest thing.
+  if (tipFor) { const trigger = tipFor; closeTip(); tipDismissed = trigger; return; }
+  if (tour.open) { tourEnd(); }
+});
+
 /* ---------------- boot ---------------- */
 
+function toggleRunRecord() {
+  const button = $("#runrecBtn");
+  const panel = $("#runrec");
+  const open = button.getAttribute("aria-expanded") === "true";
+  button.setAttribute("aria-expanded", open ? "false" : "true");
+  panel.hidden = open;
+}
+
 async function boot() {
+  buildHiddenDefinitions();
+  $("#runrecIcon").innerHTML = sized(ICON.chevronDown, "i-sm chev-d");
+  $("#tourIcon").innerHTML = sized(ICON.compass, "i-sm");
+  $("#killIcon").innerHTML = ICON.circleMinus;
   $("#haltBtn").addEventListener("click", () => admin("/admin/halt"));
   $("#resumeBtn").addEventListener("click", () => admin("/admin/resume"));
   $("#runBtn").addEventListener("click", runComposed);
+  $("#runrecBtn").addEventListener("click", toggleRunRecord);
+  $("#tourBtn").addEventListener("click", tourStart);
 
   try { renderStats(await getJSON("/api/stats")); }
-  catch (err) { $("#runline").textContent = "The metrics reports could not be read: " + err.message; }
+  catch (err) {
+    $("#ledger").innerHTML = '<div class="led"><dt>Measured figures</dt><dd>' +
+      '<small>unavailable: ' + esc(err.message) + '</small></dd></div>';
+  }
 
   refreshHealth();
 
@@ -1197,6 +1973,9 @@ async function boot() {
     $("#samples").innerHTML = '<p class="hint">The sample tickets could not be ' +
       'loaded: ' + esc(err.message) + '</p>';
   }
+
+  // The walkthrough needs a rendered decision to point at, so it waits for one.
+  if (STATE.ready && !tourSeen()) { window.setTimeout(tourStart, 400); }
 }
 
 boot();

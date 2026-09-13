@@ -217,6 +217,22 @@ def corpus_article(doc_id: str) -> dict[str, Any]:
     }
 
 
+def _first(block: dict[str, Any], *names: str) -> Any:
+    """The first of these keys the report actually carries.
+
+    The metrics report has been through two naming rounds: `citation_accuracy`
+    became `citation_accuracy_over_all_labelled_replies` once there were two
+    bases to tell apart. Reading both means a report written by either version
+    of the harness still fills the console rather than leaving a blank where a
+    measured figure should be.
+    """
+    for name in names:
+        value = block.get(name)
+        if value is not None:
+            return value
+    return None
+
+
 def _run_summary(path: Path) -> dict[str, Any]:
     """One metrics report, flattened to the figures the console shows.
 
@@ -251,13 +267,36 @@ def _run_summary(path: Path) -> dict[str, Any]:
         "blocked_by_guardrails": volume.get("blocked_by_guardrails"),
         "processing_errors": volume.get("processing_errors"),
         "first_contact_resolution": business.get("first_contact_resolution"),
-        "first_contact_resolution_verified": business.get("first_contact_resolution_verified"),
+        "verified_fcr_over_all_labelled_auto_answers": _first(
+            business,
+            "verified_fcr_over_all_labelled_auto_answers",
+            "first_contact_resolution_verified",
+        ),
+        "verified_fcr_over_answerable_auto_answers_only": _first(
+            business,
+            "verified_fcr_over_answerable_auto_answers_only",
+            "first_contact_resolution_verified_answerable_only",
+        ),
         "baseline_first_contact_resolution": business.get("baseline_first_contact_resolution"),
         "escalation_rate": business.get("escalation_rate"),
         "baseline_escalation_rate": business.get("baseline_escalation_rate"),
         "routing_agreement_with_labels": business.get("routing_agreement_with_labels"),
-        "citation_accuracy": retrieval.get("citation_accuracy"),
-        "citation_accuracy_basis": retrieval.get("citation_accuracy_basis"),
+        "citation_accuracy_over_all_labelled_replies": _first(
+            retrieval,
+            "citation_accuracy_over_all_labelled_replies",
+            "citation_accuracy",
+        ),
+        "citation_accuracy_over_all_labelled_replies_basis": _first(
+            retrieval,
+            "citation_accuracy_over_all_labelled_replies_basis",
+            "citation_accuracy_basis",
+        ),
+        "citation_accuracy_over_answerable_replies_only": retrieval.get(
+            "citation_accuracy_over_answerable_replies_only"
+        ),
+        "citation_accuracy_over_answerable_replies_only_basis": retrieval.get(
+            "citation_accuracy_over_answerable_replies_only_basis"
+        ),
         "responses_with_citations": retrieval.get("responses_with_citations"),
         "retrieval_recall_at_k": retrieval.get("recall_at_k"),
         "expected_calibration_error": calibration.get("expected_calibration_error"),
